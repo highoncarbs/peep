@@ -10,6 +10,7 @@ from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 
+# Models
 from models import login_model
 
 # Flask app intitialization 
