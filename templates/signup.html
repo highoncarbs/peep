@@ -1,16 +1,17 @@
 {% extends 'base_login.html' %}
 {% block content %}
-<section class="register">
-<div class="hero-body has-text-centered">
-	<h2 class="is-size-4">Join Lumberjack</h2>
-	<p>A Real time log analysis platform for application.<br>Free Always.</p>
+<div class=" has-text-centered" style="margin-top : 100px;">
+	<h2 class="is-size-4 has-text-weight-bold">Join Peeps</h2>
+	<h2 class="is-size-4">A sales communication platform for everyone</h2>
 	<br>
 	<br>
+	<div class="form-box">
 	<form action="/signup" method="POST">
 		{{ form.hidden_tag()}}
-		{{ form.username(class="ninput" , placeholder="Username")}}<br>
-		{{ form.email(class="ninput" , placeholder="Email")}}<br>
-		{{ form.password(class="ninput" , placeholder = "Password")}}<br>
+		{{ form.username(class="input" , placeholder="Username" , width = "5rem")}}
+		<br><br>
+		{{ form.email(class="input" , placeholder="Email")}}<br><br>
+		{{ form.password(class="input" , placeholder = "Password")}}<br><br>
 		<br>
 		{% if error_mssg %}
 			<span class="is-medium is-size-6 error-mssg">
@@ -25,6 +26,6 @@
 		<br>
 		<a href="{{ url_for('login')}}">Already registered ? Login</a>
 	</form>
+	</div>
 </div>
-</section>
 {% endblock %}

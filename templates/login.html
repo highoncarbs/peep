@@ -1,33 +1,32 @@
 {% extends 'base_login.html' %}
 {% block content %}
-<section class="register">
-<div class="hero-body has-text-centered">
-	<h2 class="is-size-4">Welcome back</h2>
+	<div class=" has-text-centered" style="margin-top : 100px;">
+	<h2 class="is-size-4 has-text-weight-bold">Welcome back</h2>
 	<br>
 	<br>
-	<form action="/login" method="POST">
+	<div class="form-box center">
+	<form action="/login" method="POST" width="5rem">
 		{{ form.hidden_tag()}}
-		{{ form.email(placeholder="Email address")}}
-		<!-- <input class="" type="email" placeholder="Email address"> --><br>
-		{{ form.password(placeholder = "Password")}}
-<!-- 		<input class="" type="password" placeholder="Password"><br>
- -->
- 		<br>
- 		<br>
- 		{% if error_mssg %}
+		{{ form.email(placeholder="Email address" , class="input")}}
+		<br>
+		<br>	
+		{{ form.password(placeholder = "Password" , class="input")}}
+		<br>
+		<br>
+		{% if error_mssg %}
 				<span class="is-medium is-size-6 error-mssg">
 					<i data-feather="alert-triangle">error</i>
 					{{ error_mssg }}
 				</span>
 				<br>
 				<br>
-				{% endif %}
-				<br>
+		{% endif %}
+		<br>
 		<button class="button is-black is-size-6"><i data-feather="log-in"></i>Login</button>
 		<br>
 		<br>
 		<a href="{{ url_for('forgot')}}">Forgot Passoword ?</a>
 	</form>
-</div>
-</section>
+	</div>
+	</div>
 {% endblock %}

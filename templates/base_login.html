@@ -2,37 +2,42 @@
 <html>
 <head>
 	{% if subtitle %}
-	<title>Lumberjack - {{subtitle}}</title>
+	<title>Peeps - {{subtitle}}</title>
 	{% else %}
-	<title>Lumberjack</title>
+	<title>Peeps</title>
 	{% endif %}
+	<link rel="stylesheet" href="https://rsms.me/inter/inter-ui.css">	  
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+ 	<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename = 'css/main.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
- <link rel="stylesheet" href="https://rsms.me/inter/inter-ui.css">	  
- <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css"></head>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename = 'css/helper.css') }}">
+</head>
 <body>
-	<div class="hero">
-	<div class="hero-head">
+	<section class="hero">
+		<nav class="hero-head">
+			<div class="columns is-mobile -is-marginless ">
+				<div class="column left">
+					<figure class="navbar-item image">
+						<img>
+					</figure>
+				</div>
+				<div class="column right">
+					<p class="navbar-item is-size-6" style="float:right">
+						{% if subtitle == "Login" %}
+							<a  href="{{ url_for('signup')}}">Signup</a>
+						{% elif subtitle == "Signup" %}
+							<a  href="{{ url_for('login')}}">Login</a>
+						{% endif %}
+					</p>
+				</div>
+		</nav>
 
-	<div class="columns">
-		<div class="reg-brand column is-half-mobile">
-				<a href="{{url_for('index')}}"><div class="brand-logo"></div></a>
-		</div>
-		<div class="reg-change column is-half-mobile">
-			{% if subtitle=="Login" %}
-				<a class="info is-size-6" href="{{ url_for('signup')}}">Signup</a>
-			{% elif subtitle=="Signup" %}
-				<a class="info is-size-6" href="{{ url_for('login')}}">Login</a>
-			{% endif %}
-		</div>
-</div>
-</div>
-</div>
+	</section>
+	<section class="body-content is-centered">
 	{% block content%}
 	{% endblock %}
+	</section>
 	<script>
       feather.replace()
     </script>
