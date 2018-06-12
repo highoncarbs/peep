@@ -69,7 +69,7 @@ class BussCatForm(FlaskForm):
 ####### CONTACT FORMS & DB #############
 ########################################
 
-class AddContact_form(FlaskForm):
+class AddContactForm(FlaskForm):
     pass
 
 class AddContact(db.Model):
