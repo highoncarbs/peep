@@ -85,3 +85,15 @@ class AddContact(db.Model):
     prod_cat = db.Column(db.String(20) , nullable = True)
     broker = db.Column(db.String(20) , nullable = True)
     comm_channel = db.Column(db.String(20) , nullable = True)
+
+########################################
+####### MSSGs FORMS & DB #############
+########################################
+
+class Mssgs(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    type_mssg = db.Column(db.String(20) , nullable =True)
+    mssg = db.Column(db.String(500) , nullable = True)
+
+class MssgsForm(FlaskForm):
+    pass
