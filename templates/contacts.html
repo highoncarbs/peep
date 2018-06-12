@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="navbar ">
+    <div class="navbar-start">
+            <p class="navbar-item is-size-4 has-text-weight-bold">Contacts </p>
+    </div>
+    <div class="navbar-end is-size-4">
+            <a class="navbar-item" id="add-contact"><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></a>
+            <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="trash-2"></i>Delete Contact</button></a>
+            <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
+    </div>
+</div>
+<br>
+<div class="">
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Padam Sethia</td>
+            <td>7073077042</td>
+            <td>Jaipur , RAJ </td>
+            <td><i data-feather="settings"></i> </td>
+        </tr>
+        <tr>
+                <td>Padam Sethia</td>
+                <td>7073077042</td>
+                <td>Jaipur , RAJ </td>
+                <td><i data-feather="settings"></i> </td>
+            </tr>
+    </tbody>
+    </table>
+</div>
+
+<!-- Modal Code -->
+<div class="modal" id="modal-add-contact">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <!-- Add form for Contacts Input -->
+        <form action="" method="POST">
+            
+        </form>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<script>
+        document.querySelector('#add-contact').addEventListener('click', function(event) {
+            event.preventDefault();
+            var modal = document.querySelector('#modal-add-contact');  // assuming you have only 1
+            var html = document.querySelector('html');
+            modal.classList.add('is-active');
+            html.classList.add('is-clipped');
+          
+            modal.querySelector('.modal-close').addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+              });
+
+            modal.querySelector('.modal-background').addEventListener('click', function(e) {
+              e.preventDefault();
+              modal.classList.remove('is-active');
+              html.classList.remove('is-clipped');
+            });
+          });
+</script>
+{% endblock %}

@@ -44,7 +44,7 @@ def login():
         user = login_model.User.query.filter_by(email=form.email.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-                login_user(user)#remember = form.remember.data)
+                login_user(user)
 
                 return redirect(url_for('index'))
             else:
@@ -87,3 +87,53 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     return login_model.User.query.get(int(user_id))
+
+# Function Routes
+
+@app.route('/contacts' , methods=['GET' , 'POST'])
+@login_required
+def contacts():
+    '''
+        Add contacts to database with option to export 
+        and import data onto Peep.
+    '''
+    user = current_user.username 
+    return render_template('contacts.html' , user = user) , 200
+
+@app.route('/insights' , methods=['GET' , 'POST'])
+@login_required
+def insights():
+    '''
+        Get insights based of various filters 
+            - Period
+            - Business Category
+            - Product dealing IN
+            - City
+            - State
+            - Country
+            - Customer Credit Health
+            - broker
+            - preffered Comm channel
+            - no of times comm done
+            - No fo Invoice
+            - Sales for that user
+    '''
+    pass
+
+
+@app.route('/basic_master' , methods=['GET' , 'POST'])
+@login_required
+def basic_master():
+    '''
+        Basic master setup done here
+    '''
+    user = current_user.username 
+    return render_template('basic-master.html' , user = user) , 200
+
+@app.route('/user_profile' , methods=['GET' , 'POST'])
+@login_required
+def user_profile():
+    '''
+        Basic master setup done here
+    '''
+    pass

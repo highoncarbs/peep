@@ -12,45 +12,44 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
 	<link rel="stylesheet" href="https://rsms.me/inter/inter-ui.css">	  
 	<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.4/d3.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
-
+	<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<section class="columns is-fullheight">
-		<aside class="column main-side aside hero is-2 is-fullheight nav">
-			<div class="brand is-size-1">
-				<a href="{{url_for('index')}}"><div class="brand-logo"></div></a>
-			</div>
-			<div class="menu sidenav is is-size-4">
-				<ul class="menu-list animated fadeIn">
-				</ul>
-			</div>
-			<div class="menu-btm is-fixed-bottom animated fadeInUp ">
-				<p class="is-size-4 ">Hi, {{user.title()}}</p>
-
-				<br>
-				<a href="/logout"><button class="button is-black is-fullwidth ">					    	<i data-feather="log-out"></i>
-Logout</button></a>
-			</div>
-		</aside>
-		<aside class="main-content column">
-			<nav class="navbar">
-				<div  style="width: 99%">
-			    <input class="i-in is-medium is-size-5" style="width: 100%;" type="email" placeholder="Search Logs">
+		<section class="columns is-fullheight">
+				<aside class="column is-side-bar is-hidden-mobile hero is-2 is-fullheight">
+					<div class="brand is-size-1">
+						<a href="{{url_for('index')}}"><div class="brand-logo"></div></a>
+					</div>
+					<div class="menu is-size-4">
+						<ul class="menu-list animated fadeInLeft">
+							<li><a href="{{ url_for('contacts') }}"><i class="icon-btn" data-feather="users"></i><span class="menu-text is-desktop">Contacts</span></a></li>
+							<li><a href="{{ url_for('insights') }}"><i class="icon-btn" data-feather="zap"></i><span class="menu-text is-desktop">Insights</span></a></li>
+							<li><a href="{{ url_for('basic_master') }}"><i class="icon-btn" data-feather="edit"></i><span class="menu-text is-desktop">Basic Master</span></a></li>
+						
+						</ul>
+					</div>
+					<div class="menu user-prof is-fixed-bottom animated fadeInUp ">
+						<ul class="menu-list is-size-4">
+							<li><a href="{{ url_for('user_profile') }}"><i class="icon-btn" data-feather="user"></i><span class="menu-text">Hi, {{user.title()}}</span></a></li>						
+						</ul>
+						<a class="logout-btn" href="/logout"><button class="button is-size-5 is-black is-fullwidth ">					    	
+							<i class="icon-btn" data-feather="log-out"></i>
+								Logout
+						</button></a>
+					</div>
+				</aside>
+				<aside class="is-main-content column">
+					
+					<div class="xcontent">
+					{% block content%}
+					{% endblock %}
+					<script>
+						feather.replace()
+					</script>
 				</div>
-			</nav>
-			<div class="xcontent">
-			{% block content%}
-			{% endblock %}
-		</div>
-		</aside>
-	</section>
-
-<script>
-      feather.replace();
-    </script>
+				</aside>
+		</section>
 </body>
 </html>

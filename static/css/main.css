@@ -9,3 +9,44 @@ body{
     margin: auto;
     width: 300px !important;
 }
+
+.icon-btn{
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align:baseline;
+}
+.is-side-bar{
+    margin-left:1rem;
+    border-right : 1px solid lightgrey;
+  }
+
+  .columns.is-fullheight {
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    
+  }
+  .columns.is-fullheight .column {
+    overflow-y: auto;
+  }
+  
+  .is-main-content{
+    margin : 1rem;
+  }
+  
+  .user-prof{
+    
+  }
+
+  .logout-btn{
+      margin-top:5px;
+  }
+
+  .modal {
+    display: none;
+  }
+  
+  .modal.is-open {
+    display: block;
+  }
+       

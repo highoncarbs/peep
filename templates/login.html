@@ -15,14 +15,14 @@
 		<br>
 		{% if error_mssg %}
 				<span class="is-medium is-size-6 error-mssg">
-					<i data-feather="alert-triangle">error</i>
+					<i class="icon-btn" data-feather="alert-triangle">error</i>
 					{{ error_mssg }}
 				</span>
 				<br>
 				<br>
 		{% endif %}
 		<br>
-		<button class="button is-black is-size-6"><i data-feather="log-in"></i>Login</button>
+		<button class="button is-black is-size-6 "><i class="icon-btn" data-feather="log-in"></i>Login</button>
 		<br>
 		<br>
 		<a href="{{ url_for('forgot')}}">Forgot Passoword ?</a>
