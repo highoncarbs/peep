@@ -164,13 +164,13 @@ def basic_master():
         pass
     if form_prod.validate_on_submit():
         mssg = ""
-        prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod.data).first()
+        prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
         if prod :
             mssg = " The Product category you have entered already exists , try adding another category."
             return render_template('basic_master.html' , user = user , 
-        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health , form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = Basic Master) , 200
+        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health , form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master") , 200
         else:
-            new_data = login_model.ProdCat(prod_cat = form_prod.prod.data)       
+            new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())       
             db.session.add(new_data)
             db.session.commit()
             return redirect(url_for('basic_master'))
@@ -182,7 +182,7 @@ def basic_master():
         # Checks for Location submit
         pass
     return render_template('basic_master.html' , user = user , 
-        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health , form_loc = form_loc , form_prod = form_prod) , 200
+        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health , form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master") , 200
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
 @login_required
