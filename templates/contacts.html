@@ -11,7 +11,7 @@
     </div>
 </div>
 <br>
-<div class="">
+<div class="table-container">
     <table class="table is-fullwidth">
         <thead>
         <tr>
@@ -28,12 +28,6 @@
             <td>Jaipur , RAJ </td>
             <td><i data-feather="settings"></i> </td>
         </tr>
-        <tr>
-                <td>Padam Sethia</td>
-                <td>7073077042</td>
-                <td>Jaipur , RAJ </td>
-                <td><i data-feather="settings"></i> </td>
-            </tr>
     </tbody>
     </table>
 </div>
@@ -43,8 +37,11 @@
     <div class="modal-background"></div>
     <div class="modal-content">
         <!-- Add form for Contacts Input -->
-        <form action="" method="POST">
-
+        <form action="/add_contacts" method="POST">
+            <div class="form-name">
+                {{ form.hidden_tag()}}
+                {{form.}}
+            </div>
         </form>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>

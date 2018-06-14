@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+            input[type="radio"], .tab-pane { display: none; }
+
+            /* the magic */
+            #a:checked ~ .tab-content > .content-a,
+            #b:checked ~ .tab-content > .content-b,
+            #c:checked ~ .tab-content > .content-c,
+            #d:checked ~ .tab-content > .content-d,
+            #e:checked ~ .tab-content > .content-e {
+              display: block;
+            }
+
+    </style>
+    <div class="navbar ">
+        <p class=" is-size-4 has-text-weight-bold">Basic Master </p>
+    </div>
+    <br>
+    <div class="body-actions">
+        <input type="radio" id="a" name="nav-tab">
+        <input type="radio" id="b" name="nav-tab">
+        <input type="radio" id="c" name="nav-tab">
+        <input type="radio" id="d" name="nav-tab">
+        <input type="radio" id="e" name="nav-tab">
+        <input type="radio" id="f" name="nav-tab">
+        <div class="tabs">
+        <ul>
+            <li><label for="a"><a>Product Dealing In</a></label></li>
+            <li><label for="b"><a>Customer Credit Health</a></label></li>
+            <li><label for="c"><a>Broker</a></label></li>
+            <li><label for="d"><a>Communication Channels</a></label></li>
+            <li><label for="e"><a>Business Category</a></label></li>
+            <li><label for="f"><a>Location</a></label></li>
+        </ul>
+        </div>
+
+        <div class="tab-content">
+                <div class="tab-pane content-a">
+                <p class="is-size-4 has-text-weight-bold">Product Dealing In</p>
+                <br>
+                {% if error_mssg %}
+                <div class="notification has-background-warning">
+                <span class="is-size-5">
+                    <span class="icon icon-btn-m">
+                        <i data-feather="alert-triangle"></i>
+                    </span>
+                    {{error_mssg}}
+                </span>
+                <br>
+                </div>
+                {% endif %}
+                <div class="notification has-background-light">
+                        <form action="/basic_master" method="POST">
+                            <div class="field  is-grouped ">
+                        {{form_prod.hidden_tag()}}
+                        <p class="control  is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Product Category")}}</p>
+                        <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+                        <br>
+                        
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Data Display  -->
+
+                <br>
+                <div class="data-display">
+                    <p class="is-size-4 has-text-weight-bold is-light">Current Products</p>
+                    <br>
+                    <div class="box">
+                    <div class="table-container">
+                            <table class="table is-fullwidth">
+                                    <thead>
+                                    <tr>
+                                        <!-- Headers -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!-- Data ROws -->
+                                    </tr>
+                                </tbody>
+                                </table>
+                    </div>
+                    </div>
+                </div>
+                <!-- End Data Display -->
+            </div>   
+            </div>
+
+                <div class="tab-pane content-b">
+                    
+                </div>
+
+                <div class="tab-pane content-c">Broker
+                {{form_prod.hidden_tag()}}
+                </div>
+
+                <div class="tab-pane content-d">Communication Channels
+                {{form_prod.hidden_tag()}}
+                </div>
+
+                <div class="tab-pane content-e">Business Category
+                {{form_prod.hidden_tag()}}
+                </div>
+
+                <div class="tab-pane content-f">Location
+                {{form_prod.hidden_tag()}}
+                </div>
+
+    </div>
+
+    
+{% endblock %}
