@@ -1,0 +1,69 @@
+<!-- Main login for each tab -->
+<p class="is-size-4 has-text-weight-bold">Customer Health Credit</p>
+<br>
+{% if error_mssg %}
+<div class="notification has-background-warning">
+<span class="is-size-5">
+    <span class="icon icon-btn-m">
+        <i data-feather="info"></i>
+    </span>
+    {{error_mssg}}
+</span>
+<br>
+</div>
+{% endif %}
+<div class="notification has-background-light">
+        <form action="/basic_master" method="POST">
+        <div class="field ">
+            {% block form_content %}
+
+
+            {% endblock %}
+        </div>
+    </form>
+</div>
+
+<!-- Action Butons -->
+<div class="notification">
+        <div class="field is-grouped">
+            <p class="control"><button class="button is-black" onclick="showData()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+            <p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
+        </div>                
+</div>
+<!-- Action button end -->
+
+<!-- Data Display  -->
+
+<div id="data-display" style="display:none;">
+    <p class="is-size-4 has-text-weight-bold is-light">Current Products</p>
+    <br>
+    <div class="box">
+    <div class="table-container">
+            <table class="table is-fullwidth">
+                    <thead>
+                    <tr>
+                        <!-- Headers -->
+                        {% block table_h_content %}
+
+
+                        {% endblock %}
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for l in plist %}
+                    <tr>
+                        <!-- Data Rows -->
+                        
+                        {% block table_d_content %}
+
+
+                        {% endblock %}
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+    </div>
+    </div>
+</div>
+<!-- End Data Display -->

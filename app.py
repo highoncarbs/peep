@@ -151,7 +151,8 @@ def basic_master():
     form_loc = login_model.LocationForm()
 
     mssg = ""
-
+    prod_list = db.session.query(login_model.ProdCat).all()
+    
     if form_broker.validate_on_submit():
         # Checks for Broker submit 
         pass
@@ -168,12 +169,22 @@ def basic_master():
         if prod :
             mssg = " The Product category you have entered already exists , try adding another category."
             return render_template('basic_master.html' , user = user , 
-        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health , form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master") , 200
+        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+        form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" , plist= prod_list ) , 200
         else:
             new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())       
-            db.session.add(new_data)
-            db.session.commit()
-            return redirect(url_for('basic_master'))
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return render_template('basic_master.html' , user = user , 
+                form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+                form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+e
+                return render_template('basic_master.html' , user = user , 
+                form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+                form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
