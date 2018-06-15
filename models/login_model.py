@@ -75,7 +75,7 @@ class ProdCatForm(FlaskForm):
     
 class BussCat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    buss_Cat = db.Column(db.String(30), unique=True, nullable=False) 
+    buss_cat = db.Column(db.String(30), unique=True, nullable=False) 
 
 class BussCatForm(FlaskForm):
     buss_cat = StringField('buss_cat', validators=[InputRequired()])

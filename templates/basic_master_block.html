@@ -1,5 +1,8 @@
 <!-- Main login for each tab -->
-<p class="is-size-4 has-text-weight-bold">Customer Health Credit</p>
+<p class="is-size-4 has-text-weight-bold">
+    {% block block_title%}
+    {% endblock %}
+</p>
 <br>
 {% if error_mssg %}
 <div class="notification has-background-warning">
@@ -38,7 +41,10 @@
 <!-- Data Display  -->
 
 <div id="data-display" style="display:none;">
-    <p class="is-size-4 has-text-weight-bold is-light">Current Products</p>
+    <p class="is-size-4 has-text-weight-bold is-light">
+            {% block block_data_display %}
+            {% endblock %}
+    </p>
     <br>
     <div class="box">
     <div class="table-container">

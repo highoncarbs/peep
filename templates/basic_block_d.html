@@ -1,30 +1,30 @@
 {% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-    Product Dealing In
+Communication Channels
 {% endblock %}
 
 {% block block_data_display %}
-    Current Products
+    Current Communication Channels
 {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
-    {{form_prod.hidden_tag()}}
-    <p class="control is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
+    {{form_comm.hidden_tag()}}
+    <p class="control is-expanded">{{form_comm.comm_channel(class="input" , placeholder = "Enter New Communication Channel")}}</p>
     <br>
 {% endblock %}
 
 {% block table_h_content%}
     <th>ID</th>
-    <th>Product Category</th>
+    <th>Communication Channel</th>
 {% endblock %}
 
 {% block table_d_content %}
-{% for l in plist %}
+{% for l in commlist %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.id}}</td>
-        <td>{{l.prod_cat}}</td>
+        <td>{{l.channels}}</td>
     </tr>
 {% endfor %}    
 

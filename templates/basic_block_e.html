@@ -1,30 +1,30 @@
 {% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-    Product Dealing In
+Business Category
 {% endblock %}
 
 {% block block_data_display %}
-    Current Products
+    Current Business Categories
 {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
-    {{form_prod.hidden_tag()}}
-    <p class="control is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
+    {{form_buss.hidden_tag()}}
+    <p class="control is-expanded">{{form_buss.buss_cat(class="input" , placeholder = "Enter New Business Category")}}</p>
     <br>
 {% endblock %}
 
 {% block table_h_content%}
     <th>ID</th>
-    <th>Product Category</th>
+    <th>Business Category</th>
 {% endblock %}
 
 {% block table_d_content %}
-{% for l in plist %}
+{% for l in busslist %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.id}}</td>
-        <td>{{l.prod_cat}}</td>
+        <td>{{l.buss_cat}}</td>
     </tr>
 {% endfor %}    
 

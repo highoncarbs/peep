@@ -152,6 +152,9 @@ def basic_master():
 
     mssg = ""
     prod_list = db.session.query(login_model.ProdCat).all()
+    health_list = db.session.query(login_model.HealthCode).all()
+    commlist = db.session.query(login_model.HealthCode).all()
+    busslist = db.session.query(login_model.BussCat).all()
     
     if form_broker.validate_on_submit():
         # Checks for Broker submit 
@@ -195,7 +198,8 @@ def basic_master():
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
         form_health = form_health , form_loc = form_loc , form_prod = form_prod ,
-        error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list) , 200
+        error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
+        hlist = health_list , commlist = commlist , busslist = busslist) , 200
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
 @login_required

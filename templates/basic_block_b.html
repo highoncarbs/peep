@@ -1,30 +1,31 @@
 {% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-    Product Dealing In
+    Customer Credit Health
 {% endblock %}
 
 {% block block_data_display %}
-    Current Products
+    Current Customer Credit Health
 {% endblock %}
+
 <!-- Data entry block -->
 {% block form_content %}
-    {{form_prod.hidden_tag()}}
-    <p class="control is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
+    {{form_health.hidden_tag()}}
+    <p class="control is-expanded">{{form_health.health_code(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
     <br>
 {% endblock %}
 
 {% block table_h_content%}
     <th>ID</th>
-    <th>Product Category</th>
+    <th>Customer Health Code</th>
 {% endblock %}
 
 {% block table_d_content %}
-{% for l in plist %}
+{% for l in hlist %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.id}}</td>
-        <td>{{l.prod_cat}}</td>
+        <td>{{l.health_code}}</td>
     </tr>
 {% endfor %}    
 
