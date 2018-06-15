@@ -19,6 +19,9 @@
 
 
             {% endblock %}
+            <div class="field is-grouped">
+            <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+            </div>
         </div>
     </form>
 </div>
@@ -44,23 +47,15 @@
                     <tr>
                         <!-- Headers -->
                         {% block table_h_content %}
-
+                        
 
                         {% endblock %}
                     </tr>
                 </thead>
                 <tbody>
-                        {% for l in plist %}
-                    <tr>
-                        <!-- Data Rows -->
-                        
-                        {% block table_d_content %}
-
-
-                        {% endblock %}
-
-                    </tr>
-                    {% endfor %}
+                    {% block table_d_content %}
+                       
+                    {% endblock %}
                 </tbody>
                 </table>
     </div>

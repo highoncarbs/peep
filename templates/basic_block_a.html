@@ -1,0 +1,24 @@
+{% extends 'basic_master_block.html' %}
+
+<!-- Data entry block -->
+{% block form_content %}
+    {{form_prod.hidden_tag()}}
+    <p class="control is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
+    <br>
+{% endblock %}
+
+{% block table_h_content%}
+    <th>ID</th>
+    <th>Product Category</th>
+{% endblock %}
+
+{% block table_d_content %}
+{% for l in plist %}
+    <tr>
+        <!-- Data Rows -->
+        <td>{{l.id}}</td>
+        <td>{{l.prod_cat}}</td>
+    </tr>
+{% endfor %}    
+
+{% endblock %}
