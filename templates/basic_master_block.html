@@ -1,3 +1,5 @@
+<!-- FIX : Issue with view data onclick() function  -->
+
 <!-- Main login for each tab -->
 <p class="is-size-4 has-text-weight-bold">
     {% block block_title%}
@@ -32,15 +34,16 @@
 <!-- Action Butons -->
 <div class="notification">
         <div class="field is-grouped">
-            <p class="control"><button class="button is-black" onclick="showData()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
-            <p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
+            {% block action_buttons %}
+           
+            {% endblock %}
         </div>                
 </div>
 <!-- Action button end -->
 
 <!-- Data Display  -->
 
-<div id="data-display" style="display:none;">
+<div id="{% block data_display %}{% endblock %}" style="display:none;">
     <p class="is-size-4 has-text-weight-bold is-light">
             {% block block_data_display %}
             {% endblock %}
@@ -48,7 +51,7 @@
     <br>
     <div class="box">
     <div class="table-container">
-            <table class="table is-fullwidth">
+            <table class="table">
                     <thead>
                     <tr>
                         <!-- Headers -->

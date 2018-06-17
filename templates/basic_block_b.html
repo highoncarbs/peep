@@ -8,6 +8,9 @@
     Current Customer Credit Health
 {% endblock %}
 
+{% block onclick %}showData_b{% endblock %}
+{% block data_display %}data_display_b {% endblock %}
+
 <!-- Data entry block -->
 {% block form_content %}
     {{form_health.hidden_tag()}}
@@ -29,4 +32,9 @@
     </tr>
 {% endfor %}    
 
+{% endblock %}
+
+{% block action_buttons %}
+    <p class="control"><button class="button is-black" onclick="showData_b()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+    <p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
 {% endblock %}

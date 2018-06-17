@@ -35,6 +35,8 @@ class User(UserMixin, db.Model):
 ####### BASIC MASTER FORMS & DB ########
 ########################################
 
+# Broker Model & Form
+
 class Broker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     broker_name = db.Column(db.String(30), unique=True, nullable=False)
@@ -50,12 +52,16 @@ class BrokerForm(FlaskForm):
     country = StringField('country', validators=[InputRequired()])
     contacts = StringField('country', validators=[InputRequired()])
 
+# CommChannel Model & Form
+
 class CommChannel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     channel = db.Column(db.String(30), unique=True, nullable=False) 
 
 class CommChannelForm(FlaskForm):
     comm_channel = StringField('comm_channel', validators=[InputRequired()])
+
+# HealthCode Model & Form
 
 class HealthCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +70,7 @@ class HealthCode(db.Model):
 class HealthCodeForm(FlaskForm):
     health_code = StringField('health_code', validators=[InputRequired()])
 
+# ProdCat Model & Form
     
 class ProdCat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,6 +79,7 @@ class ProdCat(db.Model):
 class ProdCatForm(FlaskForm):
     prod_cat = StringField('prod_cat', validators=[InputRequired()])
 
+# BussCat Model & Form
     
 class BussCat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -80,16 +88,34 @@ class BussCat(db.Model):
 class BussCatForm(FlaskForm):
     buss_cat = StringField('buss_cat', validators=[InputRequired()])
 
-class Location(db.Model):
+# State Model & Form
+
+class State(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    city = db.Column(db.String(30), unique=True, nullable=False)
     state = db.Column(db.String(30), unique=True, nullable=False)
+    
+class StateForm(FlaskForm):
+    state = StringField('state', validators=[InputRequired()])
+
+# Country Model & Form
+    
+class Country(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     country = db.Column(db.String(30), unique=True, nullable=False)
 
-class LocationForm(FlaskForm):
-    city = StringField('city', validators=[InputRequired()])
-    state = StringField('state', validators=[InputRequired()])
+class CountryForm(FlaskForm):
     country = StringField('country', validators=[InputRequired()])
+
+# City Model & Form
+
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    city = db.Column(db.String(30), unique=True, nullable=False)
+    state = db.Column(db.String(30), nullable=False)
+    country = db.Column(db.String(30), nullable=False)
+
+class CityForm(FlaskForm):
+    city = StringField('city', validators=[InputRequired()])
 
 ########################################
 ####### CONTACT FORMS & DB #############

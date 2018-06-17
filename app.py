@@ -148,58 +148,84 @@ def basic_master():
     form_health = login_model.HealthCodeForm()
     form_prod = login_model.ProdCatForm()
     form_buss = login_model.BussCatForm()
-    form_loc = login_model.LocationForm()
+    form_state = login_model.StateForm()
+    form_coun = login_model.CountryForm()
+    form_city = login_model.CityForm()
+
 
     mssg = ""
     prod_list = db.session.query(login_model.ProdCat).all()
     health_list = db.session.query(login_model.HealthCode).all()
     commlist = db.session.query(login_model.HealthCode).all()
     busslist = db.session.query(login_model.BussCat).all()
-    
-    if form_broker.validate_on_submit():
-        # Checks for Broker submit 
-        pass
+    broklist = db.session.query(login_model.Broker).all()
+    statelist = db.session.query(login_model.State).all()
+    countrylist = db.session.query(login_model.Country).all()
+    citylist = db.session.query(login_model.City).all()
 
-    if form_comm.validate_on_submit():
-        # Checks for Comm submit 
-        pass
-    if form_health.validate_on_submit():
-        # Checks for health code submit 
-        pass
-    if form_prod.validate_on_submit():
-        mssg = ""
-        prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
-        if prod :
-            mssg = " The Product category you have entered already exists , try adding another category."
-            return render_template('basic_master.html' , user = user , 
-        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
-        form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" , plist= prod_list ) , 200
-        else:
-            new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())       
-            try:
-                db.session.add(new_data)
-                db.session.commit()
-                mssg = "Data Successfully added 👍"
-                return render_template('basic_master.html' , user = user , 
-                form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
-                form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
-            except Exception as e:
-                mssg = "Error occured while adding data 😵. Here's the error : "+e
-                return render_template('basic_master.html' , user = user , 
-                form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
-                form_loc = form_loc , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
+    if  'add_data' in request.form:
+        if form_broker.validate_on_submit():
+            # Checks for Broker submit 
+            pass
 
-    if form_buss.validate_on_submit():
-        # Checks for Bussiness Category submit
-        pass
-    if form_loc.validate_on_submit():
-        # Checks for Location submit
-        pass
+        if form_comm.validate_on_submit():
+            # Checks for Comm submit 
+            pass
+        if form_health.validate_on_submit():
+            # Checks for health code submit 
+            pass
+        if form_prod.validate_on_submit():
+            mssg = ""
+            prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
+            if prod :
+                mssg = " The Product category you have entered already exists , try adding another category."
+                return render_template('basic_master.html' , user = user , 
+            form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+            form_state = form_state , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" , plist= prod_list ) , 200
+            else:
+                new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())       
+                try:
+                    db.session.add(new_data)
+                    db.session.commit()
+                    mssg = "Data Successfully added 👍"
+                    return render_template('basic_master.html' , user = user , 
+                    form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+                    form_state = form_state , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
+                except Exception as e:
+                    mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                    return render_template('basic_master.html' , user = user , 
+                    form_broker = form_broker , form_buss = form_buss , form_comm = form_comm , form_health = form_health ,
+                    form_state = form_state , form_prod = form_prod , error_mssg = mssg , subtitle = "Basic Master" ,plist= prod_list) , 200
+
+        if form_buss.validate_on_submit():
+            # Checks for Bussiness Category submit
+            pass
+        if form_state.validate_on_submit():
+            # Checks for Location submit
+            pass
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
-        form_health = form_health , form_loc = form_loc , form_prod = form_prod ,
+        form_health = form_health , form_state = form_state , form_prod = form_prod ,
         error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
-        hlist = health_list , commlist = commlist , busslist = busslist) , 200
+        hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
+
+
+@app.route('/delete/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def delete_data_prod(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    login_model.ProdCat.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    user = current_user.username
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
 @login_required

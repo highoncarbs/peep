@@ -1,0 +1,40 @@
+{% extends 'basic_master_block.html' %}
+
+{% block block_title%}
+States
+{% endblock %}
+
+{% block block_data_display %}
+    Current States
+{% endblock %}
+
+{% block onclick %}showData_f{% endblock %}
+{% block data_display %}data_display_f {% endblock %}
+
+<!-- Data entry block -->
+{% block form_content %}
+    {{form_state.hidden_tag()}}
+    <p class="control is-expanded">{{form_state.state(class="input" , placeholder = "Enter New State")}}</p>
+    <br>
+{% endblock %}
+
+{% block table_h_content%}
+    <th>ID</th>
+    <th>State</th>
+{% endblock %}
+
+{% block table_d_content %}
+{% for l in busslist %}
+    <tr>
+        <!-- Data Rows -->
+        <td>{{l.id}}</td>
+        <td>{{l.state}}</td>
+    </tr>
+{% endfor %}    
+
+{% endblock %}
+
+{% block action_buttons %}
+<p class="control"><button class="button is-black" onclick="showData_f()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+<p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
+{% endblock %}

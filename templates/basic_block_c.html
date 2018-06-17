@@ -8,6 +8,8 @@
     Current Brokers
 {% endblock %}
 
+{% block onclick %}showData_c{% endblock %}
+{% block data_display %}data_display_c {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
     {{form_broker.hidden_tag()}}
@@ -21,4 +23,9 @@
 
 {% block table_d_content %}
 
+{% endblock %}
+
+{% block action_buttons %}
+    <p class="control"><button class="button is-black" onclick="showData_c()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+    <p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
 {% endblock %}

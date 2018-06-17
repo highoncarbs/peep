@@ -7,6 +7,9 @@ Business Category
 {% block block_data_display %}
     Current Business Categories
 {% endblock %}
+
+{% block onclick %}showData_e{% endblock %}
+{% block data_display %}data_display_e {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
     {{form_buss.hidden_tag()}}
@@ -28,4 +31,9 @@ Business Category
     </tr>
 {% endfor %}    
 
+{% endblock %}
+
+{% block action_buttons %}
+<p class="control"><button class="button is-black" onclick="showData_e()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+<p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
 {% endblock %}

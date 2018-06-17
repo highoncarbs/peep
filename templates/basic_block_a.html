@@ -7,6 +7,9 @@
 {% block block_data_display %}
     Current Products
 {% endblock %}
+
+{% block onclick %}showData_a{% endblock %}
+{% block data_display %}data_display_a {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
     {{form_prod.hidden_tag()}}
@@ -15,17 +18,24 @@
 {% endblock %}
 
 {% block table_h_content%}
-    <th>ID</th>
     <th>Product Category</th>
-{% endblock %}
+    <th>Delete</th>
+    <th>Edit</th>
+    {% endblock %}
 
 {% block table_d_content %}
 {% for l in plist %}
     <tr>
         <!-- Data Rows -->
-        <td>{{l.id}}</td>
         <td>{{l.prod_cat}}</td>
+        <td><a href="{{url_for('delete_data_prod',item_id= l.id)}}">Delete</a></td>
+        <td><a href="#">Edit</a></td>
     </tr>
 {% endfor %}    
 
+{% endblock %}
+
+{% block action_buttons %}
+<p class="control"><button class="button is-black" onclick="showData_a()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
+<p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
 {% endblock %}
