@@ -141,7 +141,6 @@ def basic_master():
     form_city = login_model.CityForm()
 
 
-    mssg = ""
     prod_list = db.session.query(login_model.ProdCat).all()
     health_list = db.session.query(login_model.HealthCode).all()
     commlist = db.session.query(login_model.HealthCode).all()
@@ -161,37 +160,27 @@ def basic_master():
     if form_health.validate_on_submit():
         # Checks for health code submit 
         pass
-    if 'app_data' in request.form:
-        if form_prod.validate_on_submit():
-            mssg = ""
-            prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
-            print(prod)
-            if prod :
-                mssg = "Duplicate Data "
-                return render_template('basic_master.html' , user = user , 
-                    form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
-                    form_health = form_health , form_state = form_state , form_prod = form_prod ,
-                    error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
-                    hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200                         
-            else:
-                new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())  
-                try:
-                    db.session.add(new_data)
-                    db.session.commit()
-                    mssg = "Data Successfully added 👍"
-                    return render_template('basic_master.html' , user = user , 
-                        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
-                        form_health = form_health , form_state = form_state , form_prod = form_prod ,
-                        error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
-                        hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
-                
-                except Exception as e:
-                    mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
-                    return render_template('basic_master.html' , user = user , 
-                        form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
-                        form_health = form_health , form_state = form_state , form_prod = form_prod ,
-                        error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
-                        hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
+
+    if form_prod.validate_on_submit():
+        mssg = ""
+        prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
+
+        if prod :
+            session['mssg'] = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.ProdCat(prod_cat = form_prod.prod_cat.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                session['mssg'] = "Data Successfully added 👍"
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                session['mssg'] = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return redirect(url_for('basic_master'))
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
@@ -202,7 +191,7 @@ def basic_master():
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
         form_health = form_health , form_state = form_state , form_prod = form_prod ,
-        error_mssg = mssg , subtitle = "Basic Master" , plist = prod_list ,
+        error_mssg = session['mssg'] , subtitle = "Basic Master" , plist = prod_list ,
         hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
 
 
