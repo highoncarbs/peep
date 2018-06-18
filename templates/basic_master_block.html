@@ -26,20 +26,12 @@
             {% endblock %}
             <div class="field is-grouped">
             <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+            <p class="control"><a class="button is-black" onclick="showData_a()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
             </div>
         </div>
     </form>
 </div>
 
-<!-- Action Butons -->
-<div class="notification">
-        <div class="field is-grouped">
-            {% block action_buttons %}
-           
-            {% endblock %}
-        </div>                
-</div>
-<!-- Action button end -->
 
 <!-- Data Display  -->
 
@@ -71,3 +63,8 @@
     </div>
 </div>
 <!-- End Data Display -->
+
+{% block modal_edit_button %}
+
+{% endblock %}
+
