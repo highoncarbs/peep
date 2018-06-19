@@ -8,13 +8,16 @@
     Current Products
 {% endblock %}
 
-{% block onclick %}showData_a{% endblock %}
 {% block data_display %}data_display_a {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
     {{form_prod.hidden_tag()}}
     <p class="control is-expanded">{{form_prod.prod_cat(class="input" , placeholder = "Enter New Product Category")}}</p>
     <br>
+    <div class="field is-grouped">
+        <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+        <p class="control"><a class="button is-black" onclick="showData_a()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
+    </div>
 {% endblock %}
 
 {% block table_h_content%}
