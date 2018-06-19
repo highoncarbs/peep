@@ -39,7 +39,7 @@ body{
   .is-main-content{
     margin : 1rem;
     margin-left: 2rem;
-    margin-right: 2rem;
+    margin-bottom: 0;
   }
   
   .user-prof{

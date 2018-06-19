@@ -1,40 +1,82 @@
 {% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-    Customer Credit Health
-{% endblock %}
+Customer Credit Health {% endblock %}
 
 {% block block_data_display %}
-    Current Customer Credit Health
+    Current Customer Credit Health 
 {% endblock %}
 
-{% block onclick %}showData_b{% endblock %}
 {% block data_display %}data_display_b {% endblock %}
-
 <!-- Data entry block -->
 {% block form_content %}
     {{form_health.hidden_tag()}}
-    <p class="control is-expanded">{{form_health.health_code(class="input" , placeholder = "Enter New Customer Health Code")}}</p>
+    <p class="control is-expanded">{{form_health.health(class="input" , placeholder = "Enter New Customer Credit Health")}}</p>
     <br>
+    <div class="field is-grouped">
+        <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+        <p class="control"><a class="button is-black" onclick="showData_b()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
+    </div>
 {% endblock %}
 
 {% block table_h_content%}
-    <th>ID</th>
-    <th>Customer Health Code</th>
-{% endblock %}
+    <th>Customer Credit Health</th>
+    <th>Delete</th>
+    <th>Edit</th>
+    {% endblock %}
 
 {% block table_d_content %}
 {% for l in hlist %}
     <tr>
         <!-- Data Rows -->
-        <td>{{l.id}}</td>
-        <td>{{l.health_code}}</td>
+        <td>{{l.health}}</td>
+        <td><a href="{{url_for('delete_data_prod',item_id= l.id)}}">Delete</a></td>
+        <td><a id="edit_button">Edit</a></td>
+        <!-- Edit data modal -->
+        <div class="modal" id="modal-edit-contact">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                <form action="{{url_for('edit_data_prod',item_id= l.id)}}" method="POST">
+                    <div class="form-name">
+                        <p class="is-size-5 has-text-weight-bold">Edit data</p>
+                        <br>
+                        <p class="is-size-5"><span class="has-text-weight-bold">Current entry : </span>{{l.health}}
+                        </p><br>
+                        <input class="input is-fullwidth" name="edit_input" , placeholder="Edit current data - {{l.health}}">
+                        <br>
+                        
+                        <button class="button is-black"><i class="icon-btn" data-feather="refresh-cw"></i>Update Data</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        <!-- End edit data modal -->
+<script>
+        document.querySelector('#edit_button').addEventListener('click', function(event) {
+            event.preventDefault();
+            var modal = document.querySelector('#modal-edit-contact');  // assuming you have only 1
+            var html = document.querySelector('html');
+            modal.classList.add('is-active');
+            html.classList.add('is-clipped');
+          
+            modal.querySelector('.modal-close').addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+              });
+
+            modal.querySelector('.modal-background').addEventListener('click', function(e) {
+              e.preventDefault();
+              modal.classList.remove('is-active');
+              html.classList.remove('is-clipped');
+            });
+          });
+</script>
+
     </tr>
 {% endfor %}    
 
-{% endblock %}
-
-{% block action_buttons %}
-    <p class="control"><button class="button is-black" onclick="showData_b()"><i class="icon-btn" data-feather="eye"></i>View Data</button></p>
-    <p class="control"><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>Delete Data</button></p>
 {% endblock %}

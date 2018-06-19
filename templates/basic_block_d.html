@@ -14,7 +14,7 @@ Communication Channels
 <!-- Data entry block -->
 {% block form_content %}
     {{form_comm.hidden_tag()}}
-    <p class="control is-expanded">{{form_comm.comm_channel(class="input" , placeholder = "Enter New Communication Channel")}}</p>
+    <p class="control is-expanded">{{form_comm.channel(class="input" , placeholder = "Enter New Communication Channel")}}</p>
     <br>
 {% endblock %}
 
@@ -28,7 +28,7 @@ Communication Channels
     <tr>
         <!-- Data Rows -->
         <td>{{l.id}}</td>
-        <td>{{l.channels}}</td>
+        <td>{{l.channel}}</td>
     </tr>
 {% endfor %}    
 

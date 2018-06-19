@@ -59,16 +59,16 @@ class CommChannel(db.Model):
     channel = db.Column(db.String(30), unique=True, nullable=False) 
 
 class CommChannelForm(FlaskForm):
-    comm_channel = StringField('comm_channel', validators=[InputRequired()])
+    channel = StringField('channel', validators=[InputRequired()])
 
 # HealthCode Model & Form
 
 class HealthCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    health_code = db.Column(db.String(5), unique=True, nullable=False)
+    health = db.Column(db.String(5), unique=True, nullable=False)
 
 class HealthCodeForm(FlaskForm):
-    health_code = StringField('health_code', validators=[InputRequired()])
+    health = StringField('health', validators=[InputRequired()])
 
 # ProdCat Model & Form
     
