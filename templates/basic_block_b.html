@@ -30,14 +30,14 @@ Customer Credit Health {% endblock %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.health}}</td>
-        <td><a href="{{url_for('delete_data_prod',item_id= l.id)}}">Delete</a></td>
-        <td><a id="edit_button">Edit</a></td>
+        <td><a href="{{url_for('delete_data_health',item_id= l.id)}}">Delete</a></td>
+        <td><a id="edit_button_b">Edit</a></td>
         <!-- Edit data modal -->
-        <div class="modal" id="modal-edit-contact">
+        <div class="modal" id="modal-edit-contact_b">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
-                <form action="{{url_for('edit_data_prod',item_id= l.id)}}" method="POST">
+                <form action="{{url_for('edit_data_health',item_id= l.id)}}" method="POST">
                     <div class="form-name">
                         <p class="is-size-5 has-text-weight-bold">Edit data</p>
                         <br>
@@ -55,9 +55,9 @@ Customer Credit Health {% endblock %}
         </div>
         <!-- End edit data modal -->
 <script>
-        document.querySelector('#edit_button').addEventListener('click', function(event) {
+        document.querySelector('#edit_button_b').addEventListener('click', function(event) {
             event.preventDefault();
-            var modal = document.querySelector('#modal-edit-contact');  // assuming you have only 1
+            var modal = document.querySelector('#modal-edit-contact_b');  // assuming you have only 1
             var html = document.querySelector('html');
             modal.classList.add('is-active');
             html.classList.add('is-clipped');

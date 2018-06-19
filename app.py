@@ -218,7 +218,11 @@ def basic_master():
         hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
 
 
-@app.route('/delete/<item_id>' , methods=['GET', 'POST'])
+################## Delete & Edit Production category Routes ################
+#############################################################################
+
+
+@app.route('/delete/product/<item_id>' , methods=['GET', 'POST'])
 @login_required
 def delete_data_prod(item_id):
     '''
@@ -234,7 +238,7 @@ def delete_data_prod(item_id):
     mssg = "Data Successfully deleted"
     return redirect(url_for('basic_master'))
 
-@app.route('/edit/<item_id>' , methods=['GET' , 'POST'])
+@app.route('/edit/product/<item_id>' , methods=['GET' , 'POST'])
 @login_required
 def edit_data_prod(item_id):
     '''
@@ -245,11 +249,90 @@ def edit_data_prod(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
-    prod_model = login_model.ProdCat.query.filter_by(id=int(item_id)).first()
-    prod_model.prod_cat = request.form['edit_input'].upper()
+    temp = login_model.ProdCat.query.filter_by(id=int(item_id)).first()
+    temp.prod_cat = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
+
+
+################## Delete & Edit Comm Channels Routes ################
+#############################################################################
+
+
+@app.route('/delete/comm/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_comm(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    login_model.CommChannel.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/comm/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_comm(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.CommChannel.query.filter_by(id=int(item_id)).first()
+    temp.channel = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Credit Health Routes ################
+#############################################################################
+
+
+@app.route('/delete/health/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_health(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.HealthCode.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/health/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_health(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.HealthCode.query.filter_by(id=int(item_id)).first()
+    temp.health = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+
+
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
 @login_required
