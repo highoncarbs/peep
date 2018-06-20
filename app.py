@@ -177,6 +177,8 @@ def basic_master():
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return redirect(url_for('basic_master'))
+
+
     if form_health.validate_on_submit():
         # Checks for health code submit 
         mssg = ""
@@ -221,7 +223,26 @@ def basic_master():
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
-        pass
+        mssg = ""
+        prod = login_model.BussCat.query.filter_by(buss_cat=form_buss.buss_cat.data).first()
+
+        if prod :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.BussCat(buss_cat = form_buss.buss_cat.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return redirect(url_for('basic_master'))
+
     if form_state.validate_on_submit():
         # Checks for Location submit
         pass
@@ -341,6 +362,44 @@ def edit_data_health(item_id):
     '''
     temp = login_model.HealthCode.query.filter_by(id=int(item_id)).first()
     temp.health = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Bussniess Category Routes ################
+#############################################################################
+
+
+@app.route('/delete/buss/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_buss(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.BussCat.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/buss/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_buss(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.BussCat.query.filter_by(id=int(item_id)).first()
+    temp.buss_cat = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
