@@ -145,7 +145,7 @@ def basic_master():
 
     prod_list = db.session.query(login_model.ProdCat).all()
     health_list = db.session.query(login_model.HealthCode).all()
-    commlist = db.session.query(login_model.HealthCode).all()
+    commlist = db.session.query(login_model.CommChannel).all()
     busslist = db.session.query(login_model.BussCat).all()
     broklist = db.session.query(login_model.Broker).all()
     statelist = db.session.query(login_model.State).all()
@@ -158,21 +158,37 @@ def basic_master():
 
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
-        pass
+        mssg = ""
+        
+        prod = login_model.CommChannel.query.filter_by(channel=form_comm.channel.data).first()
+        if prod :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.CommChannel(channel=form_comm.channel.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return redirect(url_for('basic_master'))
+
+
     if form_health.validate_on_submit():
         # Checks for health code submit 
         mssg = ""
-        print('ohh')
         prod = login_model.HealthCode.query.filter_by(health=form_health.health.data).first()
-        print(prod)
-        print('ok')
         if prod :
             mssg = "Duplicate Data "
             return redirect(url_for('basic_master'))
 
         else:
             new_data = login_model.HealthCode(health=form_health.health.data.upper())  
-            print(new_data)
             try:
                 db.session.add(new_data)
                 db.session.commit()
@@ -207,7 +223,26 @@ def basic_master():
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
-        pass
+        mssg = ""
+        prod = login_model.BussCat.query.filter_by(buss_cat=form_buss.buss_cat.data).first()
+
+        if prod :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.BussCat(buss_cat = form_buss.buss_cat.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return redirect(url_for('basic_master'))
+
     if form_state.validate_on_submit():
         # Checks for Location submit
         pass
@@ -218,7 +253,11 @@ def basic_master():
         hlist = health_list , commlist = commlist , busslist = busslist , broklist = broklist , statelist = statelist) , 200
 
 
-@app.route('/delete/<item_id>' , methods=['GET', 'POST'])
+################## Delete & Edit Production category Routes ################
+#############################################################################
+
+
+@app.route('/delete/product/<item_id>' , methods=['GET', 'POST'])
 @login_required
 def delete_data_prod(item_id):
     '''
@@ -234,7 +273,7 @@ def delete_data_prod(item_id):
     mssg = "Data Successfully deleted"
     return redirect(url_for('basic_master'))
 
-@app.route('/edit/<item_id>' , methods=['GET' , 'POST'])
+@app.route('/edit/product/<item_id>' , methods=['GET' , 'POST'])
 @login_required
 def edit_data_prod(item_id):
     '''
@@ -245,11 +284,128 @@ def edit_data_prod(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
-    prod_model = login_model.ProdCat.query.filter_by(id=int(item_id)).first()
-    prod_model.prod_cat = request.form['edit_input'].upper()
+    temp = login_model.ProdCat.query.filter_by(id=int(item_id)).first()
+    temp.prod_cat = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
+
+
+################## Delete & Edit Comm Channels Routes ################
+#############################################################################
+
+
+@app.route('/delete/comm/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_comm(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    login_model.CommChannel.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/comm/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_comm(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.CommChannel.query.filter_by(id=int(item_id)).first()
+    temp.channel = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Credit Health Routes ################
+#############################################################################
+
+
+@app.route('/delete/health/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_health(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.HealthCode.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/health/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_health(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.HealthCode.query.filter_by(id=int(item_id)).first()
+    temp.health = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Bussniess Category Routes ################
+#############################################################################
+
+
+@app.route('/delete/buss/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_buss(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.BussCat.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/buss/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_buss(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.BussCat.query.filter_by(id=int(item_id)).first()
+    temp.buss_cat = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+
+
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
 @login_required
