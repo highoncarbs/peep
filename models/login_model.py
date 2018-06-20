@@ -1,4 +1,4 @@
-from wtforms import StringField, PasswordField , BooleanField
+from wtforms import StringField, PasswordField , BooleanField , SelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
@@ -116,6 +116,8 @@ class City(db.Model):
 
 class CityForm(FlaskForm):
     city = StringField('city', validators=[InputRequired()])
+    state = SelectField('state' , validators=[InputRequired()])
+    country = SelectField('country' , validators=[InputRequired()])
 
 ########################################
 ####### CONTACT FORMS & DB #############
