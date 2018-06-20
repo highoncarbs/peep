@@ -145,7 +145,7 @@ def basic_master():
 
     prod_list = db.session.query(login_model.ProdCat).all()
     health_list = db.session.query(login_model.HealthCode).all()
-    commlist = db.session.query(login_model.HealthCode).all()
+    commlist = db.session.query(login_model.CommChannel).all()
     busslist = db.session.query(login_model.BussCat).all()
     broklist = db.session.query(login_model.Broker).all()
     statelist = db.session.query(login_model.State).all()
@@ -158,21 +158,35 @@ def basic_master():
 
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
-        pass
+        mssg = ""
+        
+        prod = login_model.CommChannel.query.filter_by(channel=form_comm.channel.data).first()
+        if prod :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.CommChannel(channel=form_comm.channel.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return redirect(url_for('basic_master'))
     if form_health.validate_on_submit():
         # Checks for health code submit 
         mssg = ""
-        print('ohh')
         prod = login_model.HealthCode.query.filter_by(health=form_health.health.data).first()
-        print(prod)
-        print('ok')
         if prod :
             mssg = "Duplicate Data "
             return redirect(url_for('basic_master'))
 
         else:
             new_data = login_model.HealthCode(health=form_health.health.data.upper())  
-            print(new_data)
             try:
                 db.session.add(new_data)
                 db.session.commit()

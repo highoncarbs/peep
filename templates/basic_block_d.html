@@ -31,9 +31,9 @@ Communication Channels
         <!-- Data Rows -->
         <td>{{l.channel}}</td>
         <td><a href="{{url_for('delete_data_comm',item_id= l.id)}}">Delete</a></td>
-        <td><a id="edit_button">Edit</a></td>
+        <td><a id="edit_button_d">Edit</a></td>
         <!-- Edit data modal -->
-        <div class="modal" id="modal-edit-contact">
+        <div class="modal" id="modal-edit-contact_d">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
@@ -55,9 +55,9 @@ Communication Channels
         </div>
         <!-- End edit data modal -->
 <script>
-        document.querySelector('#edit_button').addEventListener('click', function(event) {
+        document.querySelector('#edit_button_d').addEventListener('click', function(event) {
             event.preventDefault();
-            var modal = document.querySelector('#modal-edit-contact');  // assuming you have only 1
+            var modal = document.querySelector('#modal-edit-contact_d');  // assuming you have only 1
             var html = document.querySelector('html');
             modal.classList.add('is-active');
             html.classList.add('is-clipped');
