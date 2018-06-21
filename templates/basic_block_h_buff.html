@@ -4,26 +4,26 @@
 City {% endblock %}
 
 {% block block_data_display %}
-    Current City 
+    Current City
 {% endblock %}
 
 {% block data_display %}data_display_h {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
     {{form_city.hidden_tag()}}
-    <div class="field is-grouped ">
-        <p class="control">{{form_city.city(class="input" , placeholder = "Enter New City")}}</p>
-        <div class="select control">
-            {{form_city.state}}
-        </div>
-        <div class="select control">
-            {{form_city.country}}
-        </div>
+    <div class="field is-grouped">
+    <p class="control">{{form_city.city(class="input" , placeholder = "Enter New City")}}</p>
+    <div class="select control" width="5rem">
+        {{form_city.state()}}    
     </div>
+    <div class="select control" width="5rem">
+        {{form_city.country()}}
+    </div>
+</div>
     <br>
     <div class="field is-grouped">
-        <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
-        <p class="control"><a class="button is-black" onclick="showData_h()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
+        <p class="control"><button class="button is-black" type="submit"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
+        <p class="control"><a class="button is-black" onclick="showData_g()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
     </div>
 {% endblock %}
 
@@ -36,12 +36,12 @@ City {% endblock %}
     {% endblock %}
 
 {% block table_d_content %}
+
+<!-- Needs work on Edit options and display -->
 {% for l in citylist %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.city}}</td>
-        <td>{{l.state}}</td>
-        <td>{{l.country}}</td>
         <td><a href="{{url_for('delete_data_city',item_id= l.id)}}">Delete</a></td>
         <td><a id="edit_button_h">Edit</a></td>
         <!-- Edit data modal -->

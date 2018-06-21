@@ -116,8 +116,8 @@ class City(db.Model):
 
 class CityForm(FlaskForm):
     city = StringField('city', validators=[InputRequired()])
-    state = SelectField('state' , validators=[InputRequired()])
-    country = SelectField('country' , validators=[InputRequired()])
+    state = SelectField('state' , validators=[InputRequired()] , coerce = str)
+    country = SelectField('country' , validators=[InputRequired()] , coerce = str)
 
 ########################################
 ####### CONTACT FORMS & DB #############

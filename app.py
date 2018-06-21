@@ -1,6 +1,6 @@
 #!usr/bin/python
 
-from flask import Flask , render_template , request , redirect , session , abort , url_for , g 
+from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash 
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -153,8 +153,8 @@ def basic_master():
 
     
     # Form choices for select fields
-    form_city.state.choices = [(row.id , row.state) for row in statelist]
-    form_city.country.choices = [(row.id ,row.country) for row in countrylist]
+    form_city.state.choices = [(row[0],row[0]) for row in db.session.query(login_model.State.state)]
+    form_city.country.choices = [(row[0],row[0]) for row in db.session.query(login_model.Country.country)]
  
 
     if form_broker.validate_on_submit():
@@ -293,35 +293,30 @@ def basic_master():
                 return redirect(url_for('basic_master'))
     
     if form_city.validate_on_submit():
-        # Checks for Location submit
-        print(form_city.city.data)
         mssg = ""
         prod = login_model.City.query.filter_by(city=form_city.city.data).first()
 
         if prod :
             mssg = "Duplicate Data "
+            flash(mssg)
             return redirect(url_for('basic_master'))
 
         else:
-            print('got_here')
-            print(form_city.city.data)
-            print(form_city.state.data)
-            print(form_city.country.data)
-            # new_data = login_model.City(city=form_city.city.data.upper() , state=form_city.state.data.upper() , country=form_city.country.data.upper())
-            
+            new_data = login_model.City(city=form_city.city.data.upper())  
             try:
-                print('1')
-                # db.session.add(new_data)
-                # db.session.commit()
-                # mssg = "Data Successfully added 👍"
-                return "<h1>1</h1>" #redirect(url_for('basic_master'))
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                flash(mssg)
 
-            
+                return redirect(url_for('basic_master'))
+
+
             except Exception as e:
-                print('2')
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
-                return "<h1>2</h1>" #redirect(url_for('basic_master'))
+                flash(mssg)
 
+                return redirect(url_for('basic_master'))
 
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
@@ -556,6 +551,44 @@ def edit_data_country(item_id):
     '''
     temp = login_model.Country.query.filter_by(id=int(item_id)).first()
     temp.country = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit City Routes ################
+#############################################################################
+
+
+@app.route('/delete/city/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_city(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.City.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/city/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_city(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.City.query.filter_by(id=int(item_id)).first()
+    temp.city = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
