@@ -33,6 +33,19 @@ class User(UserMixin, db.Model):
 
 
 ########################################
+####### QUERY FACTORY METHODS ##########
+########################################
+
+def state_choice():
+    return db.session.query(State)
+
+def country_choice():
+    return db.session.query(Country)
+
+def city_choice():
+    return db.session.query(City)
+
+########################################
 ####### BASIC MASTER FORMS & DB ########
 ########################################
 
@@ -48,10 +61,8 @@ class Broker(db.Model):
 
 class BrokerForm(FlaskForm):
     broker_name = StringField('broker_name', validators=[InputRequired()])
-    city = StringField('city', validators=[InputRequired()])
-    state = StringField('state', validators=[InputRequired()])
-    country = StringField('country', validators=[InputRequired()])
-    contacts = StringField('country', validators=[InputRequired()])
+    city = QuerySelectField('city',validators=[InputRequired()] , query_factory=city_choice , allow_blank= False  , get_label='city')
+    contact = StringField('contacts', validators=[InputRequired()])
 
 # CommChannel Model & Form
 
@@ -114,12 +125,6 @@ class City(db.Model):
     city = db.Column(db.String(30), unique=True, nullable=False)
     state = db.Column(db.String(30), nullable=False)
     country = db.Column(db.String(30), nullable=False)
-
-def state_choice():
-    return db.session.query(State)
-
-def country_choice():
-    return db.session.query(Country)
 
 class CityForm(FlaskForm):
     city = StringField('city', validators=[InputRequired()])

@@ -153,11 +153,6 @@ def basic_master():
 
     
     # Form choices for select fields
-    
-
-    if form_broker.validate_on_submit():
-        # Checks for Broker submit 
-        pass
 
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
@@ -314,6 +309,31 @@ def city_form():
         country = login_model.Country.query.filter_by(id=int(request.form['country'])).first().country
         new_data = login_model.City(city=request.form['city'].upper() , state = state ,
         country = country ) 
+
+        try:
+            db.session.add(new_data)
+            db.session.commit()
+            mssg = "Data Successfully added 👍"
+            return redirect(url_for('basic_master'))
+
+
+        except Exception as e:
+            mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            return redirect(url_for('basic_master'))
+
+@app.route('/broker_form' , methods= ['GET' , 'POST'])
+def broker_form():
+    # UP : Work on securing this route
+
+    prod = login_model.Broker.query.filter_by(broker_name=request.form['city']).first()
+    prod_a = login_model.Broker.query.filter_by(contact=request.form['contact']).first()
+    if prod and prod_a :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+    else:
+        query = login_model.City.query.filter_by(id=int(request.form['city'])).first()
+        new_data = login_model.Broker(broker_name=request.form['broker_name'].upper() , city = query.city ,
+        state = query.state,  country = query.country , contact = request.form['contact'] ) 
 
         try:
             db.session.add(new_data)
@@ -588,6 +608,44 @@ def edit_data_city(item_id):
     '''
     temp = login_model.City.query.filter_by(id=int(item_id)).first()
     temp.city = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Broker Routes ################
+#############################################################################
+
+
+@app.route('/delete/broker/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_broker(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    print
+    login_model.Broker.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/broker/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_broker(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    temp = login_model.Broker.query.filter_by(id=int(item_id)).first()
+    temp.broker_name = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
