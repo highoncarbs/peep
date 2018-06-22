@@ -1,49 +1,49 @@
 {% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-State {% endblock %}
+Country {% endblock %}
 
 {% block block_data_display %}
-    Current States 
+    Current Country 
 {% endblock %}
 
-{% block data_display %}data_display_f {% endblock %}
+{% block data_display %}data_display_g {% endblock %}
 <!-- Data entry block -->
 {% block form_content %}
-    {{form_state.hidden_tag()}}
-    <p class="control is-expanded">{{form_state.state(class="input" , placeholder = "Enter New State")}}</p>
+    {{form_country.hidden_tag()}}
+    <p class="control is-expanded">{{form_country.country(class="input" , placeholder = "Enter New Country")}}</p>
     <br>
     <div class="field is-grouped">
         <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
-        <p class="control"><a class="button is-black" onclick="showData_f()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
+        <p class="control"><a class="button is-black" onclick="showData_g()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
     </div>
 {% endblock %}
 
 {% block table_h_content%}
-    <th>State</th>
+    <th>Country</th>
     <th>Delete</th>
     <th>Edit</th>
     {% endblock %}
 
 {% block table_d_content %}
-{% for l in statelist %}
+{% for l in countrylist %}
     <tr>
         <!-- Data Rows -->
-        <td>{{l.state}}</td>
-        <td><a href="{{url_for('delete_data_state',item_id= l.id)}}">Delete</a></td>
-        <td><a id="edit_button_f">Edit</a></td>
+        <td>{{l.country}}</td>
+        <td><a href="{{url_for('delete_data_country',item_id= l.id)}}">Delete</a></td>
+        <td><a id="edit_button_g">Edit</a></td>
         <!-- Edit data modal -->
-        <div class="modal" id="modal-edit-contact_f">
+        <div class="modal" id="modal-edit-contact_g">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
-                <form action="{{url_for('edit_data_state',item_id= l.id)}}" method="POST">
+                <form action="{{url_for('edit_data_country',item_id= l.id)}}" method="POST">
                     <div class="form-name">
                         <p class="is-size-5 has-text-weight-bold">Edit data</p>
                         <br>
-                        <p class="is-size-5"><span class="has-text-weight-bold">Current entry : </span>{{l.state}}
+                        <p class="is-size-5"><span class="has-text-weight-bold">Current entry : </span>{{l.country}}
                         </p><br>
-                        <input class="input is-fullwidth" name="edit_input" , placeholder="Edit current data - {{l.state}}">
+                        <input class="input is-fullwidth" name="edit_input" , placeholder="Edit current data - {{l.country}}">
                         <br>
                         
                         <button class="button is-black"><i class="icon-btn" data-feather="refresh-cw"></i>Update Data</button>
@@ -55,9 +55,9 @@ State {% endblock %}
         </div>
         <!-- End edit data modal -->
 <script>
-        document.querySelector('#edit_button_f').addEventListener('click', function(event) {
+        document.querySelector('#edit_button_g').addEventListener('click', function(event) {
             event.preventDefault();
-            var modal = document.querySelector('#modal-edit-contact_f');  // assuming you have only 1
+            var modal = document.querySelector('#modal-edit-contact_g');  // assuming you have only 1
             var html = document.querySelector('html');
             modal.classList.add('is-active');
             html.classList.add('is-clipped');
