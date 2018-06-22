@@ -371,6 +371,7 @@ def delete_data_prod(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
+    session['check'] = 'a'
     login_model.ProdCat.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -387,6 +388,7 @@ def edit_data_prod(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'a'
     temp = login_model.ProdCat.query.filter_by(id=int(item_id)).first()
     temp.prod_cat = request.form['edit_input'].upper()
     db.session.commit()
@@ -409,6 +411,7 @@ def delete_data_comm(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
+    session['check'] = 'd'
     login_model.CommChannel.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -425,6 +428,7 @@ def edit_data_comm(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'd'
     temp = login_model.CommChannel.query.filter_by(id=int(item_id)).first()
     temp.channel = request.form['edit_input'].upper()
     db.session.commit()
@@ -446,7 +450,7 @@ def delete_data_health(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'b'
     login_model.HealthCode.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -463,6 +467,7 @@ def edit_data_health(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'b'
     temp = login_model.HealthCode.query.filter_by(id=int(item_id)).first()
     temp.health = request.form['edit_input'].upper()
     db.session.commit()
@@ -484,7 +489,7 @@ def delete_data_buss(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'e'
     login_model.BussCat.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -501,6 +506,7 @@ def edit_data_buss(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'e'
     temp = login_model.BussCat.query.filter_by(id=int(item_id)).first()
     temp.buss_cat = request.form['edit_input'].upper()
     db.session.commit()
@@ -522,7 +528,7 @@ def delete_data_state(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'f'
     login_model.State.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -539,6 +545,8 @@ def edit_data_state(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'f'
+
     temp = login_model.State.query.filter_by(id=int(item_id)).first()
     temp.state = request.form['edit_input'].upper()
     db.session.commit()
@@ -561,7 +569,7 @@ def delete_data_country(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'g'
     login_model.Country.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -578,6 +586,7 @@ def edit_data_country(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'g'
     temp = login_model.Country.query.filter_by(id=int(item_id)).first()
     temp.country = request.form['edit_input'].upper()
     db.session.commit()
@@ -599,7 +608,7 @@ def delete_data_city(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'h'
     login_model.City.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -616,6 +625,7 @@ def edit_data_city(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'h'    
     temp = login_model.City.query.filter_by(id=int(item_id)).first()
     temp.city = request.form['edit_input'].upper()
     db.session.commit()
@@ -637,7 +647,7 @@ def delete_data_broker(item_id):
         ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
         
     '''
-    print
+    session['check'] = 'c'
     login_model.Broker.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -654,6 +664,7 @@ def edit_data_broker(item_id):
         ** FIX : Needs refactoring , using a single routes for delete in multiple tables
         
     '''
+    session['check'] = 'c'
     temp = login_model.Broker.query.filter_by(id=int(item_id)).first()
     temp.broker_name = request.form['edit_input'].upper()
     db.session.commit()
