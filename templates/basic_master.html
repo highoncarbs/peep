@@ -21,15 +21,54 @@
     </div>
     <br>
     <div class="body-actions">
-        <input type="radio" checked="checked" id="a" name="nav-tab">
-        <input type="radio"  id="b" name="nav-tab">
-        <input type="radio"  id="c" name="nav-tab">
-        <input type="radio"  id="d" name="nav-tab">
-        <input type="radio"  id="e" name="nav-tab">
-        <input type="radio"  id="f" name="nav-tab">
-        <input type="radio"  id="g" name="nav-tab">
-        <input type="radio"  id="h" name="nav-tab">
+        {% if check == 'a' %}
+        <input type="radio" checked id="a" name="nav-tab">
+        {% else %}
+        <input type="radio" id="a" name="nav-tab">
+        {% endif %}
 
+        {% if check == 'b' %}
+        <input type="radio" checked id="b" name="nav-tab">
+        {% else %}
+        <input type="radio" id="b" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'c' %}
+        <input type="radio" checked id="c" name="nav-tab">
+        {% else %}
+        <input type="radio" id="c" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'd' %}
+        <input type="radio" checked id="d" name="nav-tab">
+        {% else %}
+        <input type="radio" id="d" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'e' %}
+        <input type="radio" checked id="e" name="nav-tab">
+        {% else %}
+        <input type="radio" id="e" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'f' %}
+        <input type="radio" checked id="f" name="nav-tab">
+        {% else %}
+        <input type="radio" id="f" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'g' %}
+        <input type="radio" checked id="g" name="nav-tab">
+        {% else %}
+        <input type="radio" id="g" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'h' %}
+        <input type="radio" checked id="h" name="nav-tab">
+        {% else %}
+        <input type="radio" id="h" name="nav-tab">
+        {% endif %}
+       
         <div class="tabs">
         <ul>
             <li><label for="a"><a>Product Dealing In</a></label></li>

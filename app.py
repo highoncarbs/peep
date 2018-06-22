@@ -130,7 +130,6 @@ def basic_master():
     '''
         Basic master setup done here
     '''
-
     mssg = ""
     user = current_user.username 
     form_broker = login_model.BrokerForm()
@@ -157,7 +156,7 @@ def basic_master():
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
         mssg = ""
-        
+        session['check'] = 'd'
         prod = login_model.CommChannel.query.filter_by(channel=form_comm.channel.data).first()
         if prod :
             mssg = "Duplicate Data "
@@ -180,6 +179,8 @@ def basic_master():
     if form_health.validate_on_submit():
         # Checks for health code submit 
         mssg = ""
+        session['check'] = 'b'
+
         prod = login_model.HealthCode.query.filter_by(health=form_health.health.data).first()
         if prod :
             mssg = "Duplicate Data "
@@ -200,6 +201,7 @@ def basic_master():
 
     if form_prod.validate_on_submit():
         mssg = ""
+        session['check'] = 'a'
         prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
 
         if prod :
@@ -222,6 +224,7 @@ def basic_master():
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
         mssg = ""
+        session['check'] = 'e'
         prod = login_model.BussCat.query.filter_by(buss_cat=form_buss.buss_cat.data).first()
 
         if prod :
@@ -244,6 +247,7 @@ def basic_master():
     if form_state.validate_on_submit():
         # Checks for Location submit
         mssg = ""
+        session['check'] = 'f'
         prod = login_model.State.query.filter_by(state=form_state.state.data).first()
 
         if prod :
@@ -265,7 +269,7 @@ def basic_master():
 
     if form_country.validate_on_submit():
         # Checks for Location submit
-        print('okka')
+        session['check'] = 'g'
         mssg = ""
         prod = login_model.Country.query.filter_by(country=form_country.country.data).first()
 
@@ -286,6 +290,10 @@ def basic_master():
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return redirect(url_for('basic_master'))
     
+    if session['check']:
+        pass
+    else:
+        session['check'] = 'a'
 
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
@@ -293,12 +301,13 @@ def basic_master():
         form_country = form_country , form_city = form_city , error_mssg = mssg ,
         subtitle = "Basic Master" , plist = prod_list , hlist = health_list ,
         commlist = commlist , busslist = busslist , broklist = broklist ,
-        statelist = statelist , countrylist = countrylist , citylist = citylist) , 200
+        statelist = statelist , countrylist = countrylist , citylist = citylist , check = session['check'] ) , 200
 
 
 @app.route('/city_form' , methods= ['GET' , 'POST'])
 def city_form():
     # UP : Work on securing this route
+    session['check'] = 'h'
 
     prod = login_model.City.query.filter_by(city=request.form['city']).first()
     if prod :
@@ -324,6 +333,7 @@ def city_form():
 @app.route('/broker_form' , methods= ['GET' , 'POST'])
 def broker_form():
     # UP : Work on securing this route
+    session['check'] = 'c'
 
     prod = login_model.Broker.query.filter_by(broker_name=request.form['city']).first()
     prod_a = login_model.Broker.query.filter_by(contact=request.form['contact']).first()
