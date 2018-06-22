@@ -153,9 +153,7 @@ def basic_master():
 
     
     # Form choices for select fields
-    form_city.state.choices = [(row[0],row[0]) for row in db.session.query(login_model.State.state)]
-    form_city.country.choices = [(row[0],row[0]) for row in db.session.query(login_model.Country.country)]
- 
+    
 
     if form_broker.validate_on_submit():
         # Checks for Broker submit 
@@ -272,6 +270,7 @@ def basic_master():
 
     if form_country.validate_on_submit():
         # Checks for Location submit
+        print('okka')
         mssg = ""
         prod = login_model.Country.query.filter_by(country=form_country.country.data).first()
 
@@ -292,31 +291,6 @@ def basic_master():
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return redirect(url_for('basic_master'))
     
-    if form_city.validate_on_submit():
-        mssg = ""
-        prod = login_model.City.query.filter_by(city=form_city.city.data).first()
-
-        if prod :
-            mssg = "Duplicate Data "
-            flash(mssg)
-            return redirect(url_for('basic_master'))
-
-        else:
-            new_data = login_model.City(city=form_city.city.data.upper())  
-            try:
-                db.session.add(new_data)
-                db.session.commit()
-                mssg = "Data Successfully added 👍"
-                flash(mssg)
-
-                return redirect(url_for('basic_master'))
-
-
-            except Exception as e:
-                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
-                flash(mssg)
-
-                return redirect(url_for('basic_master'))
 
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
@@ -326,6 +300,31 @@ def basic_master():
         commlist = commlist , busslist = busslist , broklist = broklist ,
         statelist = statelist , countrylist = countrylist , citylist = citylist) , 200
 
+
+@app.route('/city_form' , methods= ['GET' , 'POST'])
+def city_form():
+    # UP : Work on securing this route
+
+    prod = login_model.City.query.filter_by(city=request.form['city']).first()
+    if prod :
+            mssg = "Duplicate Data "
+            return redirect(url_for('basic_master'))
+    else:
+        state = login_model.State.query.filter_by(id=int(request.form['state'])).first().state
+        country = login_model.Country.query.filter_by(id=int(request.form['country'])).first().country
+        new_data = login_model.City(city=request.form['city'].upper() , state = state ,
+        country = country ) 
+
+        try:
+            db.session.add(new_data)
+            db.session.commit()
+            mssg = "Data Successfully added 👍"
+            return redirect(url_for('basic_master'))
+
+
+        except Exception as e:
+            mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Production category Routes ################
 #############################################################################

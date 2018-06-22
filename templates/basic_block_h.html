@@ -9,22 +9,25 @@ City {% endblock %}
 
 {% block data_display %}data_display_h {% endblock %}
 <!-- Data entry block -->
-{% block form_content %}
+{% block form_xcontent %}
+<form action="/city_form" method="POST">
     {{form_city.hidden_tag()}}
     <div class="field is-grouped ">
         <p class="control">{{form_city.city(class="input" , placeholder = "Enter New City")}}</p>
-        <div class="select control">
-            {{form_city.state}}
+        <div class="select control" width="5rem">
+            {{form_city.state}}    
         </div>
-        <div class="select control">
+        <div class="select control" width="5rem">
             {{form_city.country}}
         </div>
     </div>
+    
     <br>
     <div class="field is-grouped">
         <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
         <p class="control"><a class="button is-black" onclick="showData_h()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
     </div>
+</form>
 {% endblock %}
 
 {% block table_h_content%}

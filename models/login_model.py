@@ -1,4 +1,5 @@
-from wtforms import StringField, PasswordField , BooleanField , SelectField
+from wtforms import StringField, PasswordField , BooleanField
+from wtforms_alchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
@@ -114,10 +115,16 @@ class City(db.Model):
     state = db.Column(db.String(30), nullable=False)
     country = db.Column(db.String(30), nullable=False)
 
+def state_choice():
+    return db.session.query(State)
+
+def country_choice():
+    return db.session.query(Country)
+
 class CityForm(FlaskForm):
     city = StringField('city', validators=[InputRequired()])
-    state = SelectField('state' , validators=[InputRequired()] , coerce = str)
-    country = SelectField('country' , validators=[InputRequired()] , coerce = str)
+    state = QuerySelectField('state',validators=[InputRequired()] , query_factory=state_choice , allow_blank= False  , get_label='state')
+    country = QuerySelectField('country', validators=[InputRequired()], query_factory=country_choice , allow_blank= False ,get_label='country')
 
 ########################################
 ####### CONTACT FORMS & DB #############
