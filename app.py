@@ -130,7 +130,6 @@ def basic_master():
     '''
         Basic master setup done here
     '''
-
     mssg = ""
     user = current_user.username 
     form_broker = login_model.BrokerForm()
@@ -157,7 +156,7 @@ def basic_master():
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
         mssg = ""
-        
+        session['is_checked'] = 'd'
         prod = login_model.CommChannel.query.filter_by(channel=form_comm.channel.data).first()
         if prod :
             mssg = "Duplicate Data "
@@ -178,7 +177,8 @@ def basic_master():
 
 
     if form_health.validate_on_submit():
-        # Checks for health code submit 
+        # Checks for health code submit
+        session['is_checked'] = 'b'
         mssg = ""
         prod = login_model.HealthCode.query.filter_by(health=form_health.health.data).first()
         if prod :
@@ -200,6 +200,7 @@ def basic_master():
 
     if form_prod.validate_on_submit():
         mssg = ""
+        session['is_checked'] = 'a'
         prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
 
         if prod :
@@ -221,6 +222,7 @@ def basic_master():
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
+        session['is_checked'] = 'e'
         mssg = ""
         prod = login_model.BussCat.query.filter_by(buss_cat=form_buss.buss_cat.data).first()
 
@@ -243,6 +245,7 @@ def basic_master():
 
     if form_state.validate_on_submit():
         # Checks for Location submit
+        session['is_checked'] = 'f'
         mssg = ""
         prod = login_model.State.query.filter_by(state=form_state.state.data).first()
 
@@ -265,7 +268,7 @@ def basic_master():
 
     if form_country.validate_on_submit():
         # Checks for Location submit
-        print('okka')
+        session['is_checked'] = 'g'
         mssg = ""
         prod = login_model.Country.query.filter_by(country=form_country.country.data).first()
 
@@ -299,7 +302,7 @@ def basic_master():
 @app.route('/city_form' , methods= ['GET' , 'POST'])
 def city_form():
     # UP : Work on securing this route
-
+    session['is_checked'] = 'h'
     prod = login_model.City.query.filter_by(city=request.form['city']).first()
     if prod :
             mssg = "Duplicate Data "
@@ -324,7 +327,7 @@ def city_form():
 @app.route('/broker_form' , methods= ['GET' , 'POST'])
 def broker_form():
     # UP : Work on securing this route
-
+    session['is_checked'] = 'c'
     prod = login_model.Broker.query.filter_by(broker_name=request.form['city']).first()
     prod_a = login_model.Broker.query.filter_by(contact=request.form['contact']).first()
     if prod and prod_a :

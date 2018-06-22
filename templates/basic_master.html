@@ -21,14 +21,14 @@
     </div>
     <br>
     <div class="body-actions">
-        <input type="radio" checked="checked" id="a" name="nav-tab">
-        <input type="radio"  id="b" name="nav-tab">
-        <input type="radio"  id="c" name="nav-tab">
-        <input type="radio"  id="d" name="nav-tab">
-        <input type="radio"  id="e" name="nav-tab">
-        <input type="radio"  id="f" name="nav-tab">
-        <input type="radio"  id="g" name="nav-tab">
-        <input type="radio"  id="h" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'a' %}checked{% endif %}" id="a" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'b' %}checked{% endif %}" id="b" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'c' %}checked{% endif %}" id="c" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'd' %}checked{% endif %}" id="d" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'e' %}checked{% endif %}" id="e" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'f' %}checked{% endif %}" id="f" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'g' %}checked{% endif %}" id="g" name="nav-tab">
+        <input type="radio" checked="{% if session['is_checked'] == 'h' %}checked{% endif %}" id="h" name="nav-tab">
 
         <div class="tabs">
         <ul>
