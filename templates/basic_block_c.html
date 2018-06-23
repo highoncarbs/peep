@@ -7,6 +7,23 @@ Broker{% endblock %}
     Current Brokers 
 {% endblock %}
 
+{% block error_content%}
+
+{% if error_mssg_c %}
+
+<div class="notification has-background-warning ">
+<span class="is-size-5">
+    <span class="icon icon-btn-m">
+        <i data-feather="info"></i>
+    </span>
+    {{error_mssg_c}}
+</span>
+<br>
+</div>
+{% endif %}
+
+{% endblock %}
+
 {% block data_display %}data_display_c {% endblock %}
 <!-- Data entry block -->
 {% block form_xcontent %}

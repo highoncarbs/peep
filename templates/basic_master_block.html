@@ -5,18 +5,9 @@
     {% endblock %}
 </p>
 <br>
-{% if error_mssg %}
 
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-    {{error_mssg}}
-</span>
-<br>
-</div>
-{% endif %}
+{% block error_content %}
+{% endblock %}
 <div class="notification has-background-light">
         <form action="/basic_master" method="POST">
         <div class="field ">

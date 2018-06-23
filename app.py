@@ -151,15 +151,37 @@ def basic_master():
     citylist = db.session.query(login_model.City).all()
 
     
+    if session['check']:
+        pass
+    else:
+        session['check'] = 'a'
+    
+    # form subbmision Session messages 
+
+    if session['mssg_d']:
+        pass 
+    else:
+        session['mssg_d'] = ""
+    
+
+    if session['mssg_a']:
+        pass 
+    else:
+        session['mssg_a'] = ""
+    
+
+    
     # Form choices for select fields
 
     if form_comm.validate_on_submit():
         # Checks for Comm submit 
         mssg = ""
         session['check'] = 'd'
+        session['mssg_d'] = mssg
         prod = login_model.CommChannel.query.filter_by(channel=form_comm.channel.data).first()
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_d'] = mssg
             return redirect(url_for('basic_master'))
 
         else:
@@ -168,11 +190,13 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_d'] = mssg
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_d'] = mssg
                 return redirect(url_for('basic_master'))
 
 
@@ -180,10 +204,12 @@ def basic_master():
         # Checks for health code submit 
         mssg = ""
         session['check'] = 'b'
+        session['mssg_b'] = mssg
 
         prod = login_model.HealthCode.query.filter_by(health=form_health.health.data).first()
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_b'] = mssg
             return redirect(url_for('basic_master'))
 
         else:
@@ -192,20 +218,25 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_b'] = mssg        
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_b'] = mssg
                 return redirect(url_for('basic_master'))
 
     if form_prod.validate_on_submit():
         mssg = ""
         session['check'] = 'a'
+        session['mssg_a'] = mssg
         prod = login_model.ProdCat.query.filter_by(prod_cat=form_prod.prod_cat.data).first()
 
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_a'] = mssg
+
             return redirect(url_for('basic_master'))
 
         else:
@@ -214,21 +245,27 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_a'] = mssg
+
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_a'] = mssg       
                 return redirect(url_for('basic_master'))
 
     if form_buss.validate_on_submit():
         # Checks for Bussiness Category submit
         mssg = ""
         session['check'] = 'e'
+        session['mssg_e'] = mssg
+
         prod = login_model.BussCat.query.filter_by(buss_cat=form_buss.buss_cat.data).first()
 
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_e'] = mssg
             return redirect(url_for('basic_master'))
 
         else:
@@ -237,21 +274,26 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_e'] = mssg
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_e'] = mssg
                 return redirect(url_for('basic_master'))
 
     if form_state.validate_on_submit():
         # Checks for Location submit
         mssg = ""
         session['check'] = 'f'
+        session['mssg_f'] = mssg
+
         prod = login_model.State.query.filter_by(state=form_state.state.data).first()
 
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_f'] = mssg
             return redirect(url_for('basic_master'))
 
         else:
@@ -260,21 +302,25 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_f'] = mssg
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_f'] = mssg
                 return redirect(url_for('basic_master'))
 
     if form_country.validate_on_submit():
         # Checks for Location submit
         session['check'] = 'g'
         mssg = ""
+        session['mssg_g'] = mssg
         prod = login_model.Country.query.filter_by(country=form_country.country.data).first()
 
         if prod :
             mssg = "Duplicate Data "
+            session['mssg_g'] = mssg
             return redirect(url_for('basic_master'))
 
         else:
@@ -283,17 +329,28 @@ def basic_master():
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+                session['mssg_g'] = mssg
                 return redirect(url_for('basic_master'))
 
             
             except Exception as e:
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_g'] = mssg
                 return redirect(url_for('basic_master'))
     
-    if session['check']:
-        pass
+    
+    '''
+    if session['mssg_a']:
+        pass 
     else:
-        session['check'] = 'a'
+        session['mssg_a'] = "noe"
+
+        ,
+        , error_mssg_b = session['mssg_b'],
+        error_mssg_c = session['mssg_c'],error_mssg_e = session['mssg_e'],
+        error_mssg_f = session['mssg_f'],error_mssg_g = session['mssg_g'],
+        error_mssg_h = session['mssg_h']
+    '''
 
     return render_template('basic_master.html' , user = user , 
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
@@ -301,17 +358,22 @@ def basic_master():
         form_country = form_country , form_city = form_city , error_mssg = mssg ,
         subtitle = "Basic Master" , plist = prod_list , hlist = health_list ,
         commlist = commlist , busslist = busslist , broklist = broklist ,
-        statelist = statelist , countrylist = countrylist , citylist = citylist , check = session['check'] ) , 200
+        statelist = statelist , countrylist = countrylist , citylist = citylist ,
+        check = session['check'] , error_mssg_d = session['mssg_d'] ,
+        error_mssg_a = session['mssg_a']) , 200
 
 
 @app.route('/city_form' , methods= ['GET' , 'POST'])
 def city_form():
     # UP : Work on securing this route
     session['check'] = 'h'
+    mssg = ""
+    session['mssg_h'] = mssg
 
     prod = login_model.City.query.filter_by(city=request.form['city']).first()
     if prod :
             mssg = "Duplicate Data "
+            session['mssg_h'] = mssg
             return redirect(url_for('basic_master'))
     else:
         state = login_model.State.query.filter_by(id=int(request.form['state'])).first().state
@@ -323,22 +385,26 @@ def city_form():
             db.session.add(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
+            session['mssg_h'] = mssg
             return redirect(url_for('basic_master'))
 
 
         except Exception as e:
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            session['mssg_h'] = mssg
             return redirect(url_for('basic_master'))
 
 @app.route('/broker_form' , methods= ['GET' , 'POST'])
 def broker_form():
     # UP : Work on securing this route
     session['check'] = 'c'
-
+    mssg = ""
+    session['mssg_c'] = mssg
     prod = login_model.Broker.query.filter_by(broker_name=request.form['city']).first()
     prod_a = login_model.Broker.query.filter_by(contact=request.form['contact']).first()
     if prod and prod_a :
             mssg = "Duplicate Data "
+            session['mssg_c'] = mssg
             return redirect(url_for('basic_master'))
     else:
         query = login_model.City.query.filter_by(id=int(request.form['city'])).first()
@@ -349,11 +415,13 @@ def broker_form():
             db.session.add(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
+            session['mssg_c'] = mssg
             return redirect(url_for('basic_master'))
 
 
         except Exception as e:
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            session['mssg_c'] = mssg
             return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Production category Routes ################
@@ -412,6 +480,7 @@ def delete_data_comm(item_id):
         
     '''
     session['check'] = 'd'
+    session['mssg_d'] = "Data deleted successfully!"
     login_model.CommChannel.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
@@ -429,6 +498,8 @@ def edit_data_comm(item_id):
         
     '''
     session['check'] = 'd'
+    
+    session['mssg_d'] = "Data edited successfully!"
     temp = login_model.CommChannel.query.filter_by(id=int(item_id)).first()
     temp.channel = request.form['edit_input'].upper()
     db.session.commit()
