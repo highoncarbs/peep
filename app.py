@@ -98,10 +98,10 @@ def contacts():
         and import data onto Peep.
     '''
     user = current_user.username 
-    form = login_model.AddContact()
+    form = login_model.AddContactForm()
     mssg = ""
 
-    return render_template('contacts.html' , user = user) , 200
+    return render_template('contacts.html' , user = user ,form = form) , 200
 
 @app.route('/insights' , methods=['GET' , 'POST'])
 @login_required

@@ -45,6 +45,24 @@ def country_choice():
 def city_choice():
     return db.session.query(City)
 
+def prod_choice():
+    return db.session.query(ProdCat)
+
+def broker_choice():
+    return db.session.query(Broker)
+
+def health_choice():
+    return db.session.query(HealthCode)
+
+def comm_choice():
+    return db.session.query(CommChannel)
+
+def buss_choice():
+    return db.session.query(BussCat)
+
+
+
+
 ########################################
 ####### BASIC MASTER FORMS & DB ########
 ########################################
@@ -136,8 +154,19 @@ class CityForm(FlaskForm):
 ########################################
 
 class AddContactForm(FlaskForm):
-    pass
-
+    company_name = StringField('comapany_name' , validators=[InputRequired()])
+    company_per = StringField('company_per' , validators=[InputRequired()])    
+    contact_one = StringField('contact_one' , validators=[InputRequired()])
+    wh_contact = StringField('wh_contact')
+    email = StringField('email' , validators=[InputRequired()])
+    city = QuerySelectField('city',validators=[InputRequired()] , query_factory=city_choice , allow_blank= False  , get_label='city')
+    buss_cat = QuerySelectField('buss_cat',validators=[InputRequired()] , query_factory=buss_choice , allow_blank= False  , get_label='buss_cat')
+    broker = QuerySelectField('broker',validators=[InputRequired()] , query_factory=broker_choice , allow_blank= False  , get_label='broker_name')
+    comm_channel = QuerySelectField('comm_channel',validators=[InputRequired()] , query_factory=comm_choice , allow_blank= False  , get_label='channel')
+    prod_cat = QuerySelectField('prod_cat',validators=[InputRequired()] , query_factory=prod_choice , allow_blank= False  , get_label='prod_cat')
+    health_code = QuerySelectField('health_code',validators=[InputRequired()] , query_factory=health_choice , allow_blank= False  , get_label='health')
+    pref_comm_channel = QuerySelectField('pref_comm_channel',validators=[InputRequired()] , query_factory=comm_choice , allow_blank= False  , get_label='channel')
+    
 class AddContact(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     company_name = db.Column(db.String(50) , nullable = False)
@@ -151,7 +180,8 @@ class AddContact(db.Model):
     prod_cat = db.Column(db.String(20) , nullable = True)
     broker = db.Column(db.String(20) , nullable = True)
     comm_channel = db.Column(db.String(20) , nullable = True)
-
+    health_code = db.Column(db.String(20) , nullable = True)
+    pref_comm_channel = db.Column(db.String(100) , nullable = True)
 ########################################
 ####### MSSGs FORMS & DB ###############
 ########################################

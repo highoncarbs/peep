@@ -11,40 +11,134 @@
     </div>
 </div>
 <br>
+<br>
+
+{% if error_mssg_c %}
+
+<div class="notification has-background-warning ">
+<span class="is-size-5">
+    <span class="icon icon-btn-m">
+        <i data-feather="info"></i>
+    </span>
+    {{error_mssg_c}}
+</span>
+<br>
+</div>
+<br>
+
+{% endif %}
+
+
 <div class="table-container">
     <table class="table is-fullwidth">
         <thead>
         <tr>
             <th>Company Name</th>
             <th>Contact</th>
-            <th>Location</th>
-            <th>Actions</th>
+            <th>Whatsapp No.</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Business Category</th>
+            <th>Product Dealing In</th>
+            <th>Health Code</th>
+            <th>Communication Channel</th>
+            <th>Delete</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Padam Sethia</td>
-            <td>7073077042</td>
-            <td>Jaipur , RAJ </td>
-            <td><i data-feather="settings"></i> </td>
+
         </tr>
     </tbody>
     </table>
 </div>
 
+
 <!-- Modal Code -->
 <div class="modal" id="modal-add-contact">
     <div class="modal-background"></div>
     <div class="modal-content">
+        <div class="box">
         <!-- Add form for Contacts Input -->
-        <form action="/add_contacts" method="POST">
-            <div class="form-name">
-                
-            </div>
-        </form>
+            <form action="/add_contacts" method="POST">
+                {{form.hidden_tag()}}
+                <div class="form-contact">
+                        <p class="is-size-5 has-text-weight-bold">Add Contact</p>
+                        <br>
+                        <p class="label">Company Name</p>
+                        <p class="control">{{form.company_name(class="input" , placeholder="Enter Company Name")}}</p>
+                        <label class="label ">Contact Person</label>
+                        <p class="control">{{form.company_per(class="input" , placeholder="Enter Company Name")}}</p>
+                        <label class="label ">Contacts</label>
+                        <div class="field is-grouped">
+                                <p class="control">{{form.contact_one(class="input" , placeholder="Enter Contact no.")}}</p>
+                                <p class="control">{{form.wh_contact(class="input" , placeholder="Enter Whatsapp no.")}}</p>
+                        </div>
+                       
+                        <label class="label ">Email</label>
+                        <p class="control">{{form.email(class="input" , placeholder="Enter email")}}</p>
+                        
+                        <label class="label ">City</label>
+                        <div class="select">                        
+                            <p class="control">{{form.city}}</p>
+                        </div>
+                        <label class="label ">Broker</label>
+                        <div class="select">   
+                            <p class="control">{{form.broker}}</p>
+                        </div>
+                        <label class="label ">Business Category</label>
+                        <div class="field is-grouped">
+                        <div class="select control">   
+                           {{form.buss_cat}}
+                        </div>
+                        <p class="control"><a class="button" onclick="add_buss()"><i data-feather="plus-circle"></i></a></p>
+
+                        </div>
+                        <label class="label ">Communication Channel</label>
+                        <div class="field is-grouped">
+                        <div class="select control">   
+                          {{form.comm_channel}}
+                        </div>
+                        <p class="control"><a class="button" onclick="add_comm_a()"><i data-feather="plus-circle"></i></a></p>
+
+                    </div>
+                        <label class="label ">Pref. Communication Channel</label>
+                        <div class="field is-grouped " >
+                        <div class="select control">   
+                            {{form.pref_comm_channel}}
+                        </div>
+                        <p class="control"><a class="button" onclick="add_comm_b()"><i data-feather="plus-circle"></i></a></p>
+
+                        </div>
+                        <label class="label ">Product Category</label>
+                        <div class="field is-grouped" id="prod_list">
+                        <div class="select control">   
+                           {{form.prod_cat}}
+                        </div>
+                        <p class="control"><a class="button" onclick="add_prod()"><i data-feather="plus-circle"></i></a></p>
+                        </div>
+                        <label class="label ">Health Code</label>
+                        <div class="field is-grouped">
+                            <div class="select control">   
+                                {{form.health_code}}
+                            </div>
+                        </div>
+                        </div>
+                        <br>
+                        <div class="field is-grouped ">
+                            <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></p>
+                            <p class="control"><a class="button" onclick="clear_field()"><i class="icon-btn" data-feather="circle"></i>Clear Fields</a></p>
+                        </div>
+                    </div>   
+            </form>
+
     </div>
+</div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
+
 <script>
         document.querySelector('#add-contact').addEventListener('click', function(event) {
             event.preventDefault();
@@ -65,5 +159,20 @@
               html.classList.remove('is-clipped');
             });
           });
+
+        function addElement(parentId,elementbr, elementTag, elementId, html) {
+            // Adds an element to the document
+            var p = document.getElementById(parentId);
+            p.appendChild(br);
+            var br = document.createElement("br");
+            var newElement = document.createElement(elementTag);
+            newElement.setAttribute('class', elementId);
+            newElement.innerHTML = html;
+            p.appendChild(newElement);
+        };
+        function add_prod(){
+            var html = '{{form.prod_cat}}';
+        addElement('prod_list', 'br' , 'div', 'select control', html);
+        };
 </script>
 {% endblock %}
