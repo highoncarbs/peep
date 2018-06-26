@@ -48,9 +48,9 @@ Country {% endblock %}
         <!-- Data Rows -->
         <td>{{l.country}}</td>
         <td><a href="{{url_for('delete_data_country',item_id= l.id)}}">Delete</a></td>
-        <td><a id="edit_button_g">Edit</a></td>
+        <td><a id="edit_button_g_{{loop.index}}">Edit</a></td>
         <!-- Edit data modal -->
-        <div class="modal" id="modal-edit-contact_g">
+        <div class="modal" id="modal-edit-contact_g_{{loop.index}}">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
@@ -72,9 +72,9 @@ Country {% endblock %}
         </div>
         <!-- End edit data modal -->
 <script>
-        document.querySelector('#edit_button_g').addEventListener('click', function(event) {
+        document.querySelector('#edit_button_g_{{loop.index}}').addEventListener('click', function(event) {
             event.preventDefault();
-            var modal = document.querySelector('#modal-edit-contact_g');  // assuming you have only 1
+            var modal = document.querySelector('#modal-edit-contact_g_{{loop.index}}');  // assuming you have only 1
             var html = document.querySelector('html');
             modal.classList.add('is-active');
             html.classList.add('is-clipped');
