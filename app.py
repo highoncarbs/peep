@@ -1,9 +1,10 @@
 #!usr/bin/python
 
-from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , json 
+from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , jsonify ,json
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
 # from sqlalchemy.sql import text
 # from sqlalchemy.ext.declarative import declarative_base
 # from sqlalchemy import create_engine
@@ -13,6 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
+CORS(app)
 
 # SQLAlchemy initialization 
 import MySQLdb
@@ -112,13 +114,14 @@ def contacts():
     mssg = ""
 
     if request.method == 'POST':
-        print('something')
-        data = request.json
-        data = json.loads(data)
-        print(data)
-        # return redirect(url_for('contacts'))
-    return render_template('contacts.html' , user = user ,form = form) , 200
+        data = request.get_json()
+        data = data['data']
+        for key , values in data.iteritems():
+            print(key,values)
 
+
+    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run") , 200
+     
 @app.route('/insights' , methods=['GET' , 'POST'])
 @login_required
 def insights():

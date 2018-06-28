@@ -166,22 +166,32 @@ class AddContactForm(FlaskForm):
     prod_cat = QuerySelectField('prod_cat',validators=[InputRequired()] , query_factory=prod_choice , allow_blank= False  , get_label='prod_cat')
     health_code = QuerySelectField('health_code',validators=[InputRequired()] , query_factory=health_choice , allow_blank= False  , get_label='health')
     pref_comm_channel = QuerySelectField('pref_comm_channel',validators=[InputRequired()] , query_factory=comm_choice , allow_blank= False  , get_label='channel')
-    
+    address_one = StringField('address_one' , validators=[InputRequired()])
+    address_two = StringField('address_two' )
+    address_three = StringField('address_three')
+    address_pin = StringField('address_pin' , validators=[InputRequired()])
+
 class AddContact(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    company_name = db.Column(db.String(50) , nullable = False)
+    company_name = db.Column(db.String(50))
+    company_per = db.Column(db.String(50))
     contact_one = db.Column(db.String(20) , nullable = True)
     wh_contact = db.Column(db.String(20) , nullable = True)
     email = db.Column(db.String(50) , unique = True , nullable = True)
-    country = db.Column(db.String(30) , nullable = True)
-    state = db.Column(db.String(20) , nullable = True)
-    city = db.Column(db.String(20) , nullable = True)
-    buss_cat = db.Column(db.String(20) , nullable = True)
-    prod_cat = db.Column(db.String(20) , nullable = True)
-    broker = db.Column(db.String(20) , nullable = True)
-    comm_channel = db.Column(db.String(20) , nullable = True)
-    health_code = db.Column(db.String(20) , nullable = True)
-    pref_comm_channel = db.Column(db.String(100) , nullable = True)
+    country = db.Column(db.String(30) )
+    state = db.Column(db.String(20) )
+    city = db.Column(db.String(20) )
+    buss_cat = db.Column(db.String(20))
+    prod_cat = db.Column(db.String(20))
+    broker = db.Column(db.String(20) )
+    comm_channel = db.Column(db.String(20) )
+    health_code = db.Column(db.String(20) )
+    pref_comm_channel = db.Column(db.String(100))
+    address_one = db.Column(db.String(100))
+    address_two = db.Column(db.String(100))
+    address_three = db.Column(db.String(100))
+    address_pin = db.Column(db.String(10))
+
 ########################################
 ####### MSSGs FORMS & DB ###############
 ########################################

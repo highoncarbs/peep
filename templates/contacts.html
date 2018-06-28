@@ -61,6 +61,18 @@
     <div class="modal-background"></div>
     <div class="modal-content">
         <div class="box">
+                {% if error_mssg %}
+
+                <div class="notification has-background-warning is-narrow ">
+                <span class="is-size-6">
+                    <span class="icon icon-btn-m">
+                        <i data-feather="info"></i>
+                    </span>
+                    {{error_mssg_a}}
+                </span>
+                <br>
+                </div>
+                {% endif %}
         <!-- Add form for Contacts Input -->
             <form action="#" id="contact_add_form" method="POST">
                 {{form.hidden_tag()}}
@@ -79,10 +91,22 @@
                        
                         <label class="label ">Email</label>
                         <p class="control">{{form.email(class="input" , placeholder="Enter email")}}</p>
+                        <br>
+                        <div class="address-form notification is-light">
+                            <p class="label">Address Line 1</p>
+                            <p class="control">{{form.address_one(class="input" , placeholder="Address Line 1")}}</p>
+                            <p class="label">Address Line 2</p>
+                            <p class="control">{{form.address_two(class="input" , placeholder="Address Line 1")}}</p>
+                            <p class="label">Address Line 3</p>
+                            <p class="control">{{form.address_three(class="input" , placeholder="Address Line 1")}}</p>
+                            <p class="label">Pin Code</p>
+                            <p class="control">{{form.address_pin(class="input" , placeholder="Enter Pincode eg. 302001")}}</p>
+
+                            <label class="label ">City</label>
+                            <div class="select">                        
+                                <p class="control">{{form.city}}</p>
+                            </div>
                         
-                        <label class="label ">City</label>
-                        <div class="select">                        
-                            <p class="control">{{form.city}}</p>
                         </div>
                         <label class="label ">Broker</label>
                         <div class="select">   
@@ -141,7 +165,7 @@
                         </div>
                         <br>
                         <div class="field is-grouped ">
-                            <p class="control "><button type="submit" class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></p>
+                            <p class="control "><a type="submit" class="button is-black" onclick="submit_contact()"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</a></p>
                             <p class="control"><a class="button" onclick="clear_field()"><i class="icon-btn" data-feather="circle"></i>Clear Fields</a></p>
                         </div>
                     </div>   
@@ -224,8 +248,7 @@
 </script>
 <script>
 
-    $('form').on('submit' , function(event){
-                    event.preventDefault();
+    function submit_contact(){
                     var elements = document.getElementById("contact_add_form").elements;
                     var obj = {};
                     for(var i = 0 ; i < elements.length ; i++){
@@ -263,18 +286,17 @@
                         obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
                     };
 
-                    //jsonobj.push(obj);
-                                       
-                    console.log(obj);
+                    axios.post("http://127.0.0.1:5000/contacts", 
+                                { data : obj}
+                                )
+                                .then(function (response) {
+                                console.log(response);
 
-                    $.ajax({
-                        data: JSON.stringify(obj),
-                        type: 'POST',
-                        dataType: "json",
-                        url : "{{url_for('contacts')}}",
-                        contentType: 'application/json;charset=UTF-8',
-                    }).done();
-    });
+                                })
+                                .catch(function (error) {
+                                console.log(error);
+                                });
+    };
         
 </script>
 {% endblock %}

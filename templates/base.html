@@ -14,14 +14,13 @@
 	<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 	<div class="navbar is-hidden-desktop">
 		<div class="container">
-				<div class="navbar-brand">
-						<a class="navbar-item" href="#" style="font-weight:bold;">
+				<div class="navbar-brand" style="padding-left:1rem;" >
+						<a class="navbar-item is-size-5" href="#" style="font-weight:bold;" >
 						  Peep
 						</a>
 						<span class="navbar-burger burger" data-target="navMenu">
@@ -30,9 +29,9 @@
 						  <span></span>
 						</span>
 				</div>
-				<hr style="margin-top:0px;">
-				<div id="navMenu" class="navbar-menu is-shadowless">
-						<div class="navbar-end is-size-5">
+				<hr style="margin-top:0px; margin-bottom:5px;">
+				<div id="navMenu" class="navbar-menu is-shadowless animated fadeIn" >
+						<div class="navbar-end is-size-5"  style="padding-left:1rem;">
 								<a href="{{ url_for('index') }}" class="navbar-item has-text-weight-bold">Home</a>
 								<a href="{{ url_for('contacts') }}" class="navbar-item has-text-weight-bold">Contacts</a>
 								<a href="{{ url_for('insights') }}" class="navbar-item has-text-weight-bold">Insights</a>
