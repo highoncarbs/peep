@@ -49,7 +49,7 @@
     </thead>
     <tbody>
         <tr>
-
+            
         </tr>
     </tbody>
     </table>
@@ -62,7 +62,7 @@
     <div class="modal-content">
         <div class="box">
         <!-- Add form for Contacts Input -->
-            <form action="/add_contacts" method="POST">
+            <form action="#" id="contact_add_form" method="POST">
                 {{form.hidden_tag()}}
                 <div class="form-contact">
                         <p class="is-size-5 has-text-weight-bold">Add Contact</p>
@@ -88,36 +88,49 @@
                         <div class="select">   
                             <p class="control">{{form.broker}}</p>
                         </div>
+
+                        <!-- Bussiness Category -->
                         <label class="label ">Business Category</label>
                         <div class="field is-grouped">
                         <div class="select control">   
                            {{form.buss_cat}}
                         </div>
                         <p class="control"><a class="button" onclick="add_buss()"><i data-feather="plus-circle"></i></a></p>
-
                         </div>
+                        <div  id="buss_list">
+                            <!-- Buss select list -->
+                        </div>
+
                         <label class="label ">Communication Channel</label>
                         <div class="field is-grouped">
                         <div class="select control">   
                           {{form.comm_channel}}
                         </div>
                         <p class="control"><a class="button" onclick="add_comm_a()"><i data-feather="plus-circle"></i></a></p>
+                        </div>
+                        <div  id="comm_list">
+                            <!-- Comm select list -->
+                        </div>
 
-                    </div>
                         <label class="label ">Pref. Communication Channel</label>
                         <div class="field is-grouped " >
                         <div class="select control">   
                             {{form.pref_comm_channel}}
                         </div>
                         <p class="control"><a class="button" onclick="add_comm_b()"><i data-feather="plus-circle"></i></a></p>
-
+                        </div>
+                        <div  id="pref_comm_list">
+                            <!-- pref_comm select list -->
                         </div>
                         <label class="label ">Product Category</label>
-                        <div class="field is-grouped" id="prod_list">
+                        <div class="field is-grouped">
                         <div class="select control">   
                            {{form.prod_cat}}
                         </div>
                         <p class="control"><a class="button" onclick="add_prod()"><i data-feather="plus-circle"></i></a></p>
+                        </div>
+                        <div  id="prod_list">
+                            <!-- Product select list -->
                         </div>
                         <label class="label ">Health Code</label>
                         <div class="field is-grouped">
@@ -128,7 +141,7 @@
                         </div>
                         <br>
                         <div class="field is-grouped ">
-                            <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></p>
+                            <p class="control "><button type="submit" class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></p>
                             <p class="control"><a class="button" onclick="clear_field()"><i class="icon-btn" data-feather="circle"></i>Clear Fields</a></p>
                         </div>
                     </div>   
@@ -147,7 +160,7 @@
             modal.classList.add('is-active');
             html.classList.add('is-clipped');
           
-            modal.querySelector('.modal-close').addEventListener('click', function(e) {
+            document.querySelector('.modal-close').addEventListener('click', function(e) {
                 e.preventDefault();
                 modal.classList.remove('is-active');
                 html.classList.remove('is-clipped');
@@ -160,19 +173,108 @@
             });
           });
 
-        function addElement(parentId,elementbr, elementTag, elementId, html) {
+        function addElement(parentId, elementTag, elementClass,elementId, html) {
             // Adds an element to the document
             var p = document.getElementById(parentId);
-            p.appendChild(br);
-            var br = document.createElement("br");
             var newElement = document.createElement(elementTag);
-            newElement.setAttribute('class', elementId);
+            var xbr = document.createElement("br");
+            newElement.setAttribute('class', elementClass);
+            newElement.setAttribute('id', elementId);
+            newElement.setAttribute('style' , 'margin-top:0px;margin-bottom:10px;');
             newElement.innerHTML = html;
             p.appendChild(newElement);
+            p.appendChild(xbr);
         };
+
+        var prod_list = 0;
+        var buss_list = 0;
+        var comm_list_a = 0;
+        var comm_list_b = 0;
+
         function add_prod(){
             var html = '{{form.prod_cat}}';
-        addElement('prod_list', 'br' , 'div', 'select control', html);
-        };
+            var ex_id = 'prod_select_'+prod_list;
+        addElement('prod_list', 'div', 'select control', ex_id , html);
+        prod_list = prod_list+1;
+         };
+
+         function add_buss(){
+            var html = '{{form.buss_cat}}';
+            var ex_id = 'buss_select_'+buss_list;
+            addElement('buss_list', 'div', 'select control',ex_id , html);
+            buss_list = buss_list+1;
+
+         };
+
+         function add_comm_a(){
+            var html = '{{form.comm_channel}}';
+            var ex_id = 'comm_a_select_'+comm_list_a;
+            addElement('comm_list', 'div', 'select control',ex_id ,  html);
+            comm_list_a = comm_list_a+1;
+
+         };
+
+         function add_comm_b(){
+            var html = '{{form.pref_comm_channel}}';
+            var ex_id = 'comm_b_select_'+comm_list_b;
+            addElement('pref_comm_list', 'div', 'select control',ex_id , html);
+            comm_list_b = comm_list_b+1;
+         };
+
+</script>
+<script>
+
+    $('form').on('submit' , function(event){
+                    event.preventDefault();
+                    var elements = document.getElementById("contact_add_form").elements;
+                    var obj = {};
+                    for(var i = 0 ; i < elements.length ; i++){
+                        var item = elements.item(i);
+                        if (item.name == "broker" || item.name == "buss_cat"||item.name == "city"||item.name == "comm_channel" ||item.name == "health_code" ||item.name == "pref_comm_channel" || item.name == "prod_cat"){
+                            obj[item.name] = item.options[item.selectedIndex].text;
+                        }
+                        else{
+                            obj[item.name] = item.value;
+                        }
+                        
+                    };
+
+                    for(var i =0 ; i< prod_list ; i++){
+                        var prod_item = document.querySelector('#prod_select_'+i+' > select')   ;
+        
+                        obj['prod_cat_'+i] = prod_item.options[prod_item.selectedIndex].text;
+                    };
+
+                    for(var j =0 ; j< buss_list ; j++){
+                        var buss_item = document.querySelector('#buss_select_'+j+' > select')   ;
+        
+                        obj['buss_cat_'+j] = buss_item.options[buss_item.selectedIndex].text;
+                    };
+
+                    for(var k =0 ; k< comm_list_a ; k++){
+                        var comm_a_item = document.querySelector('#comm_a_select_'+k+' > select')   ;
+        
+                        obj['comm_a_cat_'+k] = comm_a_item.options[comm_a_item.selectedIndex].text;
+                    };
+
+                    for(var l =0 ; l< comm_list_b ; l++){
+                        var comm_b_item = document.querySelector('#comm_b_select_'+l+' > select')   ;
+        
+                        obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
+                    };
+
+                    //jsonobj.push(obj);
+                                       
+                    console.log(obj);
+
+                    $.ajax({
+                        data: JSON.stringify(obj),
+                        type: 'POST',
+                        dataType: "json",
+                        url : "{{url_for('contacts')}}",
+                        contentType: 'application/json;charset=UTF-8',
+                    }).done();
+    });
+        
 </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 #!usr/bin/python
 
-from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash 
+from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , json 
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,6 +31,16 @@ login_manager.login_view = 'login'
 @login_required
 def index():
     user = current_user.username 
+    session['check'] = "a"
+    session['mssg_a'] = None
+    session['mssg_b'] = ""
+    session['mssg_c'] = ""
+    session['mssg_d'] = None
+    session['mssg_e'] = ""
+    session['mssg_f'] = ""
+    session['mssg_g'] = ""
+    session['mssg_h'] = ""
+
     return render_template('base.html' , user = user) , 200
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -101,6 +111,12 @@ def contacts():
     form = login_model.AddContactForm()
     mssg = ""
 
+    if request.method == 'POST':
+        print('something')
+        data = request.json
+        data = json.loads(data)
+        print(data)
+        # return redirect(url_for('contacts'))
     return render_template('contacts.html' , user = user ,form = form) , 200
 
 @app.route('/insights' , methods=['GET' , 'POST'])
@@ -151,25 +167,6 @@ def basic_master():
     citylist = db.session.query(login_model.City).all()
 
     
-    if session['check']:
-        pass
-    else:
-        session['check'] = 'a'
-    
-    # form subbmision Session messages 
-
-    if session['mssg_d']:
-        pass 
-    else:
-        session['mssg_d'] = ""
-    
-
-    if session['mssg_a']:
-        pass 
-    else:
-        session['mssg_a'] = ""
-    
-
     
     # Form choices for select fields
 
@@ -339,6 +336,16 @@ def basic_master():
                 return redirect(url_for('basic_master'))
     
     
+    
+    if session['check']:
+        pass
+    else:
+        session['check'] = 'a'
+
+    # form subbmision Session messages 
+
+
+
     '''
     if session['mssg_a']:
         pass 

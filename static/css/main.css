@@ -39,7 +39,7 @@ body{
   
   .is-main-content{
     margin : 1rem;
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-bottom: 0;
   }
   
@@ -62,4 +62,3 @@ body{
 .form-contact label{
   margin-top:15px;
 }
-

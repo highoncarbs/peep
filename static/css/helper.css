@@ -20,5 +20,15 @@
 @media (max-width: 1024px) {
 	.desktop {
 		display: none;
-	}
+	},
 }
+/* 
+.mobile-menu{
+	margin-top:20px;
+} */
+
+@media screen and (max-width: 1024px) {
+	#menu-toggle:checked + .mobile-menu {
+	  display: block;
+	}
+  }

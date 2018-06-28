@@ -13,31 +13,64 @@
 	<link rel="stylesheet" href="https://rsms.me/inter/inter-ui.css">	  
 	<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
-	<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 </head>
 <body>
+	<div class="navbar is-hidden-desktop">
+		<div class="container">
+				<div class="navbar-brand">
+						<a class="navbar-item" href="#" style="font-weight:bold;">
+						  Peep
+						</a>
+						<span class="navbar-burger burger" data-target="navMenu">
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						</span>
+				</div>
+				<hr style="margin-top:0px;">
+				<div id="navMenu" class="navbar-menu is-shadowless">
+						<div class="navbar-end is-size-5">
+								<a href="{{ url_for('index') }}" class="navbar-item has-text-weight-bold">Home</a>
+								<a href="{{ url_for('contacts') }}" class="navbar-item has-text-weight-bold">Contacts</a>
+								<a href="{{ url_for('insights') }}" class="navbar-item has-text-weight-bold">Insights</a>
+								<a href="{{ url_for('basic_master') }}" class="navbar-item has-text-weight-bold">Basic Master</a>
+							  </div>
+							  <hr>
+				</div>
+		</div>
+		<script type="text/javascript">
+			(function() {
+			  var burger = document.querySelector('.burger');
+			  var nav = document.querySelector('#'+burger.dataset.target);
+			  burger.addEventListener('click', function(){
+				burger.classList.toggle('is-active');
+				nav.classList.toggle('is-active');
+			  });
+			})();
+		</script>
+</div>
+
 		<section class="columns is-fullheight">
-				<aside class="column is-side-bar is-hidden-mobile hero is-2 is-fullheight">
-					<div class="brand is-size-1">
-						<a href="{{url_for('index')}}"><div class="brand-logo"></div></a>
-					</div>
+				<aside class="column is-side-bar is-hidden-touch hero is-2 is-fullheight">
+					<div class="brand is-size-1"></div>
 					<div class="menu is-size-4 has-text-weight-bold">
 						<ul class="menu-list animated fadeInLeft">
-							<li><a href="{{ url_for('index') }}"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span class="menu-text is-desktop">Home</span></a></li>
-							<li><a href="{{ url_for('contacts') }}"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span class="menu-text is-desktop">Contacts</span></a></li>
-							<li><a href="{{ url_for('insights') }}"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span class="menu-text is-desktop">Insights</span></a></li>
-							<li><a href="{{ url_for('basic_master') }}"><span class="icon icon-btn-m"><i data-feather="edit-3"></i></span><span class="menu-text is-desktop">Basic Master</span></a></li>
-						
+							<li><a href="{{ url_for('index') }}"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span class="menu-text">Home</span></a></li>
+							<li><a href="{{ url_for('contacts') }}"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span class="menu-text">Contacts</span></a></li>
+							<li><a href="{{ url_for('insights') }}"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span class="menu-text">Insights</span></a></li>
+							<li><a href="{{ url_for('basic_master') }}"><span class="icon icon-btn-m"><i data-feather="edit-3"></i></span><span class="menu-text">Basic Master</span></a></li>
 						</ul>
 					</div>
 					<div class="menu user-prof is-fixed-bottom animated fadeInUp ">
 						<ul class="menu-list is-size-4">
-							<li><a href="{{ url_for('user_profile') }}"><span class="icon icon-btn-m"><i data-feather="user"></i></span><span class="menu-text">Hi, {{user.title()}}</span></a></li>						
+							<li><a href="{{ url_for('user_profile') }}"><span class="icon icon-btn-m"><i data-feather="user"></i></span><span class="menu-text desktop">Hi, {{user.title()}}</span></a></li>						
 						</ul>
 						<a class="logout-btn" href="/logout"><button class="button is-size-5 is-black is-fullwidth ">					    	
 							<i class="icon-btn" data-feather="log-out"></i>
-								Logout
+								<span class="desktop">Logout</span>
 						</button></a>
 					</div>
 				</aside>
@@ -47,7 +80,7 @@
 					{% block content%}
 					{% endblock %}
 					<script>
-						feather.replace()
+						feather.replace();
 					</script>
 				</div>
 				</aside>
