@@ -13,21 +13,6 @@
 <br>
 <br>
 
-{% if error_mssg_c %}
-
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-    {{error_mssg_c}}
-</span>
-<br>
-</div>
-<br>
-
-{% endif %}
-
 
 <div class="table-container">
     <table class="table is-fullwidth">
@@ -60,7 +45,7 @@
 <div class="modal" id="modal-add-contact">
     <div class="modal-background"></div>
     <div class="modal-content">
-        <div class="box">
+        <div class="box" style="margin-bottom : 0px;">
                 {% if error_mssg %}
 
                 <div class="notification has-background-warning is-narrow ">
@@ -170,6 +155,10 @@
                         </div>
                     </div>   
             </form>
+            
+
+            <span id="contact_error_mssg"></span>
+           
 
     </div>
 </div>
@@ -216,7 +205,7 @@
         var comm_list_b = 0;
 
         function add_prod(){
-            var html = '{{form.prod_cat}}';
+            var html = '{{form.prod_cat()}}';
             var ex_id = 'prod_select_'+prod_list;
         addElement('prod_list', 'div', 'select control', ex_id , html);
         prod_list = prod_list+1;
@@ -255,17 +244,19 @@
                         var item = elements.item(i);
                         if (item.name == "broker" || item.name == "buss_cat"||item.name == "city"||item.name == "comm_channel" ||item.name == "health_code" ||item.name == "pref_comm_channel" || item.name == "prod_cat"){
                             obj[item.name] = item.options[item.selectedIndex].text;
+                            console.log(item.options[item.selectedIndex].text);
                         }
                         else{
                             obj[item.name] = item.value;
                         }
                         
                     };
+                    console.log(obj);
 
                     for(var i =0 ; i< prod_list ; i++){
                         var prod_item = document.querySelector('#prod_select_'+i+' > select')   ;
         
-                        obj['prod_cat_'+i] = prod_item.options[prod_item.selectedIndex].text;
+                        obj['prod_cat_'+i+''] = prod_item.options[prod_item.selectedIndex].text;
                     };
 
                     for(var j =0 ; j< buss_list ; j++){
@@ -285,16 +276,15 @@
         
                         obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
                     };
-
-                    axios.post("http://127.0.0.1:5000/contacts", 
+                    console.log(obj);
+                    axios.post("{{url_for('contacts')}}", 
                                 { data : obj}
                                 )
                                 .then(function (response) {
-                                console.log(response);
-
-                                })
+                                    console.log(response);
+                                    })
                                 .catch(function (error) {
-                                console.log(error);
+                                    console.log(error);
                                 });
     };
         

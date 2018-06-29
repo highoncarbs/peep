@@ -1,6 +1,7 @@
 #!usr/bin/python
 
-from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , jsonify ,json
+from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , jsonify
+import json
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -42,6 +43,8 @@ def index():
     session['mssg_f'] = ""
     session['mssg_g'] = ""
     session['mssg_h'] = ""
+    session['mssg_i'] = ""
+    session['mssg_j'] = ""
 
     return render_template('base.html' , user = user) , 200
 
@@ -114,10 +117,59 @@ def contacts():
     mssg = ""
 
     if request.method == 'POST':
-        data = request.get_json()
+        prod_list = list()
+        buss_list = list()
+        comm_a_list = list()
+        comm_b_list = list()
+        data = request.get_json()    
         data = data['data']
-        for key , values in data.iteritems():
-            print(key,values)
+        for key , value in data.items():
+            if (key.find('prod_cat') != -1) :
+                prod_list.append(value)
+            if (key.find('buss_cat') != -1) :
+                buss_list.append(value)
+            if (key.find('comm_channel') != -1) :
+                comm_a_list.append(value)
+            if (key.find('comm_a_cat') != -1) :
+                comm_a_list.append(value)
+            if (key.find('pref_comm_channel') != -1) :
+                comm_b_list.append(value)
+            if (key.find('comm_b_channel') != -1) :
+                comm_b_list.append(value)  
+        
+        prod_list = json.dumps(list(set(prod_list)))
+        buss_list = json.dumps(list(set(buss_list)))
+        comm_a_list = json.dumps(list(set(comm_a_list)))
+        comm_b_list = json.dumps(list(set(comm_b_list)))
+        prod = login_model.AddContact.query.filter_by(city=data['city']).first()
+        prod_a = login_model.AddContact.query.filter_by(email=data['email']).first()
+        prod_b = login_model.AddContact.query.filter_by(company_name=data['company_name']).first()
+        print(comm_a_list)
+        if (prod and prod_a and prod_b) :
+            mssg = "Duplicate data"
+            return jsonify({'mssg' : mssg})
+        
+        else:
+            query = login_model.City.query.filter_by(city=data['city']).first()
+            new_data = login_model.AddContact(company_name = data['company_name'],
+            company_per = data['company_per'], contact_one = data['contact_one'], wh_contact = data['wh_contact'],
+            email = data['email'], buss_cat = buss_list, broker = data['broker'],health_code = data['health_code'],
+            comm_channel = comm_a_list, pref_comm_channel = comm_b_list, prod_cat = prod_list, city = query.city ,
+            state = query.state,  country = query.country,address_one = data['address_one'], address_two = data['address_two'],
+            address_three = data['address_three'],address_pin = data['address_pin'] ) 
+
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                return jsonify({'mssg' : mssg})
+
+
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                return jsonify({'mssg' : mssg})
+
+
 
 
     return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run") , 200
@@ -159,6 +211,9 @@ def basic_master():
     form_state = login_model.StateForm()
     form_country = login_model.CountryForm()
     form_city = login_model.CityForm()
+    form_firm = login_model.FirmForm()
+    form_group = login_model.GroupForm()
+
 
     prod_list = db.session.query(login_model.ProdCat).all()
     health_list = db.session.query(login_model.HealthCode).all()
@@ -168,6 +223,9 @@ def basic_master():
     statelist = db.session.query(login_model.State).all()
     countrylist = db.session.query(login_model.Country).all()
     citylist = db.session.query(login_model.City).all()
+    firmlist = db.session.query(login_model.Firm).all()
+    grouplist = db.session.query(login_model.Group).all()
+
 
     
     
@@ -338,7 +396,61 @@ def basic_master():
                 session['mssg_g'] = mssg
                 return redirect(url_for('basic_master'))
     
+    if form_firm.validate_on_submit():
+        # Checks for Location submit
+        mssg = ""
+        session['check'] = 'i'
+        session['mssg_i'] = mssg
+
+        prod = login_model.Firm.query.filter_by(firm=form_firm.firm.data).first()
+
+        if prod :
+            mssg = "Duplicate Data "
+            session['mssg_i'] = mssg
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.Firm(firm=form_firm.firm.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                session['mssg_i'] = mssg
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_i'] = mssg
+                return redirect(url_for('basic_master'))
     
+    if form_group.validate_on_submit():
+        # Checks for Location submit
+        mssg = ""
+        session['check'] = 'j'
+        session['mssg_j'] = mssg
+
+        prod = login_model.Group.query.filter_by(group=form_group.group.data).first()
+
+        if prod :
+            mssg = "Duplicate Data "
+            session['mssg_j'] = mssg
+            return redirect(url_for('basic_master'))
+
+        else:
+            new_data = login_model.Group(group=form_group.group.data.upper())  
+            try:
+                db.session.add(new_data)
+                db.session.commit()
+                mssg = "Data Successfully added 👍"
+                session['mssg_j'] = mssg
+                return redirect(url_for('basic_master'))
+
+            
+            except Exception as e:
+                mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                session['mssg_j'] = mssg
+                return redirect(url_for('basic_master'))
     
     if session['check']:
         pass
@@ -366,6 +478,7 @@ def basic_master():
         form_broker = form_broker , form_buss = form_buss , form_comm = form_comm ,
         form_health = form_health , form_state = form_state , form_prod = form_prod ,
         form_country = form_country , form_city = form_city , error_mssg = mssg ,
+        form_firm = form_firm , form_group = form_group , firmlist = firmlist , grouplist = grouplist,
         subtitle = "Basic Master" , plist = prod_list , hlist = health_list ,
         commlist = commlist , busslist = busslist , broklist = broklist ,
         statelist = statelist , countrylist = countrylist , citylist = citylist ,
@@ -748,6 +861,86 @@ def edit_data_broker(item_id):
     session['check'] = 'c'
     temp = login_model.Broker.query.filter_by(id=int(item_id)).first()
     temp.broker_name = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Firm Routes ################
+#############################################################################
+
+
+@app.route('/delete/firm/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_firm(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    session['check'] = 'i'
+    login_model.Firm.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/firm/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_firm(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    session['check'] = 'i'
+
+    temp = login_model.Firm.query.filter_by(id=int(item_id)).first()
+    temp.firm = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('basic_master'))
+
+################## Delete & Edit Group Routes ################
+#############################################################################
+
+
+@app.route('/delete/group/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_group(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    session['check'] = 'j'
+    login_model.Group.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('basic_master'))
+
+@app.route('/edit/group/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_group(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    session['check'] = 'j'
+
+    temp = login_model.Group.query.filter_by(id=int(item_id)).first()
+    temp.group = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))

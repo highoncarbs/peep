@@ -149,6 +149,22 @@ class CityForm(FlaskForm):
     state = QuerySelectField('state',validators=[InputRequired()] , query_factory=state_choice , allow_blank= False  , get_label='state')
     country = QuerySelectField('country', validators=[InputRequired()], query_factory=country_choice , allow_blank= False ,get_label='country')
 
+# Firm Model & Form
+class Firm(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firm = db.Column(db.String(30), unique=True, nullable=False)
+
+class FirmForm(FlaskForm):
+    firm = StringField('firm', validators=[InputRequired()])
+
+# Group Model & Form
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    group = db.Column(db.String(30), unique=True, nullable=False)
+
+class GroupForm(FlaskForm):
+    group = StringField('group', validators=[InputRequired()])
+
 ########################################
 ####### CONTACT FORMS & DB #############
 ########################################
@@ -181,12 +197,12 @@ class AddContact(db.Model):
     country = db.Column(db.String(30) )
     state = db.Column(db.String(20) )
     city = db.Column(db.String(20) )
-    buss_cat = db.Column(db.String(20))
-    prod_cat = db.Column(db.String(20))
+    buss_cat = db.Column(db.String(200))
+    prod_cat = db.Column(db.String(200))
     broker = db.Column(db.String(20) )
-    comm_channel = db.Column(db.String(20) )
+    comm_channel = db.Column(db.String(200) )
     health_code = db.Column(db.String(20) )
-    pref_comm_channel = db.Column(db.String(100))
+    pref_comm_channel = db.Column(db.String(200))
     address_one = db.Column(db.String(100))
     address_two = db.Column(db.String(100))
     address_three = db.Column(db.String(100))

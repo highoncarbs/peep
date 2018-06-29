@@ -11,7 +11,9 @@
             #e:checked ~ .tab-content > .content-e,
             #f:checked ~ .tab-content > .content-f,
             #g:checked ~ .tab-content > .content-g,
-            #h:checked ~ .tab-content > .content-h{
+            #h:checked ~ .tab-content > .content-h,
+            #i:checked ~ .tab-content > .content-i,
+            #j:checked ~ .tab-content > .content-j{
               display: block;
             }
 
@@ -68,6 +70,18 @@
         {% else %}
         <input type="radio" id="h" name="nav-tab">
         {% endif %}
+
+        {% if check == 'i' %}
+        <input type="radio" checked id="i" name="nav-tab">
+        {% else %}
+        <input type="radio" id="i" name="nav-tab">
+        {% endif %}
+
+        {% if check == 'j' %}
+        <input type="radio" checked id="j" name="nav-tab">
+        {% else %}
+        <input type="radio" id="j" name="nav-tab">
+        {% endif %}
        
         <div class="tabs">
         <ul>
@@ -79,6 +93,9 @@
             <li><label for="f"><a>State</a></label></li>
             <li><label for="g"><a>Country</a></label></li>
             <li><label for="h"><a>City</a></label></li>
+            <li><label for="i"><a>Firm</a></label></li>
+            <li><label for="j"><a>Group</a></label></li>
+
         </ul>
         </div>
 
@@ -110,38 +127,52 @@
                 <div class="tab-pane content-g">
                     {% include 'basic_block_g.html' %}
                 </div>
-
+                
                 <div class="tab-pane content-h">
                     {% include 'basic_block_h.html' %}
                 </div>
+
+                <div class="tab-pane content-i">
+                    {% include 'basic_block_i.html' %}
+                </div>
+
+                <div class="tab-pane content-j">
+                    {% include 'basic_block_j.html' %}
+                </div>
+
         </div>        
     </div>
 <script>
         function showData_a() {
-            document.getElementById('data_display_a ').style.display = "block";
-         }
-        
-         function showData_b() {
-            document.getElementById('data_display_b ').style.display = "block";
-         }
-         function showData_c() {
-            document.getElementById('data_display_c ').style.display = "block";
-         }
-         function showData_d() {
-            document.getElementById('data_display_d ').style.display = "block";
-         }
-         function showData_e() {
-            document.getElementById('data_display_e ').style.display = "block";
-         }
-         function showData_f() {
-            document.getElementById('data_display_f ').style.display = "block";
-         }
-         function showData_g() {
-            document.getElementById('data_display_g ').style.display = "block";
-         }
-         function showData_h() {
-            document.getElementById('data_display_h ').style.display = "block";
-         }
+        document.getElementById('data_display_a ').style.display = "block";
+        }
+        function showData_b() {
+        document.getElementById('data_display_b ').style.display = "block";
+        }
+        function showData_c() {
+        document.getElementById('data_display_c ').style.display = "block";
+        }
+        function showData_d() {
+        document.getElementById('data_display_d ').style.display = "block";
+        }
+        function showData_e() {
+        document.getElementById('data_display_e ').style.display = "block";
+        }
+        function showData_f() {
+        document.getElementById('data_display_f ').style.display = "block";
+        }
+        function showData_g() {
+        document.getElementById('data_display_g ').style.display = "block";
+        }
+        function showData_h() {
+        document.getElementById('data_display_h ').style.display = "block";
+        }
+        function showData_i() {
+        document.getElementById('data_display_i ').style.display = "block";
+        }
+        function showData_j() {
+        document.getElementById('data_display_j ').style.display = "block";
+        }
 </script>
     
 {% endblock %}
