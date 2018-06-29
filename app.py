@@ -197,23 +197,13 @@ def insights():
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required
 def transaction():
-    '''
-        Get insights based of various filters 
-            - Period
-            - Business Category
-            - Product dealing IN
-            - City
-            - State
-            - Country
-            - Customer Credit Health
-            - broker
-            - preffered Comm channel
-            - no of times comm done
-            - No fo Invoice
-            - Sales for that user
-    '''
-    pass
-
+    user = current_user.username 
+    mssg = ""
+    form_invoice = login_model.InvoiceForm()    
+    invoice_list = db.session.query(login_model.ProdCat).all()
+    
+    return render_template('transaction.html' , user = user ,form_invoice = form_invoice,
+    invoicelist = invoice_list )
 
 @app.route('/basic_master' , methods=['GET' , 'POST'])
 @login_required
@@ -965,7 +955,45 @@ def edit_data_group(item_id):
     mssg = "Data Successfully Edited" 
     return redirect(url_for('basic_master'))
 
+################## Delete & Edit Invoice Routes ################
+################################################################
 
+
+@app.route('/delete/invoice/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_invoice(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+    login_model.Invoice.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    return redirect(url_for('transaction'))
+
+@app.route('/edit/invoice/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_invoice(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+
+    temp = login_model.Invoice.query.filter_by(id=int(item_id)).first()
+    temp.invoice_no = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    return redirect(url_for('transaction'))
 
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])

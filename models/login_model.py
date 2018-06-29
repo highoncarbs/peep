@@ -1,4 +1,4 @@
-from wtforms import StringField, PasswordField , BooleanField
+from wtforms import StringField, PasswordField , BooleanField , DateField
 from wtforms_alchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired
 from flask_login import UserMixin
@@ -60,7 +60,11 @@ def comm_choice():
 def buss_choice():
     return db.session.query(BussCat)
 
+def contact_choice():
+    return db.session.query(AddContact)
 
+def firm_choice():
+    return db.session.query(Firm)
 
 
 ########################################
@@ -207,6 +211,25 @@ class AddContact(db.Model):
     address_two = db.Column(db.String(100))
     address_three = db.Column(db.String(100))
     address_pin = db.Column(db.String(10))
+
+########################################
+####### INVOICE DETAIL FORMS & DB ######
+########################################
+
+class Invoice(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    company_name = db.Column(db.String(50))
+    firm = db.Column(db.String(50))
+    invoice_no = db.Column(db.String(50))
+    amount = db.Column(db.String(15))
+    date = db.Column(db.String(10))
+    
+class InvoiceForm(FlaskForm):
+    invoice_no = StringField('invoice_no')
+    amount = StringField('amount')
+    firm = QuerySelectField('firm' ,  validators=[InputRequired()] , query_factory= firm_choice , allow_blank= False  , get_label='firm')
+    company_name = QuerySelectField('company_name', validators=[InputRequired()] , query_factory= contact_choice , allow_blank= False  , get_label='company_name')
+    date = DateField('date' , format = " %d-%m-%Y " )
 
 ########################################
 ####### MSSGs FORMS & DB ###############
