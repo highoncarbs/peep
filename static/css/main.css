@@ -19,9 +19,10 @@ body{
 
 .icon-btn-m{
   margin-right: 10px;
-    vertical-align:middle;
+  vertical-align:middle;
   margin-bottom : 6px;
 }
+
 .is-side-bar{
     margin-left:1rem;
     border-right : 1px solid lightgrey;
@@ -43,10 +44,6 @@ body{
     margin-bottom: 0;
   }
   
-  .user-prof{
-    
-  }
-
   .logout-btn{
       margin-top:5px;
   }

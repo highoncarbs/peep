@@ -20,7 +20,7 @@
 	<div class="navbar is-hidden-desktop">
 		<div class="container">
 				<div class="navbar-brand" style="padding-left:1rem;" >
-						<a class="navbar-item is-size-5" href="#" style="font-weight:bold;" >
+						<a class="navbar-item is-size-4" href="#" style="font-weight:bold;" >
 						  Peep
 						</a>
 						<span class="navbar-burger burger" data-target="navMenu">
@@ -31,14 +31,16 @@
 				</div>
 				<hr style="margin-top:0px; margin-bottom:5px;">
 				<div id="navMenu" class="navbar-menu is-shadowless animated fadeIn" >
-						<div class="navbar-end is-size-5"  style="padding-left:1rem;">
-								<a href="{{ url_for('index') }}" class="navbar-item has-text-weight-bold">Home</a>
-								<a href="{{ url_for('contacts') }}" class="navbar-item has-text-weight-bold">Contacts</a>
-								<a href="{{ url_for('insights') }}" class="navbar-item has-text-weight-bold">Insights</a>
-								<a href="{{ url_for('basic_master') }}" class="navbar-item has-text-weight-bold">Basic Master</a>
-							  </div>
+						<div class="navbar-end is-size-4"  style="padding-left:1rem;">
+								<a href="{{ url_for('index') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span >Home</span></a>
+								<a href="{{ url_for('contacts') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span>Contacts</span></a>
+								<a href="{{ url_for('insights') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span>Insights</span></a>
+								<a href="{{ url_for('basic_master') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="edit-3"></i></span><span>Basic Master</span></a>
+								<a href="{{ url_for('transaction') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="dollar-sign"></i></span><span>Transaction</span></a>	
+							</div>
 							  <hr>
 				</div>
+				<div
 		</div>
 		<script type="text/javascript">
 			(function() {
@@ -61,6 +63,7 @@
 							<li><a href="{{ url_for('contacts') }}"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span class="menu-text">Contacts</span></a></li>
 							<li><a href="{{ url_for('insights') }}"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span class="menu-text">Insights</span></a></li>
 							<li><a href="{{ url_for('basic_master') }}"><span class="icon icon-btn-m"><i data-feather="edit-3"></i></span><span class="menu-text">Basic Master</span></a></li>
+							<li><a href="{{ url_for('transaction') }}"><span class="icon icon-btn-m"><i data-feather="dollar-sign"></i></span><span class="menu-text">Transaction</span></a></li>
 						</ul>
 					</div>
 					<div class="menu user-prof is-fixed-bottom animated fadeInUp ">

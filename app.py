@@ -194,6 +194,26 @@ def insights():
     '''
     pass
 
+@app.route('/transaction' , methods=['GET' , 'POST'])
+@login_required
+def transaction():
+    '''
+        Get insights based of various filters 
+            - Period
+            - Business Category
+            - Product dealing IN
+            - City
+            - State
+            - Country
+            - Customer Credit Health
+            - broker
+            - preffered Comm channel
+            - no of times comm done
+            - No fo Invoice
+            - Sales for that user
+    '''
+    pass
+
 
 @app.route('/basic_master' , methods=['GET' , 'POST'])
 @login_required
