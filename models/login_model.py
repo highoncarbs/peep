@@ -1,6 +1,7 @@
-from wtforms import StringField, PasswordField , BooleanField , DateField
+from wtforms import StringField, PasswordField , BooleanField 
+from wtforms.widgets import TextArea
 from wtforms_alchemy.fields import QuerySelectField
-from wtforms.validators import InputRequired, Email, Length , DataRequired
+from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
 from app import db
@@ -65,6 +66,9 @@ def contact_choice():
 
 def firm_choice():
     return db.session.query(Firm)
+
+def group_choice():
+    return db.session.query(Group)
 
 
 ########################################
@@ -190,6 +194,8 @@ class AddContactForm(FlaskForm):
     address_two = StringField('address_two' )
     address_three = StringField('address_three')
     address_pin = StringField('address_pin' , validators=[InputRequired()])
+    group = QuerySelectField('group',validators=[InputRequired()] , query_factory=group_choice , allow_blank= False  , get_label='group')
+
 
 class AddContact(db.Model):
     id = db.Column(db.Integer , primary_key = True)
@@ -211,6 +217,7 @@ class AddContact(db.Model):
     address_two = db.Column(db.String(100))
     address_three = db.Column(db.String(100))
     address_pin = db.Column(db.String(10))
+    group = db.Column(db.String(30))
 
 ########################################
 ####### INVOICE DETAIL FORMS & DB ######
@@ -229,7 +236,24 @@ class InvoiceForm(FlaskForm):
     amount = StringField('amount')
     firm = QuerySelectField('firm' ,  validators=[InputRequired()] , query_factory= firm_choice , allow_blank= False  , get_label='firm')
     company_name = QuerySelectField('company_name', validators=[InputRequired()] , query_factory= contact_choice , allow_blank= False  , get_label='company_name')
-    date = DateField('date' , format = " %d-%m-%Y " )
+    date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
+
+########################################
+### COMMUNICATION DETAIL FORMS & DB ####
+########################################
+
+class Comm(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    comm_channel = db.Column(db.String(50))
+    mssg_detail = db.Column(db.String(100))
+    group = db.Column(db.String(50))
+    date = db.Column(db.String(10))
+    
+class CommForm(FlaskForm):
+    comm_channel = QuerySelectField('comm_channel',validators=[InputRequired()] , query_factory=comm_choice , allow_blank= False  , get_label='channel')
+    mssg_detail = StringField('mssg_detail', widget= TextArea())
+    group = QuerySelectField('group' ,  validators=[InputRequired()] , query_factory= group_choice , allow_blank= False  , get_label='group')
+    date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
 
 ########################################
 ####### MSSGs FORMS & DB ###############

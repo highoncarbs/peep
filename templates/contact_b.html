@@ -1,22 +1,22 @@
-{% extends 'trans_block.html' %}
+{% extends 'basic_master_block.html' %}
 
 {% block block_title%}
-Invoice Detail {% endblock %}
+Group Addition {% endblock %}
 
 {% block block_data_display %}
-    Current Invoice Details 
+    Current Groups 
 {% endblock %}
 
 {% block error_content%}
 
-{% if error_mssg_t_a %}
+{% if error_mssg_t_b %}
 
 <div class="notification has-background-warning ">
 <span class="is-size-5">
     <span class="icon icon-btn-m">
         <i data-feather="info"></i>
     </span>
-    {{error_mssg_t_a}}
+    {{error_mssg_t_b}}
 </span>
 <br>
 
@@ -25,53 +25,40 @@ Invoice Detail {% endblock %}
 
 {% endblock %}
 
-{% block data_display %}data_display_a {% endblock %}
+{% block data_display %}data_display_b {% endblock %}
 <!-- Data entry block -->
 {% block form_xcontent %}
-    {{form_invoice.hidden_tag()}}
-    <form action="{{url_for('transaction_invoice')}}" method="POST">
-            <div class="field">
-                <div class="field is-grouped is-grouped-multiline">
+    {{form_comm.hidden_tag()}}
+    <form action="{{url_for('transaction')}}" method="POST">
+            <div class="field is-grouped is-grouped-multiline">
                 <div class="select control" width="5rem">
-                    {{form_invoice.company_name}}    
+                    {{form_comm.comm_channel}}    
                 </div>
+                <p class="control" width="5rem">{{form_comm.mssg_detail(class="input" , placeholder="Enter campaign message detail")}}</p>
+                <p class="control" width="5rem">{{form_comm.date(class="input" , placeholder="Enter Date")}}</p>
                 <div class="select control" width="5rem">
-                    {{form_invoice.firm}}    
+               {{form_comm.group()}}
                 </div>
                 </div>
-            </div>
-        <div class="test is-paddingless">
-            <div class="field is-grouped is-multiline">
-                <p class="control">{{form_invoice.invoice_no(class="input" , placeholder = "Enter Invoice Number")}}</p>
-                <p class="control">{{form_invoice.date(class="input" , placeholder = "Date : DD - MM - YYYY ")}}</p>
-                <p class="control">{{form_invoice.amount(class="input" , placeholder = "Enter Invoice Amount")}}</p>
-                <a class="button" onclick="invoice_list_add()"><i class="icon" data-feather="plus-square"></i></a>
-            </div>
-            <div id="invoice-list">
-            <!-- Addition of data of multiple invoices -->
-            </div>
-        </div>
     <br>
     <div class="field is-grouped is-grouped-multiline">
         <p class="control "><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Data</button></p>
-        <p class="control"><a class="button is-black" onclick="showData_a()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
-    </div>
+        <p class="control"><a class="button is-black" onclick="showData_b()"><i class="icon-btn" data-feather="eye"></i>View Data</a></p>
     </div>
     </form>
 {% endblock %}
 
 {% block table_h_content%}
-    <th>Invoice No</th>
+    <th>Communication</th>
+    <th>Message</th>
     <th>Date</th>
-    <th>Company Name</th>
-    <th>Firm</th>
-    <th>Amount</th>
+    <th>Group</th>
     <th>Delete</th>
     <th>Edit</th>
     {% endblock %}
 
 {% block table_d_content %}
-{% for l in invoicelist %}
+{% for l in commlist %}
     <tr>
         <!-- Data Rows -->
         <td>{{l.invoice_no}}</td>
@@ -124,36 +111,7 @@ Invoice Detail {% endblock %}
             });
           });
 
-          function addElement(elementTag , elementId , elementClass, html) {
-            // Adds an element to the document
-            var newElement = document.createElement(elementTag);
-            newElement.setAttribute('class', elementClass);
-            newElement.setAttribute('id' , elementId);
-            newElement.setAttribute('style' , 'margin-top:0px;margin-bottom:10px;');
-            newElement.innerHTML = html;
-        };
-
-        var invoice_list = 0;
-        /*
-        function invoice_list_add(){
-            var a_id = 'invoice_no_'+invoice_list;
-            var b_id = 'invoice_date_'+invoice_list;
-            var c_id = 'invoice_amount_'+invoice_list;
-            var p = document.getElementById('invoice-list');
-            var newel = document.createElement('div');
-            newel.setAttribute('class' , 'field is-grouped-multiline');
-            var html_a = '{{form_invoice.invoice_no(class="input" , placeholder = "Enter Invoice Number" )}}';
-            var html_b = '{{form_invoice.date(class="input" , placeholder = "Date : DD - MM - YYYY ")}}';
-            var html_c = '{{form_invoice.amount(class="input" , placeholder = "Enter Invoice Amount")}}';
-            var x =addElement('p' , a_id , 'control' , html_a);
-            console.log(x);
-            //newel.appendChild(a);
-            
-            var br = document.createElement("br");
-            newel.appendChild(br);
-            invoice_list = invoice_list+1;
-        };
-        */
+        
 </script>
 
     </tr>

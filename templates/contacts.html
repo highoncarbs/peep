@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
-{% block content %}
 <div class="navbar ">
     <div class="navbar-start">
-            <p class="navbar-item is-size-4 has-text-weight-bold">Contacts </p>
+            <p class="navbar-item is-size-4 has-text-weight-bold">Add Contacts </p>
     </div>
     <div class="navbar-end is-size-4">
             <a class="navbar-item" id="add-contact"><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></a>
@@ -33,9 +31,23 @@
         </tr>
     </thead>
     <tbody>
+        {% for l in contact_list %}
         <tr>
-            
+            <td>{{l.company_name}}</td>
+            <td>{{l.contact_one}}</td>
+            <td>{{l.wh_contact}}</td>
+            <td>{{l.city}}</td>
+            <td>{{l.state}}</td>
+            <td>{{l.country}}</td>
+            <td> {{l.buss_cat}}  </td>
+            <td>{{l.prod_cat}}</td>
+            <td>{{l.health_code}}</td>
+            <td>{{l.comm_channel}}</td>
+            <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
+            <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
         </tr>
+        {% endfor %}
+
     </tbody>
     </table>
 </div>
@@ -145,6 +157,12 @@
                         <div class="field is-grouped">
                             <div class="select control">   
                                 {{form.health_code}}
+                            </div>
+                        </div>
+                        <label class="label ">Group</label>
+                        <div class="field is-grouped">
+                            <div class="select control">   
+                                {{form.group}}
                             </div>
                         </div>
                         </div>
@@ -289,4 +307,3 @@
     };
         
 </script>
-{% endblock %}

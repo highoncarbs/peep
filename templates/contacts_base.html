@@ -5,14 +5,13 @@
 
             /* the magic */
             #a:checked ~ .tab-content > .content-a,
-            #b:checked ~ .tab-content > .content-b,
-            #c:checked ~ .tab-content > .content-c{
+            #b:checked ~ .tab-content > .content-b{
               display: block;
             }
 
     </style>
     <div class="navbar ">
-        <p class=" is-size-4 has-text-weight-bold">Transaction</p>
+        <p class=" is-size-4 has-text-weight-bold">Contacts </p>
     </div>
     <br>
     <div class="body-actions">
@@ -28,32 +27,22 @@
         <input type="radio" id="b" name="nav-tab">
         {% endif %}
 
-        {% if check == 'c' %}
-        <input type="radio" checked id="c" name="nav-tab">
-        {% else %}
-        <input type="radio" id="c" name="nav-tab">
-        {% endif %}
-
+              
         <div class="tabs">
         <ul>
-            <li><label for="a"><a>Communication</a></label></li>
-            <li><label for="b"><a>Invoice Detail</a></label></li>
-            <li><label for="c"><a>Extra</a></label></li>
+            <li><label for="a"><a>Add Contacts</a></label></li>
+            <li><label for="b"><a>Group Addition</a></label></li>
         </ul>
         </div>
 
         <div class="tab-content">
                 <div class="tab-pane content-a">
-                        {% include 'trans_block_b.html' %}
-                    </div>  
-    
-                    <div class="tab-pane content-b">
-                            {% include 'trans_block_a.html' %}
-                        </div>
-    
-                    <div class="tab-pane content-c">
-                        {% include 'trans_block_b.html' %} 
-                    </div>
+                    {% include 'contacts.html' %}
+                </div>  
+
+                <div class="tab-pane content-b">
+                    {% include 'contact_b.html' %}
+                </div>
         </div>        
     </div>
 <script>
@@ -62,9 +51,6 @@
         }
         function showData_b() {
         document.getElementById('data_display_b ').style.display = "block";
-        }
-        function showData_c() {
-        document.getElementById('data_display_c ').style.display = "block";
         }
 </script>
     

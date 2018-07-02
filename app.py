@@ -45,6 +45,9 @@ def index():
     session['mssg_h'] = ""
     session['mssg_i'] = ""
     session['mssg_j'] = ""
+    session['mssg_t_a'] = ""
+    session['mssg_t_b'] = ""
+
 
     return render_template('base.html' , user = user) , 200
 
@@ -115,7 +118,7 @@ def contacts():
     user = current_user.username 
     form = login_model.AddContactForm()
     mssg = ""
-
+    contact_list = db.session.query(login_model.AddContact).all() 
     if request.method == 'POST':
         prod_list = list()
         buss_list = list()
@@ -144,7 +147,6 @@ def contacts():
         prod = login_model.AddContact.query.filter_by(city=data['city']).first()
         prod_a = login_model.AddContact.query.filter_by(email=data['email']).first()
         prod_b = login_model.AddContact.query.filter_by(company_name=data['company_name']).first()
-        print(comm_a_list)
         if (prod and prod_a and prod_b) :
             mssg = "Duplicate data"
             return jsonify({'mssg' : mssg})
@@ -156,7 +158,7 @@ def contacts():
             email = data['email'], buss_cat = buss_list, broker = data['broker'],health_code = data['health_code'],
             comm_channel = comm_a_list, pref_comm_channel = comm_b_list, prod_cat = prod_list, city = query.city ,
             state = query.state,  country = query.country,address_one = data['address_one'], address_two = data['address_two'],
-            address_three = data['address_three'],address_pin = data['address_pin'] ) 
+            address_three = data['address_three'],address_pin = data['address_pin'] , group = data['group'] ) 
 
             try:
                 db.session.add(new_data)
@@ -172,7 +174,8 @@ def contacts():
 
 
 
-    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run") , 200
+    return render_template('contacts_base.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
+    contact_list = contact_list) , 200
      
 @app.route('/insights' , methods=['GET' , 'POST'])
 @login_required
@@ -193,17 +196,62 @@ def insights():
             - Sales for that user
     '''
     pass
-
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required
 def transaction():
     user = current_user.username 
     mssg = ""
     form_invoice = login_model.InvoiceForm()    
-    invoice_list = db.session.query(login_model.ProdCat).all()
+    invoice_list = db.session.query(login_model.Invoice).all()
     
-    return render_template('transaction.html' , user = user ,form_invoice = form_invoice,
-    invoicelist = invoice_list )
+    form_comm = login_model.CommForm()
+    comm_list = db.session.query(login_model.Comm).all()
+
+    if session['check']:
+        pass
+    else:
+        session['check'] = 'a'
+
+    if form_comm.validate():
+      print("ok")
+      print(form_comm.comm_channel.data)
+        
+    return render_template('transaction.html' , user = user ,form_invoice = form_invoice, form_comm = form_comm,
+    commlist = comm_list ,invoicelist = invoice_list , check =session['check'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
+
+@app.route('/transaction/invoice' , methods=['GET' , 'POST'])
+@login_required
+def transaction_invoice():
+    # FIX : Convert to Validate_on_submit
+    mssg = ""
+    session['check'] = 'a'
+    session['mssg_t_a'] = mssg
+    print(request.form)
+    prod = login_model.Invoice.query.filter_by(invoice_no=request.form['invoice_no'].upper()).first()
+    if prod :
+        mssg = "Duplicate Data "
+        session['mssg_t_a'] = mssg
+        return redirect(url_for('basic_master'))
+
+    else:
+        firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
+        company_name = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first().company_name
+        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
+            company_name =company_name , amount = request.form['amount'] , date = request.form['date'])  
+        try:
+            db.session.add(new_data)
+            db.session.commit()
+            mssg = "Data Successfully added 👍"
+            session['mssg_t_a'] = mssg
+            return redirect(url_for('transaction'))
+
+        
+        except Exception as e:
+            mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            session['mssg_t_a'] = mssg
+            return redirect(url_for('transaction'))
+
+
 
 @app.route('/basic_master' , methods=['GET' , 'POST'])
 @login_required
@@ -236,9 +284,6 @@ def basic_master():
     firmlist = db.session.query(login_model.Firm).all()
     grouplist = db.session.query(login_model.Group).all()
 
-
-    
-    
     # Form choices for select fields
 
     if form_comm.validate_on_submit():
@@ -974,6 +1019,8 @@ def delete_data_invoice(item_id):
     login_model.Invoice.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
+    session['mssg_t_a'] = mssg
+    session['check'] = 'a'
     return redirect(url_for('transaction'))
 
 @app.route('/edit/invoice/<item_id>' , methods=['GET' , 'POST'])
@@ -993,7 +1040,53 @@ def edit_data_invoice(item_id):
     temp.invoice_no = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
+    session['mssg_t_a'] = mssg
+    session['check'] = 'a'
     return redirect(url_for('transaction'))
+
+################## Delete & Edit Contact Routes ################
+################################################################
+
+
+@app.route('/delete/contact/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_contact(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+    login_model.AddContact.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    session['mssg_c_a'] = mssg
+    session['check'] = 'a'
+    return redirect(url_for('contacts'))
+
+@app.route('/edit/contact/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_contact(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+
+    temp = login_model.AddContact.query.filter_by(id=int(item_id)).first()
+    temp.company_name = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    session['mssg_c_a'] = mssg
+    session['check'] = 'a'
+    return redirect(url_for('contacts'))
 
 
 @app.route('/user_profile' , methods=['GET' , 'POST'])
