@@ -1,12 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
 <div class="navbar ">
     <div class="navbar-start">
-            <p class="navbar-item is-size-4 has-text-weight-bold">Add Contacts </p>
+            <p class="navbar-item is-size-4 has-text-weight-bold">Contacts </p>
     </div>
     <div class="navbar-end is-size-4">
             <a class="navbar-item" id="add-contact"><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></a>
             <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="trash-2"></i>Delete Contact</button></a>
             <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
-    </div>
+            <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="plus-circle"></i>Create Groups</button></a>
+        </div>
 </div>
 <br>
 <br>
@@ -307,3 +310,4 @@
     };
         
 </script>
+{% endblock %}

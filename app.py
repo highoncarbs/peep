@@ -174,7 +174,7 @@ def contacts():
 
 
 
-    return render_template('contacts_base.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
+    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
     contact_list = contact_list) , 200
      
 @app.route('/insights' , methods=['GET' , 'POST'])
