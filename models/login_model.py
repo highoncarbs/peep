@@ -1,6 +1,6 @@
-from wtforms import StringField, PasswordField , BooleanField 
+from wtforms import StringField, PasswordField , BooleanField
 from wtforms.widgets import TextArea
-from wtforms_alchemy.fields import QuerySelectField
+from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField
 from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
@@ -69,6 +69,9 @@ def firm_choice():
 
 def group_choice():
     return db.session.query(Group)
+
+def contact_choice():
+    return db.session.query(AddContact)
 
 
 ########################################
@@ -219,6 +222,7 @@ class AddContact(db.Model):
     address_pin = db.Column(db.String(10))
     group = db.Column(db.String(30))
 
+
 ########################################
 ####### INVOICE DETAIL FORMS & DB ######
 ########################################
@@ -254,6 +258,15 @@ class CommForm(FlaskForm):
     mssg_detail = StringField('mssg_detail', widget= TextArea())
     group = QuerySelectField('group' ,  validators=[InputRequired()] , query_factory= group_choice , allow_blank= False  , get_label='group')
     date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
+
+########################################
+####### GROUP ADDITION FORMS & DB ######
+########################################
+
+
+class AddGroupForm(FlaskForm):
+    group = QuerySelectField('group' , allow_blank = False , get_label = 'group' , query_factory = group_choice)
+    contact= SelectMultipleField('contact' )
 
 ########################################
 ####### MSSGs FORMS & DB ###############

@@ -7,8 +7,8 @@ from flask_login import LoginManager , login_user  , login_required , logout_use
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 # from sqlalchemy.sql import text
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
 
 # Models
 # Flask app intitialization 
@@ -20,8 +20,13 @@ CORS(app)
 # SQLAlchemy initialization 
 import MySQLdb
 db = SQLAlchemy(app)
+engine = create_engine('mysql+mysqldb://root@127.0.0.1/PEEPS')
+Base = declarative_base()
 
 from models import login_model
+
+# Hepler functions
+from functions import GroupTableCreator
 
 # # Flask Login Initiialization 
 
@@ -35,6 +40,7 @@ login_manager.login_view = 'login'
 def index():
     user = current_user.username 
     session['check'] = "a"
+    session['check_t'] = "a"
     session['mssg_a'] = None
     session['mssg_b'] = ""
     session['mssg_c'] = ""
@@ -114,11 +120,31 @@ def contacts():
     '''
         Add contacts to database with option to export 
         and import data onto Peep.
+
+        FIX: add to Groups
     '''
     user = current_user.username 
     form = login_model.AddContactForm()
+    form_add_group = login_model.AddGroupForm()
+    form_add_group.contact.choices = [ (r.id , r.company_name ) for r in login_model.AddContact.query.order_by('company_name') ]
+
+    if form_add_group.validate_on_submit():
+        print("going in")
+        return "{}{}".format(form_add_group.group.data , form_add_group.contact.data)
+        
     mssg = ""
     contact_list = db.session.query(login_model.AddContact).all() 
+    
+
+
+
+    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
+    contact_list = contact_list , form_add_group=form_add_group) , 200
+
+@app.route('/contacts/add' , methods=['POST'])
+@login_required
+def contacts_add():
+
     if request.method == 'POST':
         prod_list = list()
         buss_list = list()
@@ -171,12 +197,6 @@ def contacts():
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return jsonify({'mssg' : mssg})
 
-
-
-
-    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
-    contact_list = contact_list) , 200
-     
 @app.route('/insights' , methods=['GET' , 'POST'])
 @login_required
 def insights():
@@ -207,24 +227,24 @@ def transaction():
     form_comm = login_model.CommForm()
     comm_list = db.session.query(login_model.Comm).all()
 
-    if session['check']:
+    if session['check_t']:
         pass
     else:
-        session['check'] = 'a'
+        session['check_t'] = 'a'
 
     if form_comm.validate():
       print("ok")
       print(form_comm.comm_channel.data)
         
     return render_template('transaction.html' , user = user ,form_invoice = form_invoice, form_comm = form_comm,
-    commlist = comm_list ,invoicelist = invoice_list , check =session['check'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
+    commlist = comm_list ,invoicelist = invoice_list , check =session['check_t'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
 
 @app.route('/transaction/invoice' , methods=['GET' , 'POST'])
 @login_required
 def transaction_invoice():
     # FIX : Convert to Validate_on_submit
     mssg = ""
-    session['check'] = 'a'
+    session['check_t'] = 'a'
     session['mssg_t_a'] = mssg
     print(request.form)
     prod = login_model.Invoice.query.filter_by(invoice_no=request.form['invoice_no'].upper()).first()
@@ -494,11 +514,14 @@ def basic_master():
 
         else:
             new_data = login_model.Group(group=form_group.group.data.upper())  
+            GroupTableCreator(form_group.group.data.upper())
             try:
                 db.session.add(new_data)
                 db.session.commit()
+                Base.metadata.create_all(engine)
                 mssg = "Data Successfully added 👍"
                 session['mssg_j'] = mssg
+                
                 return redirect(url_for('basic_master'))
 
             

@@ -63,3 +63,6 @@ body{
   margin-top:15px;
 }
 
+.buttons a{
+  padding-right: 1rem;
+}

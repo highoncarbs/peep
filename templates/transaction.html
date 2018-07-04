@@ -12,7 +12,7 @@
 
     </style>
     <div class="navbar ">
-        <p class=" is-size-4 has-text-weight-bold">Transaction</p>
+        <p class=" is-size-4 has-text-weight-bold">Transaction </p>
     </div>
     <br>
     <div class="body-actions">
@@ -33,39 +33,41 @@
         {% else %}
         <input type="radio" id="c" name="nav-tab">
         {% endif %}
-
+       
         <div class="tabs">
         <ul>
-            <li><label for="a"><a>Communication</a></label></li>
-            <li><label for="b"><a>Invoice Detail</a></label></li>
-            <li><label for="c"><a>Extra</a></label></li>
+            <li><label for="a"><a>Invoice Detail</a></label></li>
+            <li><label for="b"><a>Communication</a></label></li>
+            <li><label for="c"><a>Mail</a></label></li>
+
         </ul>
         </div>
 
         <div class="tab-content">
                 <div class="tab-pane content-a">
-                        {% include 'trans_block_b.html' %}
-                    </div>  
-    
-                    <div class="tab-pane content-b">
-                            {% include 'trans_block_a.html' %}
-                        </div>
-    
-                    <div class="tab-pane content-c">
-                        {% include 'trans_block_b.html' %} 
-                    </div>
+                    {% include 'trans_block_a.html' %}
+                </div>  
+
+                <div class="tab-pane content-b">
+                    {% include 'trans_block_b.html' %}
+                </div>
+
+                <div class="tab-pane content-c">
+                    {% include 'basic_master_block.html' %} 
+                </div>
         </div>        
-    </div>
+</div>
 <script>
         function showData_a() {
-        document.getElementById('data_display_a ').style.display = "block";
+        document.getElementById('data_display_a').style.display = "block";
         }
         function showData_b() {
-        document.getElementById('data_display_b ').style.display = "block";
+        document.getElementById('data_display_b').style.display = "block";
         }
         function showData_c() {
-        document.getElementById('data_display_c ').style.display = "block";
+        document.getElementById('data_display_c').style.display = "block";
         }
+    
 </script>
     
 {% endblock %}
