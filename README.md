@@ -1,16 +1,11 @@
 <p align="center">
-<p> </p>
+<img align="center" src="./assets/peep-logo.png">
+   <br>
+<img align="center" src="https://img.shields.io/badge/WORK%20-IN%20PROGRESS-yellow.svg"/>
+<img align="center" src="https://img.shields.io/badge/License-MIT%20v3-blue.svg"/>
+<img align="center" src="https://img.shields.io/badge/Python-3-lightgrey.svg" /> 
 <br>
-<img src="./assets/peep-logo.png">
-   <br>
-   <br>
-<img src="https://img.shields.io/badge/WORK%20-IN%20PROGRESS-yellow.svg"/>
-<img src="https://img.shields.io/badge/License-MIT%20v3-blue.svg"/>
-<img src="https://img.shields.io/badge/Python-3-lightgrey.svg" /    > 
-
 </p>
-<br>
-
 Simple and open marketing application to track the return on any marketing campaigns. Ideally built for small businesses that do not have much sophisticated requirements.
 
 ## ⚡ Features
