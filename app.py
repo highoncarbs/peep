@@ -113,6 +113,21 @@ def load_user(user_id):
     return login_model.User.query.get(int(user_id))
 
 # Function Routes
+@app.route('/user' , methods=['GET' , 'POST'])
+@login_required
+def user():
+    '''
+        User setup done here
+        - Username
+        - Email for sending
+        - Delete Account
+        - Reset data
+        - Export data 
+    '''
+    user = current_user.username 
+
+    return render_template('settings.html' ,user=user),200
+
 
 @app.route('/contacts' , methods=['GET' , 'POST'])
 @login_required
@@ -130,8 +145,10 @@ def contacts():
 
     if form_add_group.validate_on_submit():
         print("going in")
-        return "{}{}".format(form_add_group.group.data , form_add_group.contact.data)
-        
+        return "group data : {} , contact : {}".format(form_add_group.group.data , form_add_group.contact.data)
+    for error in form_add_group.contact.errors:
+        print(error)
+
     mssg = ""
     contact_list = db.session.query(login_model.AddContact).all() 
     
@@ -1112,10 +1129,3 @@ def edit_data_contact(item_id):
     return redirect(url_for('contacts'))
 
 
-@app.route('/user_profile' , methods=['GET' , 'POST'])
-@login_required
-def user_profile():
-    '''
-        Basic master setup done here
-    '''
-    pass

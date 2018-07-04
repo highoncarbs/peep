@@ -66,9 +66,10 @@
 						</ul>
 					</div>
 					<div class="menu user-prof is-fixed-bottom animated fadeInUp ">
-						<ul class="menu-list is-size-4">
-							<li><a href="{{ url_for('user_profile') }}"><span class="icon icon-btn-m"><i data-feather="user"></i></span><span class="menu-text desktop">Hi, {{user.title()}}</span></a></li>						
+						<ul class="menu-list is-size-4" style="margin-bottom:0.5rem;">
+							<li><a href="{{ url_for('user') }}"><span class="icon icon-btn-m"><i data-feather="user"></i></span><span class="menu-text desktop">Hi, {{user.title()}}</span></a></li>						
 						</ul>
+				
 						<a class="logout-btn" href="/logout"><button class="button is-size-5 is-black is-fullwidth ">					    	
 							<i class="icon-btn" data-feather="log-out"></i>
 								<span class="desktop">Logout</span>

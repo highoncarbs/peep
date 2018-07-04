@@ -1,9 +1,13 @@
 astroid==1.6.4
 click==6.7
+decorator==4.3.0
 Flask==1.0.2
+Flask-Cors==3.0.6
 Flask-Login==0.4.1
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
+infinity==1.4
+intervals==0.8.1
 isort==4.3.4
 itsdangerous==0.24
 Jinja2==2.10
@@ -15,6 +19,11 @@ pkg-resources==0.0.0
 pylint==1.9.1
 six==1.11.0
 SQLAlchemy==1.2.8
+SQLAlchemy-Utils==0.33.3
+validators==0.12.2
 Werkzeug==0.14.1
 wrapt==1.10.11
 WTForms==2.2
+WTForms-Alchemy==0.16.7
+WTForms-Components==0.10.3
+WTForms-SQLAlchemy==0.1

@@ -265,8 +265,8 @@ class CommForm(FlaskForm):
 
 
 class AddGroupForm(FlaskForm):
-    group = QuerySelectField('group' , allow_blank = False , get_label = 'group' , query_factory = group_choice)
-    contact= SelectMultipleField('contact' )
+    group = QuerySelectField('group' , allow_blank = False  ,get_label = 'group' , query_factory = group_choice)
+    contact= SelectMultipleField('contact' , coerce=int)
 
 ########################################
 ####### MSSGs FORMS & DB ###############
