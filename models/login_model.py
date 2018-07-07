@@ -1,10 +1,11 @@
 from wtforms import StringField, PasswordField , BooleanField
 from wtforms.widgets import TextArea
-from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField
+from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField ,SelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
 from app import db
+import datetime
 
 ########################################
 #######  APP LOGIN FORMS & DB ##########
@@ -233,14 +234,14 @@ class Invoice(db.Model):
     firm = db.Column(db.String(50))
     invoice_no = db.Column(db.String(50))
     amount = db.Column(db.String(15))
-    date = db.Column(db.String(10))
+    date = db.Column(db.Date)
     
 class InvoiceForm(FlaskForm):
     invoice_no = StringField('invoice_no')
-    amount = StringField('amount')
+    amount = StringField('amount' , validators=[DataRequired() , InputRequired()])
     firm = QuerySelectField('firm' ,  validators=[InputRequired()] , query_factory= firm_choice , allow_blank= False  , get_label='firm')
     company_name = QuerySelectField('company_name', validators=[InputRequired()] , query_factory= contact_choice , allow_blank= False  , get_label='company_name')
-    date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
+    date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format YYYY-MM-DD")  ,  InputRequired() , DataRequired()])
 
 ########################################
 ### COMMUNICATION DETAIL FORMS & DB ####
@@ -251,21 +252,20 @@ class Comm(db.Model):
     comm_channel = db.Column(db.String(50))
     mssg_detail = db.Column(db.String(100))
     group = db.Column(db.String(50))
-    date = db.Column(db.String(10))
+    date = db.Column(db.DateTime)
     
 class CommForm(FlaskForm):
-    comm_channel = QuerySelectField('comm_channel',validators=[InputRequired()] , query_factory=comm_choice , allow_blank= False  , get_label='channel')
+    comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
     mssg_detail = StringField('mssg_detail', widget= TextArea())
-    group = QuerySelectField('group' ,  validators=[InputRequired()] , query_factory= group_choice , allow_blank= False  , get_label='group')
+    group = SelectField('group' ,  validators=[InputRequired()] , coerce = int)
     date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
 
 ########################################
 ####### GROUP ADDITION FORMS & DB ######
 ########################################
 
-
 class AddGroupForm(FlaskForm):
-    group = QuerySelectField('group' , allow_blank = False  ,get_label = 'group' , query_factory = group_choice)
+    group = SelectField('group' ,coerce =int)
     contact= SelectMultipleField('contact' , coerce=int)
 
 ########################################
@@ -278,4 +278,5 @@ class Mssgs(db.Model):
     mssg = db.Column(db.String(500) , nullable = True)
 
 class MssgsForm(FlaskForm):
-    pass
+    type_mssg = SelectField('Communication Type' , coerce =int)
+    mssg = StringField('mssg' , widget = TextArea() , validators = [InputRequired() , DataRequired()])

@@ -6,10 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
-# from sqlalchemy.sql import text
+from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-
+import datetime
 # Models
 # Flask app intitialization 
 
@@ -20,7 +20,8 @@ CORS(app)
 # SQLAlchemy initialization 
 import MySQLdb
 db = SQLAlchemy(app)
-engine = create_engine('mysql+mysqldb://root@127.0.0.1/PEEPS')
+engine = db.engine
+conn = engine.connect()
 Base = declarative_base()
 
 from models import login_model
@@ -141,13 +142,15 @@ def contacts():
     user = current_user.username 
     form = login_model.AddContactForm()
     form_add_group = login_model.AddGroupForm()
+    form_add_group.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
     form_add_group.contact.choices = [ (r.id , r.company_name ) for r in login_model.AddContact.query.order_by('company_name') ]
 
     if form_add_group.validate_on_submit():
-        print("going in")
-        return "group data : {} , contact : {}".format(form_add_group.group.data , form_add_group.contact.data)
-    for error in form_add_group.contact.errors:
-        print(error)
+        group = login_model.Group.query.filter_by(id=int(form_add_group.group.data)).first().group
+        for x in form_add_group.contact.data:
+            sql = text('insert into :tablename(contact)  values (:value)')
+            print(sql)
+            conn.execute(sql , tablename = group , value = int(x))
 
     mssg = ""
     contact_list = db.session.query(login_model.AddContact).all() 
@@ -232,7 +235,9 @@ def insights():
             - No fo Invoice
             - Sales for that user
     '''
-    pass
+    user = current_user.username 
+    return render_template('insights.html' , user = user) , 200
+
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required
 def transaction():
@@ -243,6 +248,8 @@ def transaction():
     
     form_comm = login_model.CommForm()
     comm_list = db.session.query(login_model.Comm).all()
+    form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
+    form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
 
     if session['check_t']:
         pass
@@ -250,8 +257,29 @@ def transaction():
         session['check_t'] = 'a'
 
     if form_comm.validate():
-      print("ok")
-      print(form_comm.comm_channel.data)
+        print('Going IN')
+        mssg = ""
+        session['check_t'] = 'b'
+        session['mssg_t_b'] = mssg
+        date_new = datetime.date(int(request.form_comm['date'].split('-')[0]),int(request.form_comm['date'].split('-')[1]),int(request.form_comm['date'].split('-')[2]))
+        new_data = login_model.Comm(comm_channel=form_comm.channel.data.upper() , mssg_detail = form_comm.mssg_detail.data,
+        group = form_comm.group.data , date = date_new )  
+        print(form_comm.group.data)
+        try:
+            db.session.add(new_data)
+            db.session.commit()
+            mssg = "Data Successfully added 👍"
+            session['mssg_d'] = mssg
+            return redirect(url_for('basic_master'))
+   
+        except Exception as e:
+            mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+            session['mssg_d'] = mssg
+            return redirect(url_for('basic_master'))
+    
+    for fieldName, errorMessages in form.errors.items():
+        for err in errorMessages:
+            print(err)
         
     return render_template('transaction.html' , user = user ,form_invoice = form_invoice, form_comm = form_comm,
     commlist = comm_list ,invoicelist = invoice_list , check =session['check_t'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
@@ -272,9 +300,10 @@ def transaction_invoice():
 
     else:
         firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
+        date_new = datetime.date(int(request.form['date'].split('-')[0]),int(request.form['date'].split('-')[1]),int(request.form['date'].split('-')[2]))
         company_name = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first().company_name
         new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
-            company_name =company_name , amount = request.form['amount'] , date = request.form['date'])  
+            company_name =company_name , amount = request.form['amount'] , date = date_new)  
         try:
             db.session.add(new_data)
             db.session.commit()

@@ -27,8 +27,8 @@ Current Communications
 {% block data_display %}data_display_b{% endblock %}
 <!-- Data entry block -->
 {% block form_xcontent %}
-    {{form_comm.hidden_tag()}}
     <form action="{{url_for('transaction')}}" method="POST">
+            {{form_comm.hidden_tag()}}
             <div class="field is-grouped is-grouped-multiline">
                 <div class="select control" width="5rem">
                     {{form_comm.comm_channel}}    

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- FIX : Action Buttons in navbar-end -->
+<div class="navbar ">
+    <div class="navbar-start">
+            <p class="navbar-item is-size-4 has-text-weight-bold">Insights </p>
+    </div>
+    <div class="navbar-end is-size-4">
+            <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
+            <a class="navbar-item" id="group-create" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Reports</button></a>
+            <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
+        </div>
+</div>
+<br>
+<br>
+{% endblock %}
