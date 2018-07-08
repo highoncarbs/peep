@@ -15,6 +15,8 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
 </head>
 <body>
 	<div class="navbar is-hidden-desktop">
@@ -55,7 +57,9 @@
 
 		<section class="columns is-fullheight">
 				<aside class="column is-side-bar is-hidden-touch hero is-2 is-fullheight">
-					<div class="brand is-size-1"></div>
+					<div class="brand is-narrow animated fadeInLeft"  style="padding:1rem;padding-top:2rem;">
+							<a href="{{url_for('index')}}"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
+					</div>
 					<div class="menu is-size-4 has-text-weight-bold">
 						<ul class="menu-list animated fadeInLeft">
 							<li><a href="{{ url_for('index') }}"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span class="menu-text">Home</span></a></li>

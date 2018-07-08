@@ -1,4 +1,4 @@
-from wtforms import StringField, PasswordField , BooleanField
+from wtforms import StringField, PasswordField , BooleanField , DateField
 from wtforms.widgets import TextArea
 from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField ,SelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp
@@ -252,13 +252,13 @@ class Comm(db.Model):
     comm_channel = db.Column(db.String(50))
     mssg_detail = db.Column(db.String(100))
     group = db.Column(db.String(50))
-    date = db.Column(db.DateTime)
+    date = db.Column(db.Date)
     
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
     mssg_detail = StringField('mssg_detail', widget= TextArea())
     group = SelectField('group' ,  validators=[InputRequired()] , coerce = int)
-    date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format DD-MM-YYYY")  ,  InputRequired() , DataRequired()])
+    date = StringField('date' , validators=[InputRequired() , DataRequired()])
 
 ########################################
 ####### GROUP ADDITION FORMS & DB ######
@@ -280,3 +280,22 @@ class Mssgs(db.Model):
 class MssgsForm(FlaskForm):
     type_mssg = SelectField('Communication Type' , coerce =int)
     mssg = StringField('mssg' , widget = TextArea() , validators = [InputRequired() , DataRequired()])
+
+########################################
+####### INSIGHTS FILTER FORM ###########
+########################################
+
+class FilterForm(FlaskForm):
+    date_start = DateField('start_date' ,format = r'%Y-%m-%d')
+    date_end = DateField('end_date' ,format = r'%Y-%m-%d')
+    buss_cat = SelectMultipleField('buss_cat' , coerce =int)
+    prod_cat = SelectMultipleField('prod_cat' , coerce =int)
+    city = SelectMultipleField('city' , coerce =int)
+    state = SelectMultipleField('state' , coerce =int)
+    country = SelectMultipleField('country' , coerce =int)
+    broker = SelectMultipleField('broker' , coerce =int)
+    health_code = SelectMultipleField('health_code' , coerce = int)
+    no_comm = StringField('no_comm')
+    comm_channel = SelectMultipleField('buss_cat' , coerce = int)
+    no_invoice = StringField('no_invoice')
+    amount = StringField('amount')

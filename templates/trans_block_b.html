@@ -9,14 +9,18 @@ Current Communications
 
 {% block error_content%}
 
-{% if error_mssg_t_b %}
-
+{% if error_mssg %}
 <div class="notification has-background-warning ">
 <span class="is-size-5">
     <span class="icon icon-btn-m">
         <i data-feather="info"></i>
     </span>
-    {{error_mssg_t_b}}
+    {% for field, errors in form_comm.errors.items() %}
+    <div class="alert alert-error">
+        {{ error_mssg }}
+    </div>
+    {% endfor %}
+  
 </span>
 <br>
 </div>
@@ -60,11 +64,11 @@ Current Communications
 {% for l in commlist %}
 <tr>
     <!-- Data Rows -->
-    <td>{{l.invoice_no}}</td>
+    <td>{{l.comm_channel}}</td>
+    <td>{{l.mssg_detail}}</td>
     <td>{{l.date}}</td>
-    <td>{{l.company_name}}</td>
-    <td>{{l.firm}}</td>
-    <td>{{l.amount}}</td>
+    <td>{{l.group}}</td>
+
     <td><a href="{{url_for('delete_data_invoice',item_id= l.id)}}">Delete</a></td>
     <td><a id="edit_button_t_a_{{loop.index}}">Edit</a></td>
     <!-- Edit data modal -->

@@ -3,15 +3,82 @@
 
 <!-- FIX : Action Buttons in navbar-end -->
 <div class="navbar ">
-    <div class="navbar-start">
+        <div class="navbar-start">
             <p class="navbar-item is-size-4 has-text-weight-bold">Insights </p>
-    </div>
-    <div class="navbar-end is-size-4">
-            <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
-            <a class="navbar-item" id="group-create" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Reports</button></a>
-            <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
+         </div>
+        <div class="navbar-end is-size-4">
+                <a class="navbar-item" id="filter" ><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
+                <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Reports</button></a>
+                <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
         </div>
 </div>
 <br>
-<br>
+
+<!-- Filter Section -->
+<div class="modal" id="modal-filter">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+        <div class="box has-addons-centered">
+                <p class="is-size-4 has-text-weight-bold">Filters </p>
+                <br>
+                <form action="/insights" method="POST">
+                {{form.hidden_tag()}}
+
+                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
+                        <div class="field is-grouped is-multiline">
+                        <p class="control">{{form.date_start(class="input")}}</p>
+                        <span class="control has-text-grey is-size-5 has-text-weight-normal"> to </span>
+                        <p class="control">{{form.date_end(class="input")}}</p>
+                        </div>
+                        <br>
+                        <div class="columns">
+                                <div class="column">
+                                        <div class="field is-horizontal">
+                                        <div class="field" style="margin-right:2rem;">
+                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
+                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                        </div>
+                                        
+                                        <div class="field">
+                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
+                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                        </div>
+                                        </div>
+
+                                        <div class="field">
+                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
+                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                        </div>
+                                        </div>
+                                </div>
+                        </div>
+                </form>
+        </div>
+</div>
+<button class="modal-close is-large" aria-label="close"></button>
+
+</div>
+<!-- End Filter Modal -->
+<script>
+        document.querySelector('#filter').addEventListener('click', function(event) {
+        event.preventDefault();
+        var modal = document.querySelector('#modal-filter');  // assuming you have only 1
+        var html = document.querySelector('html');
+        modal.classList.add('is-active');
+        html.classList.add('is-clipped');
+
+        modal.querySelector('.modal-close').addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+                });
+
+        modal.querySelector('.modal-background').addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+        });
+        });
+
+</script>
 {% endblock %}

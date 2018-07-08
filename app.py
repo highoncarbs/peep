@@ -148,9 +148,8 @@ def contacts():
     if form_add_group.validate_on_submit():
         group = login_model.Group.query.filter_by(id=int(form_add_group.group.data)).first().group
         for x in form_add_group.contact.data:
-            sql = text('insert into :tablename(contact)  values (:value)')
-            print(sql)
-            conn.execute(sql , tablename = group , value = int(x))
+            sql = 'insert into {}(contact)  values ({})'.format(group , int(x))
+            conn.execute(sql )
 
     mssg = ""
     contact_list = db.session.query(login_model.AddContact).all() 
@@ -236,7 +235,9 @@ def insights():
             - Sales for that user
     '''
     user = current_user.username 
-    return render_template('insights.html' , user = user) , 200
+    form = login_model.FilterForm()
+    form.buss_cat.choices = [(r.id , r.buss_cat) for r in login_model.BussCat.query.all()]
+    return render_template('insights.html' , user = user , form = form) , 200
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required
@@ -251,36 +252,32 @@ def transaction():
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
 
-    if session['check_t']:
-        pass
-    else:
-        session['check_t'] = 'a'
-
+   
     if form_comm.validate():
-        print('Going IN')
         mssg = ""
         session['check_t'] = 'b'
         session['mssg_t_b'] = mssg
-        date_new = datetime.date(int(request.form_comm['date'].split('-')[0]),int(request.form_comm['date'].split('-')[1]),int(request.form_comm['date'].split('-')[2]))
-        new_data = login_model.Comm(comm_channel=form_comm.channel.data.upper() , mssg_detail = form_comm.mssg_detail.data,
+        date_new = datetime.date(int(form_comm.date.data.split('-')[0]),int(form_comm.date.data.split('-')[1]),int(form_comm.date.data.split('-')[2]))
+        new_data = login_model.Comm(comm_channel=form_comm.comm_channel.data , mssg_detail = form_comm.mssg_detail.data,
         group = form_comm.group.data , date = date_new )  
-        print(form_comm.group.data)
         try:
             db.session.add(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
             session['mssg_d'] = mssg
-            return redirect(url_for('basic_master'))
+            return redirect(url_for('transaction'))
    
         except Exception as e:
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
             session['mssg_d'] = mssg
-            return redirect(url_for('basic_master'))
+            return redirect(url_for('transaction'))
     
-    for fieldName, errorMessages in form.errors.items():
-        for err in errorMessages:
-            print(err)
         
+        if session['check_t']:
+            pass
+        else:
+            session['check_t'] = 'a'
+
     return render_template('transaction.html' , user = user ,form_invoice = form_invoice, form_comm = form_comm,
     commlist = comm_list ,invoicelist = invoice_list , check =session['check_t'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
 
