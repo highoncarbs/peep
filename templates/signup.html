@@ -1,14 +1,18 @@
 {% extends 'base_login.html' %}
 {% block content %}
-<div class=" has-text-centered" style="margin-top : 100px;">
-	<h2 class="is-size-4 has-text-weight-bold">Join Peeps</h2>
-	<h2 class="is-size-4">A sales communication platform for everyone</h2>
-	<br>
-	<br>
-	<div class="form-box">
-	<form action="/signup" method="POST">
+<div class=" has-text-centered is-vcentered">
+		<a href="{{url_for('index')}}" style="padding:1rem;"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
+			
+		<p class="has-text-weight-bold" style="margin-top:1rem;">Coomunication Management Platform designed <br>for small bussiness.</p>
+		<br>
+		<br>
+		<h2 class="is-size-4 has-text-weight-bold">Join Peep.</h2>
+		<br>
+		<br>
+	<div class="form-box center">
+	<form action="/signup" method="POST" width="5rem">
 		{{ form.hidden_tag()}}
-		{{ form.username(class="input" , placeholder="Username" , width = "5rem")}}
+		{{ form.username(class="input" , placeholder="Username")}}
 		<br><br>
 		{{ form.email(class="input" , placeholder="Email")}}<br><br>
 		{{ form.password(class="input" , placeholder = "Password")}}<br><br>

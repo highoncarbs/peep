@@ -18,9 +18,8 @@
 		<nav class="hero-head">
 			<div class="columns is-mobile -is-marginless ">
 				<div class="column left">
-							<div class="brand is-narrow menu menu-item animated fadeIn"  style="padding:2rem;">
-									<a href="{{url_for('index')}}"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
-							</div>					</figure>
+							<div class="brand is-narrow menu menu-item animated fadeIn"  >
+							</div>				
 				<div class="column right">
 					<p class="navbar-item is-size-6" style="float:right">
 						{% if subtitle == "Login" %}
@@ -33,7 +32,8 @@
 		</nav>
 
 	</section>
-	<section class="body-content is-centered">
+	<section class="hero-body body-content is-centered">
+
 	{% block content%}
 	{% endblock %}
 	</section>
