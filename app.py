@@ -2,7 +2,7 @@
 
 from flask import Flask , render_template , request , redirect , session , abort , url_for , g , flash , jsonify
 import json
-from flask_sqlalchemy import SQLAlchemy 
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager , login_user  , login_required , logout_user , current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
@@ -56,7 +56,7 @@ def index():
     session['mssg_t_b'] = ""
 
 
-    return render_template('base.html' , user = user) , 200
+    return render_template('home.html' , user = user) , 200
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -237,6 +237,14 @@ def insights():
     user = current_user.username 
     form = login_model.FilterForm()
     form.buss_cat.choices = [(r.id , r.buss_cat) for r in login_model.BussCat.query.all()]
+    form.prod_cat.choices = [(r.id , r.prod_cat) for r in login_model.ProdCat.query.all()]
+    form.city.choices = [(r.id , r.city) for r in login_model.City.query.all()]
+    form.state.choices = [(r.id , r.state) for r in login_model.State.query.all()]
+    form.country.choices = [(r.id , r.country) for r in login_model.Country.query.all()]
+    form.broker.choices = [(r.id , r.broker_name) for r in login_model.Broker.query.all()]
+    form.health_code.choices = [(r.id , r.health) for r in login_model.HealthCode.query.all()]
+    form.comm_channel.choices = [(r.id , r.channel) for r in login_model.CommChannel.query.all()]
+
     return render_template('insights.html' , user = user , form = form) , 200
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
@@ -248,7 +256,9 @@ def transaction():
     invoice_list = db.session.query(login_model.Invoice).all()
     
     form_comm = login_model.CommForm()
-    comm_list = db.session.query(login_model.Comm).all()
+    comm_list = db.session.query(login_model.Comm).join(login_model.CommChannel).all()
+    for x in comm_list:
+        print(dir(x))
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
 

@@ -249,10 +249,11 @@ class InvoiceForm(FlaskForm):
 
 class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    comm_channel = db.Column(db.String(50))
+    comm_channel = db.Column(db.Integer , db.ForeignKey('comm_channel.id'))
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.String(50))
+    group = db.Column(db.Integer)
     date = db.Column(db.Date)
+    comm = db.relationship("CommChannel")
     
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
@@ -299,3 +300,6 @@ class FilterForm(FlaskForm):
     comm_channel = SelectMultipleField('buss_cat' , coerce = int)
     no_invoice = StringField('no_invoice')
     amount = StringField('amount')
+
+###### MAPPER #########
+

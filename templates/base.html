@@ -15,15 +15,13 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
-</head>
+	</head>
 <body>
 	<div class="navbar is-hidden-desktop">
 		<div class="container">
 				<div class="navbar-brand" style="padding-left:1rem;" >
-						<a class="navbar-item is-size-4" href="#" style="font-weight:bold;" >
-						  Peep
+						<a class="navbar-item " href="{{url_for('index')}}" style="font-weight:bold;" >
+								<img  src="static/images/peep-logo.png" width="112"/>
 						</a>
 						<span class="navbar-burger burger" data-target="navMenu">
 						  <span></span>
@@ -33,7 +31,7 @@
 				</div>
 				<hr style="margin-top:0px; margin-bottom:5px;">
 				<div id="navMenu" class="navbar-menu is-shadowless animated fadeIn" >
-						<div class="navbar-end is-size-4"  style="padding-left:1rem;">
+						<div class="navbar-end is-size-4 is-center"  style="padding-left:1rem;">
 								<a href="{{ url_for('index') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span >Home</span></a>
 								<a href="{{ url_for('contacts') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span>Contacts</span></a>
 								<a href="{{ url_for('insights') }}" class="navbar-item has-text-weight-bold"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span>Insights</span></a>

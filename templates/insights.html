@@ -26,30 +26,78 @@
 
                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
                         <div class="field is-grouped is-multiline">
-                        <p class="control">{{form.date_start(class="input")}}</p>
+                        <p class="control">{{form.date_start(class="input" , placeholder="Enter Start Date - YYYY-MM-DD")}}</p>
                         <span class="control has-text-grey is-size-5 has-text-weight-normal"> to </span>
-                        <p class="control">{{form.date_end(class="input")}}</p>
+                        <p class="control">{{form.date_end(class="input" , placeholder="Enter End Date - YYYY-MM-DD")}}</p>
                         </div>
                         <br>
                         <div class="columns">
                                 <div class="column">
                                         <div class="field is-horizontal">
-                                        <div class="field" style="margin-right:2rem;">
-                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
-                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                                <div class="field" style="margin-right:2rem;">
+                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
+                                                <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                                </div>
+                                                
+                                                <div class="field">
+                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
+                                                <p class="select is-multiple control" width="5rem">{{form.prod_cat}}</p>
+                                                </div>
                                         </div>
-                                        
-                                        <div class="field">
-                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
-                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                        <div class="notification is-narrow is-light">
+                                        <div class="field is-horizontal">
+                                                <div class="field" style="margin-right:2.5rem;">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">City</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.city}}</p>
+                                                </div>
+                                                <div class="field " style="margin-right:2.5rem;">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">State</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.state}}</p>
+                                                </div>
+                                                <div class="field">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Country</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.country}}</p>
+                                                </div>
                                         </div>
+                                        </div>
+                                        <div class="field is-horizontal">
+                                                <div class="field" style="margin-right:2rem;">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Broker</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.broker}}</p>
+                                                </div>
+                                                
+                                                <div class="field" style="margin-right:2rem;">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Health Code</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.health_code   }}</p>
+                                                </div>
+                                                <div class="field">
+                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Communication Channels</p>
+                                                        <p class="select is-multiple control" width="5rem">{{form.comm_channel}}</p>
+                                                </div>
                                         </div>
 
-                                        <div class="field">
-                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
-                                        <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                        <div class="field is-horizontal">
+                                                        <div class="field" style="margin-right:1rem;">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">No. Invoice</p>
+                                                                <p class="select is-multiple control" width="5rem">{{form.no_invoice(class="input" , placeholder="Enter number of Invoice")}}</p>
+                                                        </div>
+                                                        
+                                                        <div class="field" style="margin-right:1rem;">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Amount</p>
+                                                                <p class="select is-multiple control" width="5rem">{{form.amount(class="input" , placeholder="Enter Amount Minimum")}}</p>
+                                                        </div>
+                                                        <div class="field">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">No. of Comm</p>
+                                                                <p class="select is-multiple control" width="5rem">{{form.no_comm(class="input" , placeholder="Enter number of Communications")}}</p>
+                                                        </div>
                                         </div>
+                                        <div class="buttons">
+                                                <a class="button is-black"><i class="icon-btn" data-feather="check-square"></i>Set Filter</a>                                          
+                                                <a class="button is-light"><i class="icon-btn" data-feather="circle"></i>Clear Filters</a>
+
                                         </div>
+
+
                                 </div>
                         </div>
                 </form>
