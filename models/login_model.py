@@ -1,7 +1,7 @@
 from wtforms import StringField, PasswordField , BooleanField , DateField
 from wtforms.widgets import TextArea
 from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField ,SelectField
-from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp
+from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp , Optional
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
 from app import db
@@ -230,11 +230,13 @@ class AddContact(db.Model):
 
 class Invoice(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    company_name = db.Column(db.String(50))
-    firm = db.Column(db.String(50))
+    company_name = db.Column(db.Integer , db.ForeignKey('add_contact.id'))
+    firm = db.Column(db.Integer , db.ForeignKey('firm.id'))
     invoice_no = db.Column(db.String(50))
     amount = db.Column(db.String(15))
     date = db.Column(db.Date)
+    com_name = db.relationship("AddContact" , foreign_keys=[company_name])
+    firm_value = db.relationship("Firm" , foreign_keys=[firm])
     
 class InvoiceForm(FlaskForm):
     invoice_no = StringField('invoice_no')
@@ -251,9 +253,10 @@ class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     comm_channel = db.Column(db.Integer , db.ForeignKey('comm_channel.id'))
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.Integer)
+    group = db.Column(db.Integer ,db.ForeignKey('group.id') )
     date = db.Column(db.Date)
-    comm = db.relationship("CommChannel")
+    comm = db.relationship("CommChannel" , foreign_keys=[comm_channel])
+    group_value = db.relationship("Group" , foreign_keys=[group])
     
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
@@ -287,8 +290,8 @@ class MssgsForm(FlaskForm):
 ########################################
 
 class FilterForm(FlaskForm):
-    date_start = DateField('start_date' ,format = r'%Y-%m-%d')
-    date_end = DateField('end_date' ,format = r'%Y-%m-%d')
+    date_start = DateField('start_date' ,format = r'%Y-%m-%d' ,validators=[Optional(),])
+    date_end = DateField('end_date' ,format = r'%Y-%m-%d' , validators=[Optional(),])
     buss_cat = SelectMultipleField('buss_cat' , coerce =int)
     prod_cat = SelectMultipleField('prod_cat' , coerce =int)
     city = SelectMultipleField('city' , coerce =int)
