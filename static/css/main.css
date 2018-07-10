@@ -16,11 +16,18 @@ body{
     
 }
 
+.clear{
+  margin-bottom:1rem;
+}
 
 .icon-btn-m{
   margin-right: 10px;
   vertical-align:middle;
   margin-bottom : 6px;
+}
+.icon-btn-s{
+  margin-right: 0.5rem;
+  
 }
 
 .is-side-bar{

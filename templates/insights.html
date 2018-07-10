@@ -21,7 +21,7 @@
         <div class="box has-addons-centered">
                 <p class="is-size-4 has-text-weight-bold">Filters </p>
                 <br>
-                <form action="/insights" method="POST">
+                <form id="filter_form" action="/insights" method="POST">
                 {{form.hidden_tag()}}
 
                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
@@ -36,11 +36,15 @@
                                         <div class="field is-horizontal">
                                                 <div class="field" style="margin-right:2rem;">
                                                 <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
+                                                <span onclick="buss_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br>
                                                 <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
                                                 </div>
                                                 
                                                 <div class="field">
                                                 <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
+                                                <span onclick="prod_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br>
                                                 <p class="select is-multiple control" width="5rem">{{form.prod_cat}}</p>
                                                 </div>
                                         </div>
@@ -48,14 +52,20 @@
                                         <div class="field is-horizontal">
                                                 <div class="field" style="margin-right:2.5rem;">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">City</p>
+                                                        <span onclick="city_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                        <br>            
                                                         <p class="select is-multiple control" width="5rem">{{form.city}}</p>
                                                 </div>
                                                 <div class="field " style="margin-right:2.5rem;">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">State</p>
+                                                        <span onclick="state_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                        <br>
                                                         <p class="select is-multiple control" width="5rem">{{form.state}}</p>
                                                 </div>
                                                 <div class="field">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Country</p>
+                                                        <span onclick="country_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br>
                                                         <p class="select is-multiple control" width="5rem">{{form.country}}</p>
                                                 </div>
                                         </div>
@@ -63,16 +73,21 @@
                                         <div class="field is-horizontal">
                                                 <div class="field" style="margin-right:2rem;">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Broker</p>
+                                                        <span onclick="broker_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br>
                                                         <p class="select is-multiple control" width="5rem">{{form.broker}}</p>
                                                 </div>
                                                 
                                                 <div class="field" style="margin-right:2rem;">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Health Code</p>
-                                                        <p class="select is-multiple control" width="5rem">{{form.health_code   }}</p>
+                                                        <span onclick="health_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br>
+                                                        <p class="select is-multiple control" width="5rem">{{form.health_code}}</p>
                                                 </div>
                                                 <div class="field">
                                                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Communication Channels</p>
-                                                        <p class="select is-multiple control" width="5rem">{{form.comm_channel}}</p>
+                                                        <span onclick="comm_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                <br><p class="select is-multiple control" width="5rem">{{form.comm_channel}}</p>
                                                 </div>
                                         </div>
 
@@ -92,12 +107,9 @@
                                                         </div>
                                         </div>
                                         <div class="buttons">
-                                                <a class="button is-black"><i class="icon-btn" data-feather="check-square"></i>Set Filter</a>                                          
+                                                <button class="button is-black" onclick="form_reset()" type="submit"><i class="icon-btn" data-feather="check-square"></i>Set Filter</button>                                          
                                                 <a class="button is-light"><i class="icon-btn" data-feather="circle"></i>Clear Filters</a>
-
                                         </div>
-
-
                                 </div>
                         </div>
                 </form>
@@ -127,6 +139,42 @@
                 html.classList.remove('is-clipped');
         });
         });
+        
+        function prod_cat_reset(){
+                select_box = document.getElementById("prod_cat");
+                select_box.selectedIndex = -1;
+        };
 
+        function comm_reset(){
+                select_box = document.getElementById("comm_channel");
+                select_box.selectedIndex = -1;
+        };
+        function buss_cat_reset(){
+                select_box = document.getElementById("buss_cat");
+                select_box.selectedIndex = -1;
+        };
+        function city_reset(){
+                select_box = document.getElementById("city");
+                select_box.selectedIndex = -1;
+        };
+        function state_reset(){
+                select_box = document.getElementById("state");
+                select_box.selectedIndex = -1;
+        };
+        function country_reset(){
+                select_box = document.getElementById("country");
+                select_box.selectedIndex = -1;
+        };
+        function broker_reset(){
+                select_box = document.getElementById("broker");
+                select_box.selectedIndex = -1;
+        };
+        function health_reset(){
+                select_box = document.getElementById("health_code");
+                select_box.selectedIndex = -1;
+        };
+
+        function form_reset(){
+                document.getElementById("filter_form").reset();  };
 </script>
 {% endblock %}
