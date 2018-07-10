@@ -245,6 +245,11 @@ def insights():
     form.health_code.choices = [(r.id , r.health) for r in login_model.HealthCode.query.all()]
     form.comm_channel.choices = [(r.id , r.channel) for r in login_model.CommChannel.query.all()]
 
+    
+    if form.validate_on_submit():
+        print(form.buss_cat.data)
+    else:  # You only want to print the errors since fail on validate
+        print(form.errors) 
     return render_template('insights.html' , user = user , form = form) , 200
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
@@ -257,8 +262,6 @@ def transaction():
     
     form_comm = login_model.CommForm()
     comm_list = db.session.query(login_model.Comm).join(login_model.CommChannel).all()
-    for x in comm_list:
-        print(dir(x))
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
 
@@ -306,11 +309,9 @@ def transaction_invoice():
         return redirect(url_for('basic_master'))
 
     else:
-        firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
         date_new = datetime.date(int(request.form['date'].split('-')[0]),int(request.form['date'].split('-')[1]),int(request.form['date'].split('-')[2]))
-        company_name = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first().company_name
-        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
-            company_name =company_name , amount = request.form['amount'] , date = date_new)  
+        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = int(request.form['firm']) ,
+            company_name = int(request.form['company_name']) , amount = request.form['amount'] , date = date_new)  
         try:
             db.session.add(new_data)
             db.session.commit()

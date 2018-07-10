@@ -74,8 +74,8 @@ Current Invoice Details
         <!-- Data Rows -->
         <td>{{l.invoice_no}}</td>
         <td>{{l.date}}</td>
-        <td>{{l.company_name}}</td>
-        <td>{{l.firm}}</td>
+        <td>{{l.com_name.company_name}}</td>
+        <td>{{l.firm_value.firm}}</td>
         <td>{{ "{:,}".format(l.amount | int) }}</td>
         <td><a href="{{url_for('delete_data_invoice',item_id= l.id)}}">Delete</a></td>
         <td><a id="edit_button_t_a_{{loop.index}}">Edit</a></td>
