@@ -17,35 +17,35 @@ Simple and open marketing application to track the return on any marketing campa
         <img src="./assets/1.PNG" alt="Login Page">
       </a>
       <br />
-      <em>Contacts</em>
+      <em>Login Page</em>
     </td>
     <td align="center">
       <a href="./assets/2.PNG" target="_blank" title="Basic Master">
         <img src="./assets/2.PNG" alt="Basic Master">
       </a>
       <br />
-      <em>Opportunities</em>
+      <em>Basic Master</em>
     </td>
     <td align="center">
       <a href="./assets/3.PNG" target="_blank" title="Add Contacts">
         <img src="./assets/3.PNG" alt="Add Contacts">
       </a>
       <br />
-      <em>Accounts</em>
+      <em>Add Contacts</em>
     </td>
     <td align="center">
       <a href="./assets/4.PNG" target="_blank" title="Transactions">
         <img src="./assets/4.PNG" alt="Transactions">
       </a>
       <br />
-      <em>Tasks</em>
+      <em>Transactions</em>
     </td>
     <td align="center">
       <a href="./assets/5.PNG" target="_blank" title="Create Groups">
         <img src="./assets/5.PNG" alt="Create Groups">
       </a>
       <br />
-      <em>Tasks</em>
+      <em>Create Groups</em>
     </td>
   </tr>
 </table>
