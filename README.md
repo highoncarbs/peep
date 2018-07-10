@@ -1,5 +1,5 @@
 <p align="center">
-<img align="center" src="./assets/peep-logo.png">
+<img align="center" src="./assets/peep-logo.PNG">
    <br><br>
 <img align="center" src="https://img.shields.io/badge/WORK%20-IN%20PROGRESS-yellow.svg"/>
 <img align="center" src="https://img.shields.io/badge/License-MIT%20v3-blue.svg"/>
@@ -10,7 +10,7 @@ Simple and open marketing application to track the return on any marketing campa
 
 ## Screenshots
 
-| <img align="center" src="./assets/1.png"/>  | <img align="center" src="./assets/2.png"/>  |  <img align="center" src="./assets/3.png"/>  |  <img align="center" src="./assets/4.png"/>  |  <img align="center" src="./assets/5.png"/>  |
+| <img align="center" src="./assets/1.PNG"/>  | <img align="center" src="./assets/2.PNG"/>  |  <img align="center" src="./assets/3.PNG"/>  |  <img align="center" src="./assets/4.PNG"/>  |  <img align="center" src="./assets/5.PNG"/>  |
 
 ## ⚡ Features
 
