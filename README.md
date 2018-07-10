@@ -1,5 +1,5 @@
 <p align="center">
-<img align="center" src="./assets/peep-logo.PNG">
+<img align="center" src="./assets/peep-logo.png">
    <br><br>
 <img align="center" src="https://img.shields.io/badge/WORK%20-IN%20PROGRESS-yellow.svg"/>
 <img align="center" src="https://img.shields.io/badge/License-MIT%20v3-blue.svg"/>
