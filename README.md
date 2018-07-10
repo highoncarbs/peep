@@ -10,7 +10,45 @@ Simple and open marketing application to track the return on any marketing campa
 
 ## Screenshots
 
-| <img align="center" src="./assets/1.PNG"/>  | <img align="center" src="./assets/2.PNG"/>  |  <img align="center" src="./assets/3.PNG"/>  |  <img align="center" src="./assets/4.PNG"/>  |  <img align="center" src="./assets/5.PNG"/>  |
+<table>
+  <tr>
+    <td align="center">
+      <a href="./assets/1.PNG" target="_blank" title="Login Page">
+        <img src="./assets/1.PNG" alt="Login Page">
+      </a>
+      <br />
+      <em>Contacts</em>
+    </td>
+    <td align="center">
+      <a href="./assets/2.PNG" target="_blank" title="Basic Master">
+        <img src="./assets/2.PNG" alt="Basic Master">
+      </a>
+      <br />
+      <em>Opportunities</em>
+    </td>
+    <td align="center">
+      <a href="./assets/3.PNG" target="_blank" title="Add Contacts">
+        <img src="./assets/3.PNG" alt="Add Contacts">
+      </a>
+      <br />
+      <em>Accounts</em>
+    </td>
+    <td align="center">
+      <a href="./assets/4.PNG" target="_blank" title="Transactions">
+        <img src="./assets/4.PNG" alt="Transactions">
+      </a>
+      <br />
+      <em>Tasks</em>
+    </td>
+    <td align="center">
+      <a href="./assets/5.PNG" target="_blank" title="Create Groups">
+        <img src="./assets/5.PNG" alt="Create Groups">
+      </a>
+      <br />
+      <em>Tasks</em>
+    </td>
+  </tr>
+</table>
 
 ## ⚡ Features
 
