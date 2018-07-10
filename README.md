@@ -10,7 +10,7 @@ Simple and open marketing application to track the return on any marketing campa
 
 ## Screenshots
 
-| <img align="center" src="./assets/1"/>  | <img align="center" src="./assets/2"/>  |  <img align="center" src="./assets/3"/>  |  <img align="center" src="./assets/4"/>  |  <img align="center" src="./assets/5"/>  |
+| <img align="center" src="./assets/1.png"/>  | <img align="center" src="./assets/2.png"/>  |  <img align="center" src="./assets/3.png"/>  |  <img align="center" src="./assets/4.png"/>  |  <img align="center" src="./assets/5.png"/>  |
 
 ## ⚡ Features
 
