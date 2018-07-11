@@ -27,8 +27,8 @@ Current Invoice Details
 {% block data_display %}data_display_a{% endblock %}
 <!-- Data entry block -->
 {% block form_xcontent %}
-{{form_invoice.hidden_tag()}}
     <form action="{{url_for('transaction_invoice')}}" method="POST">
+            {{form_invoice.hidden_tag()}}
             <div class="field">
                 <div class="field is-grouped is-grouped-multiline">
                 <div class="select control" width="5rem">
@@ -74,8 +74,8 @@ Current Invoice Details
         <!-- Data Rows -->
         <td>{{l.invoice_no}}</td>
         <td>{{l.date}}</td>
-        <td>{{l.com_name.company_name}}</td>
-        <td>{{l.firm_value.firm}}</td>
+        <td>{{l.company_name}}</td>
+        <td>{{l.firm}}</td>
         <td>{{ "{:,}".format(l.amount | int) }}</td>
         <td><a href="{{url_for('delete_data_invoice',item_id= l.id)}}">Delete</a></td>
         <td><a id="edit_button_t_a_{{loop.index}}">Edit</a></td>

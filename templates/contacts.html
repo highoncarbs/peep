@@ -325,8 +325,8 @@
                     for(var i = 0 ; i < elements.length ; i++){
                         var item = elements.item(i);
                         if (item.name == "broker" || item.name == "buss_cat"||item.name == "city"||item.name == "comm_channel" ||item.name == "health_code" ||item.name == "pref_comm_channel" || item.name == "prod_cat"){
-                            obj[item.name] = item.options[item.selectedIndex].value;
-                            console.log(item.options[item.selectedIndex].value);
+                            obj[item.name] = item.options[item.selectedIndex].text;
+                            console.log(item.options[item.selectedIndex].text);
                         }
                         else{
                             obj[item.name] = item.value;
@@ -338,25 +338,25 @@
                     for(var i =0 ; i< prod_list ; i++){
                         var prod_item = document.querySelector('#prod_select_'+i+' > select')   ;
         
-                        obj['prod_cat_'+i+''] = prod_item.options[prod_item.selectedIndex].value;
+                        obj['prod_cat_'+i+''] = prod_item.options[prod_item.selectedIndex].text;
                     };
 
                     for(var j =0 ; j< buss_list ; j++){
                         var buss_item = document.querySelector('#buss_select_'+j+' > select')   ;
         
-                        obj['buss_cat_'+j] = buss_item.options[buss_item.selectedIndex].value;
+                        obj['buss_cat_'+j] = buss_item.options[buss_item.selectedIndex].text;
                     };
 
                     for(var k =0 ; k< comm_list_a ; k++){
                         var comm_a_item = document.querySelector('#comm_a_select_'+k+' > select')   ;
         
-                        obj['comm_a_cat_'+k] = comm_a_item.options[comm_a_item.selectedIndex].value;
+                        obj['comm_a_cat_'+k] = comm_a_item.options[comm_a_item.selectedIndex].text;
                     };
 
                     for(var l =0 ; l< comm_list_b ; l++){
                         var comm_b_item = document.querySelector('#comm_b_select_'+l+' > select')   ;
         
-                        obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].value;
+                        obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
                     };
                     console.log(obj);
                     axios.post("{{url_for('contacts_add')}}", 

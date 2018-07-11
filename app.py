@@ -173,24 +173,23 @@ def contacts_add():
         data = data['data']
         for key , value in data.items():
             if (key.find('prod_cat') != -1) :
-                prod_list.append(int(value))
+                prod_list.append(value)
             if (key.find('buss_cat') != -1) :
-                buss_list.append(int(value))
+                buss_list.append(value)
             if (key.find('comm_channel') != -1) :
-                comm_a_list.append(int(value))
+                comm_a_list.append(value)
             if (key.find('comm_a_cat') != -1) :
-                comm_a_list.append(int(value))
+                comm_a_list.append(value)
             if (key.find('pref_comm_channel') != -1) :
-                comm_b_list.append(int(value))
+                comm_b_list.append(value)
             if (key.find('comm_b_channel') != -1) :
-                comm_b_list.append(int(value))  
+                comm_b_list.append(value)  
         
         prod_list = json.dumps(list(set(prod_list)))
         buss_list = json.dumps(list(set(buss_list)))
         comm_a_list = json.dumps(list(set(comm_a_list)))
         comm_b_list = json.dumps(list(set(comm_b_list)))
-        city_val = login_model.City.query.filter_by(id=data['city']).first().city
-        prod = login_model.AddContact.query.filter_by(city=city_val).first()
+        prod = login_model.AddContact.query.filter_by(city=data['city']).first()
         prod_a = login_model.AddContact.query.filter_by(email=data['email']).first()
         prod_b = login_model.AddContact.query.filter_by(company_name=data['company_name']).first()
 
@@ -199,7 +198,7 @@ def contacts_add():
             return jsonify({'mssg' : mssg})
         
         else:
-            query = login_model.City.query.filter_by(id=data['city']).first()
+            query = login_model.City.query.filter_by(city=data['city']).first()
             new_data = login_model.AddContact(company_name = data['company_name'].upper(),
             company_per = data['company_per'].upper(), contact_one = data['contact_one'], wh_contact = data['wh_contact'],
             email = data['email'], buss_cat = buss_list, broker = data['broker'],health_code = data['health_code'],
@@ -263,30 +262,40 @@ def transaction():
     mssg = ""
     form_invoice = login_model.InvoiceForm()    
     invoice_list = db.session.query(login_model.Invoice).all()
-    
+
     form_comm = login_model.CommForm()
-    comm_list = db.session.query(login_model.Comm).join(login_model.CommChannel).all()
+    comm_list = db.session.query(login_model.Comm).all()
+
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
 
    
-    if form_comm.validate():
+    if form_comm.validate_on_submit():
         mssg = ""
         session['check_t'] = 'b'
         session['mssg_t_b'] = mssg
+
+        comm_channel = login_model.CommChannel.query.filter_by(id=int(form_comm.comm_channel.data)).first().channel
+        group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first().group
+        print(comm_channel)
         date_new = datetime.date(int(form_comm.date.data.split('-')[0]),int(form_comm.date.data.split('-')[1]),int(form_comm.date.data.split('-')[2]))
-        new_data = login_model.Comm(comm_channel=form_comm.comm_channel.data , mssg_detail = form_comm.mssg_detail.data,
-        group = form_comm.group.data , date = date_new )  
+        new_data = login_model.Comm(comm_channel=comm_channel , mssg_detail = form_comm.mssg_detail.data,
+        group = group , date = date_new )  
+        print(new_data)
         try:
+            print('Going In')
             db.session.add(new_data)
+            print('Going 2')
             db.session.commit()
+            print('Going 3')
+
             mssg = "Data Successfully added 👍"
-            session['mssg_d'] = mssg
+            session['mssg_t_b'] = mssg
             return redirect(url_for('transaction'))
    
         except Exception as e:
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
-            session['mssg_d'] = mssg
+            session['mssg_t_b'] = mssg
             return redirect(url_for('transaction'))
     
         
@@ -294,6 +303,9 @@ def transaction():
             pass
         else:
             session['check_t'] = 'a'
+
+    else:
+        print(form_comm.errors)
 
     return render_template('transaction.html' , user = user ,form_invoice = form_invoice, form_comm = form_comm,
     commlist = comm_list ,invoicelist = invoice_list , check =session['check_t'] , error_mssg_t_a = session['mssg_t_a'] ) , 200
@@ -313,9 +325,11 @@ def transaction_invoice():
         return redirect(url_for('basic_master'))
 
     else:
+        firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
         date_new = datetime.date(int(request.form['date'].split('-')[0]),int(request.form['date'].split('-')[1]),int(request.form['date'].split('-')[2]))
-        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = int(request.form['firm']) ,
-            company_name = int(request.form['company_name']) , amount = request.form['amount'] , date = date_new)  
+        company_name = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first().company_name
+        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
+            company_name = company_name , amount = request.form['amount'] , date = date_new)  
         try:
             db.session.add(new_data)
             db.session.commit()
@@ -1169,4 +1183,46 @@ def edit_data_contact(item_id):
     session['check'] = 'a'
     return redirect(url_for('contacts'))
 
+################## Delete & Edit Contact Routes ################
+################################################################
 
+
+@app.route('/delete/comm_adv/<item_id>' , methods=['GET', 'POST'])
+@login_required
+def delete_data_comm_adv(item_id):
+    '''
+        Deletes data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a signle routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+    login_model.Comm.query.filter_by(id=int(item_id)).delete()
+    db.session.commit()
+    mssg = "Data Successfully deleted"
+    session['mssg_c_a'] = mssg
+    session['check'] = 'a'
+    return redirect(url_for('transaction'))
+
+@app.route('/edit/comm_adv/<item_id>' , methods=['GET' , 'POST'])
+@login_required
+def edit_data_comm_adv(item_id):
+    '''
+        Edits data from the Data Display Table
+        Requires Args :
+        INPUT : item_id
+
+        ** FIX : Needs refactoring , using a single routes for delete in multiple tables
+        
+    '''
+    # session['check'] = 'j'
+
+    temp = login_model.Comm.query.filter_by(id=int(item_id)).first()
+    temp.company_name = request.form['edit_input'].upper()
+    db.session.commit()
+    mssg = "Data Successfully Edited" 
+    session['mssg_c_a'] = mssg
+    session['check'] = 'a'
+    return redirect(url_for('transaction'))

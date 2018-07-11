@@ -198,7 +198,7 @@ class AddContactForm(FlaskForm):
     address_two = StringField('address_two' )
     address_three = StringField('address_three')
     address_pin = StringField('address_pin' , validators=[InputRequired()])
-    group = QuerySelectField('group',validators=[Optional(),] , query_factory=group_choice , allow_blank= True  , get_label='group')
+    group = QuerySelectField('group',validators=[Optional(),] , query_factory=group_choice , allow_blank= False  , get_label='group')
 
 
 class AddContact(db.Model):
@@ -230,8 +230,8 @@ class AddContact(db.Model):
 
 class Invoice(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    company_name = db.Column(db.Integer)
-    firm = db.Column(db.Integer)
+    company_name = db.Column(db.String(50))
+    firm = db.Column(db.String(50))
     invoice_no = db.Column(db.String(50))
     amount = db.Column(db.String(15))
     date = db.Column(db.Date)
@@ -249,10 +249,11 @@ class InvoiceForm(FlaskForm):
 
 class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    comm_channel = db.Column(db.Integer )
+    comm_channel = db.Column(db.String(50) )
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.Integer)
+    group = db.Column(db.String(50))
     date = db.Column(db.Date)
+    
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
     mssg_detail = StringField('mssg_detail', widget= TextArea())
