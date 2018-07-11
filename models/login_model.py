@@ -198,7 +198,7 @@ class AddContactForm(FlaskForm):
     address_two = StringField('address_two' )
     address_three = StringField('address_three')
     address_pin = StringField('address_pin' , validators=[InputRequired()])
-    group = QuerySelectField('group',validators=[InputRequired()] , query_factory=group_choice , allow_blank= False  , get_label='group')
+    group = QuerySelectField('group',validators=[Optional(),] , query_factory=group_choice , allow_blank= True  , get_label='group')
 
 
 class AddContact(db.Model):
@@ -230,14 +230,12 @@ class AddContact(db.Model):
 
 class Invoice(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    company_name = db.Column(db.Integer , db.ForeignKey('add_contact.id'))
-    firm = db.Column(db.Integer , db.ForeignKey('firm.id'))
+    company_name = db.Column(db.Integer)
+    firm = db.Column(db.Integer)
     invoice_no = db.Column(db.String(50))
     amount = db.Column(db.String(15))
     date = db.Column(db.Date)
-    com_name = db.relationship("AddContact" , foreign_keys=[company_name])
-    firm_value = db.relationship("Firm" , foreign_keys=[firm])
-    
+
 class InvoiceForm(FlaskForm):
     invoice_no = StringField('invoice_no')
     amount = StringField('amount' , validators=[DataRequired() , InputRequired()])
@@ -251,13 +249,10 @@ class InvoiceForm(FlaskForm):
 
 class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    comm_channel = db.Column(db.Integer , db.ForeignKey('comm_channel.id'))
+    comm_channel = db.Column(db.Integer )
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.Integer ,db.ForeignKey('group.id') )
+    group = db.Column(db.Integer)
     date = db.Column(db.Date)
-    comm = db.relationship("CommChannel" , foreign_keys=[comm_channel])
-    group_value = db.relationship("Group" , foreign_keys=[group])
-    
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
     mssg_detail = StringField('mssg_detail', widget= TextArea())

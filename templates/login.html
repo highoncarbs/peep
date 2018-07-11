@@ -10,7 +10,7 @@
 	<br>
 	<br>
 	<div class="form-box center">
-	<form action="/login" method="POST" width="5rem">
+	<form action="/login" method="POST">
 		{{ form.hidden_tag()}}
 		{{ form.email(placeholder="Email address" , class="input")}}
 		<br>
@@ -19,14 +19,13 @@
 		<br>
 		<br>
 		{% if error_mssg %}
-				<span class="is-medium is-size-6 error-mssg">
+				<div class="notification is-size-6 error-mssg">
 					<i class="icon-btn" data-feather="alert-triangle">error</i>
 					{{ error_mssg }}
-				</span>
-				<br>
-				<br>
+				</div>
+				
 		{% endif %}
-		<br>
+
 		<button class="button is-black is-size-6 "><i class="icon-btn" data-feather="log-in"></i>Login</button>
 		<br>
 		<br>

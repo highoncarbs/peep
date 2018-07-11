@@ -173,33 +173,35 @@ def contacts_add():
         data = data['data']
         for key , value in data.items():
             if (key.find('prod_cat') != -1) :
-                prod_list.append(value)
+                prod_list.append(int(value))
             if (key.find('buss_cat') != -1) :
-                buss_list.append(value)
+                buss_list.append(int(value))
             if (key.find('comm_channel') != -1) :
-                comm_a_list.append(value)
+                comm_a_list.append(int(value))
             if (key.find('comm_a_cat') != -1) :
-                comm_a_list.append(value)
+                comm_a_list.append(int(value))
             if (key.find('pref_comm_channel') != -1) :
-                comm_b_list.append(value)
+                comm_b_list.append(int(value))
             if (key.find('comm_b_channel') != -1) :
-                comm_b_list.append(value)  
+                comm_b_list.append(int(value))  
         
         prod_list = json.dumps(list(set(prod_list)))
         buss_list = json.dumps(list(set(buss_list)))
         comm_a_list = json.dumps(list(set(comm_a_list)))
         comm_b_list = json.dumps(list(set(comm_b_list)))
-        prod = login_model.AddContact.query.filter_by(city=data['city']).first()
+        city_val = login_model.City.query.filter_by(id=data['city']).first().city
+        prod = login_model.AddContact.query.filter_by(city=city_val).first()
         prod_a = login_model.AddContact.query.filter_by(email=data['email']).first()
         prod_b = login_model.AddContact.query.filter_by(company_name=data['company_name']).first()
+
         if (prod and prod_a and prod_b) :
             mssg = "Duplicate data"
             return jsonify({'mssg' : mssg})
         
         else:
-            query = login_model.City.query.filter_by(city=data['city']).first()
-            new_data = login_model.AddContact(company_name = data['company_name'],
-            company_per = data['company_per'], contact_one = data['contact_one'], wh_contact = data['wh_contact'],
+            query = login_model.City.query.filter_by(id=data['city']).first()
+            new_data = login_model.AddContact(company_name = data['company_name'].upper(),
+            company_per = data['company_per'].upper(), contact_one = data['contact_one'], wh_contact = data['wh_contact'],
             email = data['email'], buss_cat = buss_list, broker = data['broker'],health_code = data['health_code'],
             comm_channel = comm_a_list, pref_comm_channel = comm_b_list, prod_cat = prod_list, city = query.city ,
             state = query.state,  country = query.country,address_one = data['address_one'], address_two = data['address_two'],
@@ -247,7 +249,9 @@ def insights():
 
     
     if form.validate_on_submit():
-        print(form.buss_cat.data)
+        buss_cat = form.buss_cat.data
+        prod_cat = form.prod_cat.data
+        print(buss_cat , prod_cat)
     else:  # You only want to print the errors since fail on validate
         print(form.errors) 
     return render_template('insights.html' , user = user , form = form) , 200
