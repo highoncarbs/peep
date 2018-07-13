@@ -13,7 +13,56 @@
         </div>
 </div>
 <br>
+<!-- Data Display -->
+<br>
+<div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>Business Category</th>
+                <th>Product Dealing In</th>
+                <th>Broker</th>
+                <th>Health Code</th>
+                <th>Communication Channel</th>
+                <th>Pref Communication Channel</th>
+                <th>No. of Communication</th>
+                <th>No. of Invoice</th>
+                <th>Sales Amount</th>
+                <th>Delete</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in filter_list %}
+            <tr>
+                <td>{{l.company_name}}</td>
+                <td>{{l.city}}</td>
+                <td>{{l.state}}</td>
+                <td>{{l.country}}</td>
+                <td>{{l.buss_cat}}  </td>
+                <td>{{l.prod_cat}}</td>
+                <td>{{l.prod_cat}}</td>
+                <td>{{l.health_code}}</td>
+                <td>{{l.comm_channel}}</td>
+                <td>{{l.pref_comm_channel}}</td>
+                <td>{{l.no_comm}}</td>
+                <td>{{l.no_invoice}}</td>
+                <td>{{l.no_sales}}</td>                               
+                <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
+                <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
+            </tr>
+            {% endfor %}
+    
+        </tbody>
+        </table>
+    </div>
 
+
+<!-- End Data Display -->
 <!-- Filter Section -->
 <div class="modal" id="modal-filter">
         <div class="modal-background"></div>

@@ -214,7 +214,7 @@ def contacts_add():
                 try:
                     group = login_model.Group.query.filter_by(id=int(data['group'])).first().group
                     sql = 'insert into {}(contact)  values ({})'.format(group , int(new_data.id))
-                    conn.execute(sql 
+                    conn.execute(sql)
 
                 except Exception as e:
                     mssg = "Error occured while adding data to Group 😵. Here's the error : "+str(e)
@@ -272,6 +272,8 @@ def insights():
         amount = form.amount.data
         no_comm = form.no_comm.data
         
+        # Building filter lists
+
         # Bussiness category
         buss_list = list()
         for id in buss_cat:
@@ -289,25 +291,30 @@ def insights():
             broker_list.append(x)
 
         city_list = list()
-        for id in buss_cat:
-            city_list.append(db.session(login_model.City).filter_by(id = int(id)).first())
+        for id in city:
+            city_list.append(db.session.query(login_model.City).filter_by(id = int(id)).first().city)
         
         state_list = list()
-        for id in buss_cat:
-            state_list.append(db.session(login_model.State).filter_by(id = int(id)).first())
+        for id in state:
+            state_list.append(db.session.query(login_model.State).filter_by(id = int(id)).first().state)
         
         country_list = list()
-        for id in buss_cat:
-            country_list.append(db.session(login_model.Country).filter_by(id = int(id)).first())
+        for id in country:
+            country_list.append(db.session.query(login_model.Country).filter_by(id = int(id)).first().country)
         
         comm_list = list()
-        for id in buss_cat:
-            comm_list.append(db.session(login_model.CommChannel).filter_by(id = int(id)).first())
+        for id in comm_channel:
+            comm_list.append(db.session.query(login_model.CommChannel).filter_by(id = int(id)).first().channel)
 
+        print(comm_list)
         hcode_list = list()
-        for id in buss_cat:
+        for id in health_code:
             hcode_list.append(db.session.query(login_model.HealthCode).filter_by(id = int(id)).first().health)
-        
+
+        # End filter lists
+
+        # Conditional Queries 
+
         query = db.session.query(login_model.Invoice)
         
         if date_start:
@@ -319,6 +326,27 @@ def insights():
         if broker_list:
             query = query.filter(login_model.Invoice.broker.in_(broker_list))
         
+        if city_list:
+            query = query.filter(login_model.Invoice.city.in_(city_list))
+
+        if state_list:
+            query = query.filter(login_model.Invoice.state.in_(state_list))
+
+        if country_list:
+            query = query.filter(login_model.Invoice.country.in_(country_list))
+
+        if comm_list:
+            query = query.filter(login_model.Invoice.comm_channel.in_(comm_list))
+
+        if hcode_list:
+            query = query.filter(login_model.Invoice.health_code.in_(hcode_list))
+
+        if no_comm:
+            query = query.filter( no_comm >= no_comm)
+
+        if amount:
+            query = query.filter( amount >= amount)
+                
         print(query.all())
 
     else:  # You only want to print the errors since fail on validate
