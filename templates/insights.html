@@ -22,8 +22,7 @@
                 <p class="is-size-4 has-text-weight-bold">Filters </p>
                 <br>
                 <form id="filter_form" action="/insights" method="POST">
-                {{form.hidden_tag()}}
-
+                        {{form.hidden_tag()}}
                         <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
                         <div class="field is-grouped is-multiline">
                         <p class="control">{{form.date_start(class="input" , placeholder="Enter Start Date - YYYY-MM-DD")}}</p>
@@ -174,7 +173,5 @@
                 select_box.selectedIndex = -1;
         };
 
-        function form_reset(){
-                document.getElementById("filter_form").reset();  };
 </script>
 {% endblock %}

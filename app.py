@@ -205,11 +205,21 @@ def contacts_add():
             comm_channel = comm_a_list, pref_comm_channel = comm_b_list, prod_cat = prod_list, city = query.city ,
             state = query.state,  country = query.country,address_one = data['address_one'], address_two = data['address_two'],
             address_three = data['address_three'],address_pin = data['address_pin'] , group = data['group'] ) 
-
+            
             try:
                 db.session.add(new_data)
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
+
+                try:
+                    group = login_model.Group.query.filter_by(id=int(data['group'])).first().group
+                    sql = 'insert into {}(contact)  values ({})'.format(group , int(new_data.id))
+                    conn.execute(sql 
+
+                except Exception as e:
+                    mssg = "Error occured while adding data to Group 😵. Here's the error : "+str(e)
+                    return jsonify({'mssg' : mssg})
+
                 return jsonify({'mssg' : mssg})
 
 
@@ -250,9 +260,70 @@ def insights():
     if form.validate_on_submit():
         buss_cat = form.buss_cat.data
         prod_cat = form.prod_cat.data
-        print(buss_cat , prod_cat)
+        broker = form.broker.data
+        city = form.city.data
+        health_code = form.health_code.data
+        comm_channel = form.comm_channel.data
+        date_start = form.date_start.data
+        date_end = form.date_end.data
+        state = form.state.data
+        country = form.country.data
+        no_invoice = form.no_invoice.data
+        amount = form.amount.data
+        no_comm = form.no_comm.data
+        
+        # Bussiness category
+        buss_list = list()
+        for id in buss_cat:
+            buss_list.append(db.session.query(login_model.BussCat).filter_by(id = int(id)).first().buss_cat)
+        
+        # Product category
+        prod_list = list()
+        for id in prod_cat:
+            prod_list.append(db.session.query(login_model.ProdCat).filter_by(id = int(id)).first().prod_cat)
+
+        # Broker list        
+        broker_list = list()
+        for id in broker:
+            x = db.session.query(login_model.Broker).filter_by(id = int(id)).first().broker_name
+            broker_list.append(x)
+
+        city_list = list()
+        for id in buss_cat:
+            city_list.append(db.session(login_model.City).filter_by(id = int(id)).first())
+        
+        state_list = list()
+        for id in buss_cat:
+            state_list.append(db.session(login_model.State).filter_by(id = int(id)).first())
+        
+        country_list = list()
+        for id in buss_cat:
+            country_list.append(db.session(login_model.Country).filter_by(id = int(id)).first())
+        
+        comm_list = list()
+        for id in buss_cat:
+            comm_list.append(db.session(login_model.CommChannel).filter_by(id = int(id)).first())
+
+        hcode_list = list()
+        for id in buss_cat:
+            hcode_list.append(db.session.query(login_model.HealthCode).filter_by(id = int(id)).first().health)
+        
+        query = db.session.query(login_model.Invoice)
+        
+        if date_start:
+            query = query.filter(date >= date_start)
+        
+        if date_end:
+            query = query.filter(date <= date_end)
+        
+        if broker_list:
+            query = query.filter(login_model.Invoice.broker.in_(broker_list))
+        
+        print(query.all())
+
     else:  # You only want to print the errors since fail on validate
         print(form.errors) 
+
     return render_template('insights.html' , user = user , form = form) , 200
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
@@ -317,7 +388,6 @@ def transaction_invoice():
     mssg = ""
     session['check_t'] = 'a'
     session['mssg_t_a'] = mssg
-    print(request.form)
     prod = login_model.Invoice.query.filter_by(invoice_no=request.form['invoice_no'].upper()).first()
     if prod :
         mssg = "Duplicate Data "
@@ -327,9 +397,11 @@ def transaction_invoice():
     else:
         firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
         date_new = datetime.date(int(request.form['date'].split('-')[0]),int(request.form['date'].split('-')[1]),int(request.form['date'].split('-')[2]))
-        company_name = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first().company_name
+        contact = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first()
         new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
-            company_name = company_name , amount = request.form['amount'] , date = date_new)  
+            company_name = contact.company_name , city = contact.city ,country = contact.country , state = contact.state ,
+                amount = request.form['amount'] , date = date_new , buss_cat = contact.buss_cat , prod_cat = contact.prod_cat,
+                broker = contact.broker , health_code = contact.health_code , comm_channel = contact.comm_channel , pref_comm_channel = contact.pref_comm_channel)  
         try:
             db.session.add(new_data)
             db.session.commit()
@@ -673,26 +745,30 @@ def broker_form():
     session['check'] = 'c'
     mssg = ""
     session['mssg_c'] = mssg
-    prod = login_model.Broker.query.filter_by(broker_name=request.form['city']).first()
+    prod = login_model.Broker.query.filter_by(broker_name=request.form['broker_name'].upper()).first()
     prod_a = login_model.Broker.query.filter_by(contact=request.form['contact']).first()
-    if prod and prod_a :
+
+    if prod and prod_b:
             mssg = "Duplicate Data "
             session['mssg_c'] = mssg
+            print(mssg)
             return redirect(url_for('basic_master'))
     else:
         query = login_model.City.query.filter_by(id=int(request.form['city'])).first()
         new_data = login_model.Broker(broker_name=request.form['broker_name'].upper() , city = query.city ,
         state = query.state,  country = query.country , contact = request.form['contact'] ) 
-
+        print(new_data)
         try:
             db.session.add(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
             session['mssg_c'] = mssg
+            print(mssg)
             return redirect(url_for('basic_master'))
 
 
         except Exception as e:
+            print(e)
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
             session['mssg_c'] = mssg
             return redirect(url_for('basic_master'))

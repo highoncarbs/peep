@@ -83,11 +83,11 @@ def contact_choice():
 
 class Broker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    broker_name = db.Column(db.String(30), unique=True, nullable=False)
-    city = db.Column(db.String(30), unique=True, nullable=False)
-    state = db.Column(db.String(30), unique=True, nullable=False)
-    country = db.Column(db.String(30), unique=True, nullable=False)
-    contact =  db.Column(db.String(30), unique=True, nullable=False)
+    broker_name = db.Column(db.String(30), nullable=False)
+    city = db.Column(db.String(30), nullable=False)
+    state = db.Column(db.String(30), nullable=False)
+    country = db.Column(db.String(30), nullable=False)
+    contact =  db.Column(db.String(30), nullable=False)
 
 class BrokerForm(FlaskForm):
     broker_name = StringField('broker_name', validators=[InputRequired()])
@@ -231,6 +231,16 @@ class AddContact(db.Model):
 class Invoice(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     company_name = db.Column(db.String(50))
+    city = db.Column(db.String(50))
+    state = db.Column(db.String(50))
+    country = db.Column(db.String(50))
+    buss_cat = db.Column(db.String(50))
+    prod_cat = db.Column(db.String(50))
+    broker = db.Column(db.String(50))
+    health_code = db.Column(db.String(50))
+    comm_channel = db.Column(db.String(50))
+    pref_comm_channel = db.Column(db.String(50))
+    no_comm = db.Column(db.Integer ,  default = 0)
     firm = db.Column(db.String(50))
     invoice_no = db.Column(db.String(50))
     amount = db.Column(db.String(15))
