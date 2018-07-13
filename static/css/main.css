@@ -73,3 +73,12 @@ body{
 .buttons a{
   padding-right: 1rem;
 }
+
+.snackbar{
+  min-width: 250px;
+  margin-left: -125px;
+  position: fixed;
+  z-index: 5;
+  left: 50%;
+  top:100px;
+}

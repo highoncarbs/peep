@@ -11,16 +11,28 @@ Customer Credit Health {% endblock %}
 
 {% if error_mssg_b %}
 
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-        <td><a id="edit_button_b">Edit</a></td>
-        {{error_mssg_b}}
-</span>
-<br>
+<div class="snackbar">
+    <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            {{error_mssg_b}}
+        </span>
+        <br>
+    </div>
 </div>
+
+<script>
+        $(document).ready( function() {
+            $('.snackbar').delay(3000).fadeOut();
+          });
+          $.ajax({
+            type: "POST",
+            url: "{{url_for('delete_session_mssg' , mssg = 'mssg_b')}}",
+            
+          }).done(function( o ) {
+             console.log("session['mssg_b'] is empty")
+          });
+</script>
 {% endif %}
 
 {% endblock %}

@@ -8,20 +8,32 @@
     Current Products
 {% endblock %}
 
-
 {% block error_content%}
 
 {% if error_mssg_a %}
 
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-    {{error_mssg_a}}
-</span>
-<br>
+<div class="snackbar">
+    <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            {{error_mssg_a}}
+        </span>
+        <br>
+    </div>
 </div>
+
+<script>
+        $(document).ready( function() {
+            $('.snackbar').delay(3000).fadeOut();
+          });
+          $.ajax({
+            type: "POST",
+            url: "{{url_for('delete_session_mssg' , mssg = 'mssg_a')}}",
+            
+          }).done(function( o ) {
+             console.log("session['mssg_a'] is empty")
+          });
+</script>
 {% endif %}
 
 {% endblock %}

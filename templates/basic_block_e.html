@@ -12,19 +12,31 @@ Business Category
 
 {% if error_mssg_e %}
 
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-    {{error_mssg_e}}
-</span>
-<br>
+<div class="snackbar">
+    <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            {{error_mssg_e}}
+        </span>
+        <br>
+    </div>
 </div>
+
+<script>
+        $(document).ready( function() {
+            $('.snackbar').delay(3000).fadeOut();
+          });
+          $.ajax({
+            type: "POST",
+            url: "{{url_for('delete_session_mssg' , mssg = 'mssg_e')}}",
+            
+          }).done(function( o ) {
+             console.log("session['mssg_e'] is empty")
+          });
+</script>
 {% endif %}
 
 {% endblock %}
-
 
 {% block data_display %}data_display_e {% endblock %}
 <!-- Data entry block -->

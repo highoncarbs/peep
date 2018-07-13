@@ -9,21 +9,30 @@ Current Communications
 
 {% block error_content%}
 
-{% if error_mssg %}
-<div class="notification has-background-warning ">
-<span class="is-size-5">
-    <span class="icon icon-btn-m">
-        <i data-feather="info"></i>
-    </span>
-    {% for field, errors in form_comm.errors.items() %}
-    <div class="alert alert-error">
-        {{ error_mssg }}
+{% if error_mssg_t_b %}
+
+<div class="snackbar">
+    <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            {{error_mssg_t_b}}
+        </span>
+        <br>
     </div>
-    {% endfor %}
-  
-</span>
-<br>
 </div>
+
+<script>
+        $(document).ready( function() {
+            $('.snackbar').delay(3000).fadeOut();
+          });
+          $.ajax({
+            type: "POST",
+            url: "{{url_for('delete_session_mssg' , mssg = 'mssg_t_b')}}",
+            
+          }).done(function( o ) {
+             console.log("session['mssg_t_b'] is empty")
+          });
+</script>
 {% endif %}
 
 {% endblock %}
