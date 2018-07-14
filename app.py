@@ -151,13 +151,12 @@ def contacts():
             sql = 'insert into {}(contact)  values ({})'.format(group , int(x))
             conn.execute(sql )
 
-    mssg = ""
     contact_list = db.session.query(login_model.AddContact).all() 
     
 
 
 
-    return render_template('contacts.html' , user = user ,form = form , error_mssg_a ="Testing the error run" ,
+    return render_template('contacts.html' , user = user ,form = form , error_mssg_c_a = session['mssg_c_a'] ,
     contact_list = contact_list , form_add_group=form_add_group) , 200
 
 @app.route('/contacts/add' , methods=['POST'])

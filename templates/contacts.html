@@ -17,6 +17,31 @@
 <br>
 <br>
 
+{% if error_mssg_c_a %}
+
+<div class="snackbar">
+    <div class="box  is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            {{error_mssg_c_a}}
+        </span>
+        <br>
+    </div>
+</div>
+
+<script>
+        $(document).ready( function() {
+            $('.snackbar').delay(3000).fadeOut();
+          });
+          $.ajax({
+            type: "POST",
+            url: "{{url_for('delete_session_mssg' , mssg = 'mssg_c_a')}}",
+            
+          }).done(function( o ) {
+             console.log("session['mssg_c_a'] is empty")
+          });
+</script>
+{% endif %}
 
 <div class="snackbar-c is-hidden is-overlay is-narrow is-centered">
     <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
