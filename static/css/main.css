@@ -78,7 +78,17 @@ body{
   min-width: 250px;
   margin-left: -125px;
   position: fixed;
-  z-index: 5;
+  z-index: 9999999  ;
   left: 50%;
   top:100px;
+}
+
+.snackbar-c{
+  width: 250px;
+  position: fixed;
+  z-index: 9999999  ;
+  left: 50%;
+  right: 50%;
+  margin: 0 auto;
+  margin-top:100px;
 }

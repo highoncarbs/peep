@@ -18,6 +18,15 @@
 <br>
 
 
+<div class="snackbar-c is-hidden is-overlay is-narrow is-centered">
+    <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+        <span class="is-size-5">
+            <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+            <span class="response-mssg"></span>
+        </span>
+        <br>
+    </div>
+</div>
 
 <div class="table-container">
     <table class="table is-fullwidth">
@@ -239,12 +248,13 @@
                 e.preventDefault();
                 modal.classList.remove('is-active');
                 html.classList.remove('is-clipped');
-              });
+                window.location.reload();              });
 
             modal.querySelector('.modal-background').addEventListener('click', function(e) {
               e.preventDefault();
               modal.classList.remove('is-active');
               html.classList.remove('is-clipped');
+              window.location.reload();    
             });
           });
 
@@ -359,12 +369,20 @@
                         obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
                     };
                     console.log(obj);
+                    
                     axios.post("{{url_for('contacts_add')}}", 
                                 { data : obj}
                                 )
                                 .then(function (response) {
-                                    console.log(response);
-                                    })
+                                    console.log(response.data.mssg );
+                                    var snack = document.getElementsByClassName('snackbar-c');                                    
+                                    $("span.response-mssg").html(response.data.mssg+ '  🤙') ;
+                                    $(".snackbar-c").removeClass("is-hidden").addClass("");
+                                    setTimeout(function() {
+                                        $(".snackbar-c").fadeOut();
+                                      }, 3000);
+                                    
+                                })
                                 .catch(function (error) {
                                     console.log(error);
                                 });
