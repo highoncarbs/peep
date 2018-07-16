@@ -14,20 +14,20 @@
                         <div class="tile is-child box">
                                 <p class="title is-size-4">Contacts</p>
                                 
-                                <p>Ohhhh</p>
+                                <p class="numbers has-text-black">{{c_len}}</p>
                                 <br>
                                 <div class="buttons">
-                                        <a class="button is-black"> Go to Contacts <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
+                                        <a class="button is-black" href="{{url_for('contacts')}}"> Go to Contacts <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
                                 </div>
                         </div>
                 </div>     
                 <div class="tile is-parent">
                                 <div class="tile is-child box">
                                                 <p class="title is-size-4">Invoices</p>
-                                                <p>Ohhhh</p>
+                                                <p class="numbers has-text-black">{{i_len}}</p>
                                                 <br>
                                                 <div class="buttons">
-                                                                <a class="button is-black"> Go to Invoices <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
+                                                                <a class="button is-black"  href="{{url_for('transaction')}}"> Go to Invoices <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
 
                                                         </div>
                                         </div>
@@ -35,10 +35,10 @@
                 <div class="tile is-parent">
                                 <div class="tile is-child box">
                                                 <p class="title is-size-4">Communications</p>
-                                                <p>Ohhhh</p>
+                                                <p class="numbers has-text-black         ">{{com_len}}</p>
                                                 <br>
                                                 <div class="buttons">
-                                                                <a class="button is-black"> Go to Communications <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
+                                                                <a class="button is-black"  href="{{url_for('transaction')}}"> Go to Communications <span class="icon icon-r" ><i data-feather="arrow-right"></i></span></a>
 
                                                         </div>
                                         </div>

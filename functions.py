@@ -1,4 +1,5 @@
 from app import Base , db
+from math import log10, floor
 
 def GroupTableCreator(tablename):
     '''
@@ -13,3 +14,7 @@ def GroupTableCreator(tablename):
             contact = db.Column(db.Integer)
             
     return GroupTable
+
+def human_format(num, ends=["", "K", "M", "B", "T"]):
+        # divides by 3 to separate into thousands (...000)
+        return str(num)[0:2] + str(ends[int(floor(log10(num))/3)])

@@ -96,3 +96,10 @@ body{
 .icon-r{
   margin-left: 4px !important;
 }
+
+.numbers{
+  font-family: 'Inter UI';
+  font-weight: 700;
+  font-size:8rem;
+  font-variant-numeric: slashed-zero;
+}

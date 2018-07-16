@@ -27,8 +27,7 @@ Base = declarative_base()
 from models import login_model
 
 # Hepler functions
-from functions import GroupTableCreator
-
+from functions import GroupTableCreator , human_format
 # # Flask Login Initiialization 
 
 login_manager = LoginManager()
@@ -55,8 +54,13 @@ def index():
     session['mssg_t_a'] = ""
     session['mssg_t_b'] = ""
 
+    contacts = len(db.session.query(login_model.AddContact).all())
+    invoices = len(db.session.query(login_model.Invoice).all())
+    comms = len(db.session.query(login_model.Comm).all())
+    
+    
 
-    return render_template('home.html' , user = user) , 200
+    return render_template('home.html' , user = user , c_len = human_format(contacts) , i_len = human_format(invoices) , com_len = human_format(comms)) , 200
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
