@@ -1,15 +1,15 @@
 {% extends 'base_login.html' %}
 {% block content %}
 	<div class=" has-text-centered is-vcentered" >
-			<a href="{{url_for('index')}}" style="padding:1rem;"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
+			<a href="{{url_for('index')}}" class="animated fadeInDown" style="padding:1rem;"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
 			
-			<p class="has-text-weight-bold" style="margin-top:1rem;">Coomunication Management Platform designed <br>for small bussiness.</p>
+			<p class="has-text-weight-bold animated fadeInDown" style="margin-top:1rem;">Coomunication Management Platform designed <br>for small bussiness.</p>
 			<br>
 			<br>
-			<h2 class="is-size-4 has-text-weight-bold">Welcome back</h2>
+			<h2 class="is-size-4 has-text-weight-bold animated fadeInDown">Welcome back</h2>
 	<br>
 	<br>
-	<div class="form-box center">
+	<div class="form-box center" class="animated fadeInUp">
 	<form action="/login" method="POST">
 		{{ form.hidden_tag()}}
 		{{ form.email(placeholder="Email address" , class="input")}}

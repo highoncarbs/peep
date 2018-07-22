@@ -75,9 +75,9 @@ Broker{% endblock %}
         <!-- Data Rows -->
         <td>{{l.broker_name}}</td>
         <td>{{l.contact}}</td>
-        <td>{{l.city}}</td>
-        <td>{{l.state}}</td>
-        <td>{{l.country}}</td>
+        <td>{{l.city[0].city}}</td>
+        <td>{{l.city[0].state}}</td>
+        <td>{{l.city[0].country}}</td>
         <td><a href="{{url_for('delete_data_broker',item_id= l.id)}}">Delete</a></td>
         <td><a id="edit_button_c_{{loop.index}}">Edit</a></td>
         <!-- Edit data modal -->

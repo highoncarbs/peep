@@ -15,8 +15,9 @@
 <br>
 <!-- Data Display -->
 <br>
+{% if filter_list|length > 0 %}
 <div class="table-container">
-        <table class="table is-fullwidth">
+        <table class="table is-fullwidth is-hoverable is-bordered">
             <thead>
             <tr>
                 <th>Company Name</th>
@@ -61,7 +62,17 @@
         </table>
     </div>
 
-
+    {% else %}
+    <div class="notification has-text-centered is-center">
+        <p class="is-size-5 has-text-weight-bold has-text-grey-light">
+            😧 Woah ! So empty.
+            <br><br>
+            Create new filters with <span class="button is-outlined has-text-grey"><i class="icon-btn" data-feather="filter"></i>Filter</span> button.
+            <br>
+            Also view saved reports by clicking on <span class="button is-outlined has-text-grey"><i class="icon-btn" data-feather="eye"></i>Vew Reports</span> button.
+        </p>
+    </div>
+    {% endif %}
 <!-- End Data Display -->
 <!-- Filter Section -->
 <div class="modal" id="modal-filter">

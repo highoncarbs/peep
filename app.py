@@ -53,11 +53,13 @@ def index():
     session['mssg_j'] = ""
     session['mssg_t_a'] = ""
     session['mssg_t_b'] = ""
+    session['mssg_c_a'] = None
+
 
     contacts = len(db.session.query(login_model.AddContact).all())
     invoices = len(db.session.query(login_model.Invoice).all())
     comms = len(db.session.query(login_model.Comm).all())
-    
+    print(contacts)
     
 
     return render_template('home.html' , user = user , c_len = human_format(contacts) , i_len = human_format(invoices) , com_len = human_format(comms)) , 200
@@ -96,7 +98,7 @@ def signup():
             # Base.metadata.create_all(engine)        
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
         else:
             return render_template('signup.html' , form = form ,subtitle = "Signup" ,error_mssg = "Email already exists.")
 
@@ -188,45 +190,69 @@ def contacts_add():
             if (key.find('comm_b_channel') != -1) :
                 comm_b_list.append(value)  
         
-        prod_list = json.dumps(list(set(prod_list)))
-        buss_list = json.dumps(list(set(buss_list)))
-        comm_a_list = json.dumps(list(set(comm_a_list)))
-        comm_b_list = json.dumps(list(set(comm_b_list)))
-        prod = login_model.AddContact.query.filter_by(city=data['city']).first()
-        prod_a = login_model.AddContact.query.filter_by(email=data['email']).first()
-        prod_b = login_model.AddContact.query.filter_by(company_name=data['company_name']).first()
-
-        if (prod and prod_a and prod_b) :
+        prod_list = list(set(prod_list))
+        buss_list = list(set(buss_list))
+        comm_a_list = list(set(comm_a_list))
+        comm_b_list = list(set(comm_b_list))
+        
+        if (False) :
             mssg = "Duplicate data"
             return jsonify({'mssg' : mssg})
         
         else:
-            query = login_model.City.query.filter_by(city=data['city']).first()
+            city = login_model.City.query.filter_by(id=int(data['city'])).first()
             new_data = login_model.AddContact(company_name = data['company_name'].upper(),
             company_per = data['company_per'].upper(), contact_one = data['contact_one'], wh_contact = data['wh_contact'],
-            email = data['email'], buss_cat = buss_list, broker = data['broker'],health_code = data['health_code'],
-            comm_channel = comm_a_list, pref_comm_channel = comm_b_list, prod_cat = prod_list, city = query.city ,
-            state = query.state,  country = query.country,address_one = data['address_one'], address_two = data['address_two'],
-            address_three = data['address_three'],address_pin = data['address_pin'] , group = data['group'] ) 
+            email = data['email'],address_one = data['address_one'], address_two = data['address_two'],
+            address_three = data['address_three'],address_pin = data['address_pin'] ) 
             
             try:
                 db.session.add(new_data)
+                city.contact_city.append(new_data)
+
+                for id in buss_list:
+                    busscat = login_model.BussCat.query.filter_by(id=int(id)).first()
+                    print(busscat.buss_cat)
+                    busscat.contact_buss.append(new_data)
+
+                for id in prod_list:
+                    prodcat = login_model.ProdCat.query.filter_by(id=int(id)).first()
+                    prodcat.contact_prod.append(new_data)      
+
+                for id in comm_a_list:
+                    commcat = login_model.CommChannel.query.filter_by(id=int(id)).first()
+                    commcat.contact_comm_a.append(new_data) 
+
+                for id in comm_b_list:
+                    commcat = login_model.CommChannel.query.filter_by(id=int(id)).first()
+                    commcat.contact_comm_b.append(new_data) 
+
+                health_code = login_model.HealthCode.query.filter_by(id=int(data['health_code'])).first()
+                health_code.contact_health.append(new_data)
+
+                broker = login_model.Broker.query.filter_by(id=int(data['broker'])).first()
+                broker.contact_broker.append(new_data)
+
+                group = login_model.Group.query.filter_by(id=int(data['group'])).first()
+                group.contact_group.append(new_data)
+
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
 
-                try:
-                    group = login_model.Group.query.filter_by(id=int(data['group'])).first().group
-                    sql = 'insert into {}(contact)  values ({})'.format(group , int(new_data.id))
-                    conn.execute(sql)
+                # try:
+                #     group = login_model.Group.query.filter_by(id=int(data['group'])).first().group
+                #     sql = 'insert into {}(contact)  values ({})'.format(group , int(new_data.id))
+                #     conn.execute(sql)
 
-                except Exception as e:
-                    mssg = "Error occured while adding data to Group 😵. Here's the error : "+str(e)
-                    return jsonify({'mssg' : mssg})
+                # except Exception as e:
+                #     mssg = "Error occured while adding data to Group 😵. Here's the error : "+str(e)
+                #     return jsonify({'mssg' : mssg})
 
                 return jsonify({'mssg' : mssg})
 
 
             except Exception as e:
+                print("Here , bitch")
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return jsonify({'mssg' : mssg})
 
@@ -424,14 +450,14 @@ def transaction_invoice():
         return redirect(url_for('basic_master'))
 
     else:
-        firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first().firm
+        firm = login_model.Firm.query.filter_by(id=int(request.form['firm'])).first()
+        print(firm)
         date_new = datetime.date(int(request.form['date'].split('-')[0]),int(request.form['date'].split('-')[1]),int(request.form['date'].split('-')[2]))
-        contact = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first()
-        new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , firm = firm ,
-            company_name = contact.company_name , city = contact.city ,country = contact.country , state = contact.state ,
-                amount = request.form['amount'] , date = date_new , buss_cat = contact.buss_cat , prod_cat = contact.prod_cat,
-                broker = contact.broker , health_code = contact.health_code , comm_channel = contact.comm_channel , pref_comm_channel = contact.pref_comm_channel)  
         try:
+            contact = login_model.AddContact.query.filter_by(id=int(request.form['company_name'])).first()
+            new_data = login_model.Invoice(invoice_no=request.form['invoice_no'].upper() , amount = request.form['amount'] , date = date_new )
+            contact.invoice.append(new_data)  
+            firm.invoice.append(new_data)
             db.session.add(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
@@ -723,6 +749,7 @@ def basic_master():
 
 
 @app.route('/city_form' , methods= ['GET' , 'POST'])
+@login_required
 def city_form():
     # UP : Work on securing this route
     session['check'] = 'h'
@@ -754,6 +781,7 @@ def city_form():
             return redirect(url_for('basic_master'))
 
 @app.route('/broker_form' , methods= ['GET' , 'POST'])
+@login_required
 def broker_form():
     # UP : Work on securing this route
     session['check'] = 'c'
@@ -769,11 +797,11 @@ def broker_form():
             return redirect(url_for('basic_master'))
     else:
         query = login_model.City.query.filter_by(id=int(request.form['city'])).first()
-        new_data = login_model.Broker(broker_name=request.form['broker_name'].upper() , city = query.city ,
-        state = query.state,  country = query.country , contact = request.form['contact'] ) 
-        print(new_data)
+        new_data = login_model.Broker(broker_name=request.form['broker_name'].upper() ,
+                   contact = request.form['contact'] ) 
         try:
             db.session.add(new_data)
+            query.broker.append(new_data)
             db.session.commit()
             mssg = "Data Successfully added 👍"
             session['mssg_c'] = mssg

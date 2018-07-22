@@ -6,12 +6,21 @@
     <div class="navbar-start">
             <p class="navbar-item is-size-4 has-text-weight-bold">Contacts </p>
     </div>
+    {% if contact_list|length > 0 %}
     <div class="navbar-end is-size-4">
             <a class="navbar-item" id="add-contact"><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></a>
             <a class="navbar-item"><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
             <a class="navbar-item" id="group-create" ><button class="button is-black"><i class="icon-btn" data-feather="plus-circle"></i>Create Groups</button></a>
             <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Groups</button></a>
-        </div>
+    </div>
+    {% else %}
+    <div class="navbar-end is-size-4">
+            <a class="navbar-item" id="add-contact"><button class="button is-black"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</button></a>
+            <a class="navbar-item"><button class="button is-black" disabled><i class="icon-btn" data-feather="filter" ></i>Filter</button></a>
+            <a class="navbar-item" id="group-create"><button class="button is-black" disabled><i class="icon-btn" data-feather="plus-circle"></i>Create Groups</button></a>
+            <a class="navbar-item"><button class="button is-black" disabled><i class="icon-btn" data-feather="eye"></i>View Groups</button></a>
+    </div>
+    {% endif %}
 </div>
 <br>
 <br>
@@ -52,8 +61,9 @@
     </div>
 </div>
 
+{% if contact_list|length > 0 %}
 <div class="table-container">
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth is-hoverable is-bordered">
         <thead>
         <tr>
             <th>Company Name</th>
@@ -76,13 +86,28 @@
             <td>{{l.company_name}}</td>
             <td>{{l.contact_one}}</td>
             <td>{{l.wh_contact}}</td>
-            <td>{{l.city}}</td>
-            <td>{{l.state}}</td>
-            <td>{{l.country}}</td>
-            <td> {{l.buss_cat}}  </td>
-            <td>{{l.prod_cat}}</td>
-            <td>{{l.health_code}}</td>
-            <td>{{l.comm_channel}}</td>
+            <td>{{l.city[0].city}}</td>
+            <td>{{l.city[0].state}}</td>
+            <td>{{l.city[0].country}}</td>
+            <td> 
+                {% for id in l.buss_cat %}
+                    <span>{{id.buss_cat}}</span>
+                {% endfor %}
+            </td>
+            <td> 
+                {% for id in l.prod_cat %}
+                    <span>{{id.prod_cat}}</span>
+                {% endfor %}
+            </td>
+            <td>{% for id in l.health_code %}
+                    <span>{{id.health}}</span>
+                {% endfor %}
+            </td>
+            <td>
+                {% for id in l.comm_channel %}
+                    <span>{{id.channel}}</span>
+                {% endfor %}
+            </td>
             <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
             <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
         </tr>
@@ -92,7 +117,16 @@
     </table>
 </div>
 
-
+{% else %}
+<div class="notification has-text-centered is-center">
+    <p class="is-size-5 has-text-weight-bold has-text-grey-light">
+        😧 Woah ! So empty.
+        <br>
+        <br>
+        Create contacts with <span class="button is-outlined has-text-grey"><i class="icon-btn" data-feather="plus-square"></i>Add Contact</span> button
+    </p>
+</div>
+{% endif %}
 <!-- Modal Code -->
 <div class="modal" id="modal-add-contact">
     <div class="modal-background"></div>
@@ -358,39 +392,33 @@
                     var obj = {};
                     for(var i = 0 ; i < elements.length ; i++){
                         var item = elements.item(i);
-                        if (item.name == "broker" || item.name == "buss_cat"||item.name == "city"||item.name == "comm_channel" ||item.name == "health_code" ||item.name == "pref_comm_channel" || item.name == "prod_cat"){
-                            obj[item.name] = item.options[item.selectedIndex].text;
-                            console.log(item.options[item.selectedIndex].text);
-                        }
-                        else{
                             obj[item.name] = item.value;
                         }
-                        
-                    };
+                    
                     console.log(obj);
 
                     for(var i =0 ; i< prod_list ; i++){
                         var prod_item = document.querySelector('#prod_select_'+i+' > select')   ;
         
-                        obj['prod_cat_'+i+''] = prod_item.options[prod_item.selectedIndex].text;
+                        obj['prod_cat_'+i+''] = prod_item.options[prod_item.selectedIndex].value;
                     };
 
                     for(var j =0 ; j< buss_list ; j++){
                         var buss_item = document.querySelector('#buss_select_'+j+' > select')   ;
         
-                        obj['buss_cat_'+j] = buss_item.options[buss_item.selectedIndex].text;
+                        obj['buss_cat_'+j] = buss_item.options[buss_item.selectedIndex].value;
                     };
 
                     for(var k =0 ; k< comm_list_a ; k++){
                         var comm_a_item = document.querySelector('#comm_a_select_'+k+' > select')   ;
         
-                        obj['comm_a_cat_'+k] = comm_a_item.options[comm_a_item.selectedIndex].text;
+                        obj['comm_a_cat_'+k] = comm_a_item.options[comm_a_item.selectedIndex].value;
                     };
 
                     for(var l =0 ; l< comm_list_b ; l++){
                         var comm_b_item = document.querySelector('#comm_b_select_'+l+' > select')   ;
         
-                        obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].text;
+                        obj['comm_b_cat_'+l] = comm_b_item.options[comm_b_item.selectedIndex].value;
                     };
                     console.log(obj);
                     
@@ -400,7 +428,7 @@
                                 .then(function (response) {
                                     console.log(response.data.mssg );
                                     var snack = document.getElementsByClassName('snackbar-c');                                    
-                                    $("span.response-mssg").html(response.data.mssg+ '  🤙') ;
+                                    $("span.response-mssg").html(response.data.mssg) ;
                                     $(".snackbar-c").removeClass("is-hidden").addClass("");
                                     setTimeout(function() {
                                         $(".snackbar-c").fadeOut();
@@ -408,9 +436,16 @@
                                     
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    console.log(response.data.mssg );
+                                    var snack = document.getElementsByClassName('snackbar-c');                                    
+                                    $("span.response-mssg").html(error.data.mssg+ '🤙') ;
+                                    $(".snackbar-c").removeClass("is-hidden").addClass("");
+                                    setTimeout(function() {
+                                        $(".snackbar-c").fadeOut();
+                                      }, 3000);
                                 });
-    };
+                            };
     
 </script>
+
 {% endblock %}

@@ -84,15 +84,19 @@ def contact_choice():
 class Broker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     broker_name = db.Column(db.String(30), nullable=False)
-    city = db.Column(db.String(30), nullable=False)
-    state = db.Column(db.String(30), nullable=False)
-    country = db.Column(db.String(30), nullable=False)
     contact =  db.Column(db.String(30), nullable=False)
+    city = db.relationship('City' , secondary='broker_city' , backref='broker' , lazy = 'dynamic')
+
 
 class BrokerForm(FlaskForm):
     broker_name = StringField('broker_name', validators=[InputRequired()])
     city = QuerySelectField('city',validators=[InputRequired()] , query_factory=city_choice , allow_blank= False  , get_label='city')
     contact = StringField('contacts', validators=[InputRequired()])
+
+db.Table('broker_city',
+    db.Column('broker_id' , db.Integer , db.ForeignKey('broker.id')),
+    db.Column('city_id' , db.Integer , db.ForeignKey('city.id'))
+    )
 
 # CommChannel Model & Form
 
@@ -208,20 +212,61 @@ class AddContact(db.Model):
     contact_one = db.Column(db.String(20) , nullable = True)
     wh_contact = db.Column(db.String(20) , nullable = True)
     email = db.Column(db.String(50) , unique = True , nullable = True)
-    country = db.Column(db.String(30) )
-    state = db.Column(db.String(20) )
-    city = db.Column(db.String(20) )
-    buss_cat = db.Column(db.String(200))
-    prod_cat = db.Column(db.String(200))
-    broker = db.Column(db.String(20) )
-    comm_channel = db.Column(db.String(200) )
-    health_code = db.Column(db.String(20) )
-    pref_comm_channel = db.Column(db.String(200))
     address_one = db.Column(db.String(100))
     address_two = db.Column(db.String(100))
     address_three = db.Column(db.String(100))
     address_pin = db.Column(db.String(10))
-    group = db.Column(db.String(30))
+    
+    
+    city = db.relationship('City' ,cascade="all,delete", secondary='contact_city' , backref='contact_city' , lazy = 'dynamic')
+    buss_cat = db.relationship('BussCat' , cascade="all,delete",secondary='contact_buss' , backref='contact_buss' , lazy = 'dynamic')
+    prod_cat = db.relationship('ProdCat' , cascade="all,delete",secondary='contact_prod' , backref='contact_prod' , lazy = 'dynamic')
+    broker = db.relationship('Broker' ,cascade="all,delete", secondary='contact_broker' , backref='contact_broker' , lazy = 'dynamic')
+    comm_channel = db.relationship('CommChannel' ,cascade="all,delete", secondary='contact_comm_a' , backref='contact_comm_a' , lazy = 'dynamic')
+    health_code = db.relationship('HealthCode' , cascade="all,delete",secondary='contact_health' , backref='contact_health' , lazy = 'dynamic')
+    pref_comm_channel = db.relationship('CommChannel' , cascade="all,delete",secondary='contact_comm_b' , backref='contact_comm_b' , lazy = 'dynamic')
+    group = db.relationship('Group' , secondary='contact_group' ,cascade="all,delete", backref='contact_group' , lazy = 'dynamic')
+    invoice = db.relationship('AddContact' , cascade="all,delete", secondary='contact_invoice' , backref='contact_invoice' , lazy = 'dynamic')
+
+db.Table('contact_comm_a',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL' )),
+    db.Column('channel_id' , db.Integer , db.ForeignKey('comm_channel.id' , ondelete='SET NULL'))
+)
+
+db.Table('contact_comm_b',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' ,ondelete='SET NULL')),
+    db.Column('channel_id' , db.Integer , db.ForeignKey('comm_channel.id' , ondelete='SET NULL'))
+)
+
+db.Table('contact_city',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL')),
+    db.Column('city_id' , db.Integer , db.ForeignKey('city.id' , ondelete='SET NULL'))
+    )
+
+db.Table('contact_buss',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL')),
+    db.Column('buss_id' , db.Integer , db.ForeignKey('buss_cat.id' , ondelete='SET NULL'))
+    )
+
+db.Table('contact_prod',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL')),
+    db.Column('prod_id' , db.Integer , db.ForeignKey('prod_cat.id' ,ondelete='SET NULL'))
+    )
+
+db.Table('contact_broker',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' ,ondelete='SET NULL')),
+    db.Column('broker_id' , db.Integer , db.ForeignKey('broker.id' ,ondelete='SET NULL'))
+    )
+
+db.Table('contact_health',
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' ,ondelete='SET NULL')),
+    db.Column('health_id' , db.Integer , db.ForeignKey('health_code.id' , ondelete='SET NULL'))
+    )
+
+db.Table('contact_group', 
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' ,ondelete='SET NULL')),
+    db.Column('group_id' , db.Integer , db.ForeignKey('group.id' , ondelete='SET NULL'))
+)
 
 
 ########################################
@@ -230,21 +275,11 @@ class AddContact(db.Model):
 
 class Invoice(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    company_name = db.Column(db.String(50))
-    city = db.Column(db.String(50))
-    state = db.Column(db.String(50))
-    country = db.Column(db.String(50))
-    buss_cat = db.Column(db.String(50))
-    prod_cat = db.Column(db.String(50))
-    broker = db.Column(db.String(50))
-    health_code = db.Column(db.String(50))
-    comm_channel = db.Column(db.String(50))
-    pref_comm_channel = db.Column(db.String(50))
-    no_comm = db.Column(db.Integer ,  default = 0)
-    firm = db.Column(db.String(50))
-    invoice_no = db.Column(db.String(50))
-    amount = db.Column(db.String(15))
     date = db.Column(db.Date)
+    amount = db.Column(db.Integer)
+    invoice_no = db.Column(db.Integer)
+    firm = db.relationship('Firm', cascade="all,delete", secondary='invoice_firm' , backref='invoice' , lazy = 'dynamic')
+
 
 class InvoiceForm(FlaskForm):
     invoice_no = StringField('invoice_no')
@@ -253,6 +288,15 @@ class InvoiceForm(FlaskForm):
     company_name = QuerySelectField('company_name', validators=[InputRequired()] , query_factory= contact_choice , allow_blank= False  , get_label='company_name')
     date = StringField('date' , validators=[ Regexp(r'[0-9]{2}[-]{1}[0-9]{2}[-|]{1}[0-9]{4}' , message ="Date format YYYY-MM-DD")  ,  InputRequired() , DataRequired()])
 
+db.Table('invoice_firm',
+    db.Column('invoice_id' , db.Integer , db.ForeignKey('invoice.id' , ondelete='SET NULL')),
+    db.Column('firm_id' , db.Integer , db.ForeignKey('firm.id' , ondelete='SET NULL'))
+    )
+
+db.Table('contact_invoice', 
+    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL')),
+    db.Column('invoice_id' , db.Integer , db.ForeignKey('invoice.id' , ondelete='SET NULL'))
+)
 ########################################
 ### COMMUNICATION DETAIL FORMS & DB ####
 ########################################
@@ -261,7 +305,7 @@ class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     comm_channel = db.Column(db.String(50) )
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.String(50))
+    group = db.relationship('Group' , secondary="comm_group" , backref="comm" , lazy="dynamic")
     date = db.Column(db.Date)
     
 class CommForm(FlaskForm):
@@ -270,6 +314,10 @@ class CommForm(FlaskForm):
     group = SelectField('group' ,  validators=[InputRequired()] , coerce = int)
     date = StringField('date' , validators=[InputRequired() , DataRequired()])
 
+db.Table('comm_group', 
+    db.Column('comm_id' , db.Integer , db.ForeignKey('comm.id' , ondelete='SET NULL')),
+    db.Column('group_id' , db.Integer , db.ForeignKey('group.id' , ondelete='SET NULL'))
+)
 ########################################
 ####### GROUP ADDITION FORMS & DB ######
 ########################################
