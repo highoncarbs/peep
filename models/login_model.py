@@ -217,7 +217,6 @@ class AddContact(db.Model):
     address_three = db.Column(db.String(100))
     address_pin = db.Column(db.String(10))
     
-    
     city = db.relationship('City' ,cascade="all,delete", secondary='contact_city' , backref='contact_city' , lazy = 'dynamic')
     buss_cat = db.relationship('BussCat' , cascade="all,delete",secondary='contact_buss' , backref='contact_buss' , lazy = 'dynamic')
     prod_cat = db.relationship('ProdCat' , cascade="all,delete",secondary='contact_prod' , backref='contact_prod' , lazy = 'dynamic')
@@ -226,7 +225,7 @@ class AddContact(db.Model):
     health_code = db.relationship('HealthCode' , cascade="all,delete",secondary='contact_health' , backref='contact_health' , lazy = 'dynamic')
     pref_comm_channel = db.relationship('CommChannel' , cascade="all,delete",secondary='contact_comm_b' , backref='contact_comm_b' , lazy = 'dynamic')
     group = db.relationship('Group' , secondary='contact_group' ,cascade="all,delete", backref='contact_group' , lazy = 'dynamic')
-    invoice = db.relationship('AddContact' , cascade="all,delete", secondary='contact_invoice' , backref='contact_invoice' , lazy = 'dynamic')
+    invoice = db.relationship('Invoice' , cascade="all,delete", backref='contact_invoice' , lazy = 'dynamic')
 
 db.Table('contact_comm_a',
     db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL' )),
@@ -279,6 +278,7 @@ class Invoice(db.Model):
     amount = db.Column(db.Integer)
     invoice_no = db.Column(db.Integer)
     firm = db.relationship('Firm', cascade="all,delete", secondary='invoice_firm' , backref='invoice' , lazy = 'dynamic')
+    contact = db.Column(db.Integer, db.ForeignKey('add_contact.id'))
 
 
 class InvoiceForm(FlaskForm):
@@ -292,11 +292,6 @@ db.Table('invoice_firm',
     db.Column('invoice_id' , db.Integer , db.ForeignKey('invoice.id' , ondelete='SET NULL')),
     db.Column('firm_id' , db.Integer , db.ForeignKey('firm.id' , ondelete='SET NULL'))
     )
-
-db.Table('contact_invoice', 
-    db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL')),
-    db.Column('invoice_id' , db.Integer , db.ForeignKey('invoice.id' , ondelete='SET NULL'))
-)
 ########################################
 ### COMMUNICATION DETAIL FORMS & DB ####
 ########################################
@@ -305,7 +300,7 @@ class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     comm_channel = db.Column(db.String(50) )
     mssg_detail = db.Column(db.String(100))
-    group = db.relationship('Group' , secondary="comm_group" , backref="comm" , lazy="dynamic")
+    group = db.Column(db.String(100))
     date = db.Column(db.Date)
     
 class CommForm(FlaskForm):
@@ -314,10 +309,6 @@ class CommForm(FlaskForm):
     group = SelectField('group' ,  validators=[InputRequired()] , coerce = int)
     date = StringField('date' , validators=[InputRequired() , DataRequired()])
 
-db.Table('comm_group', 
-    db.Column('comm_id' , db.Integer , db.ForeignKey('comm.id' , ondelete='SET NULL')),
-    db.Column('group_id' , db.Integer , db.ForeignKey('group.id' , ondelete='SET NULL'))
-)
 ########################################
 ####### GROUP ADDITION FORMS & DB ######
 ########################################

@@ -40,19 +40,27 @@
         <tbody>
             {% for l in filter_list %}
             <tr>
-                <td>{{l.company_name}}</td>
-                <td>{{l.city}}</td>
-                <td>{{l.state}}</td>
-                <td>{{l.country}}</td>
-                <td>{{l.buss_cat}}  </td>
-                <td>{{l.prod_cat}}</td>
-                <td>{{l.prod_cat}}</td>
-                <td>{{l.health_code}}</td>
-                <td>{{l.comm_channel}}</td>
-                <td>{{l.pref_comm_channel}}</td>
-                <td>{{l.no_comm}}</td>
-                <td>{{l.no_invoice}}</td>
-                <td>{{l.no_sales}}</td>                               
+                <td>{{l[0].company_name[0]}}</td>
+                <td>{{l[0].city[0].city }}</td>
+                <td>{{l[0].city[0].state}}</td>
+                <td>{{l[0].city[0].country}}</td>
+                <td>
+                        {% for buss in l[0].buss_cat %}       
+                        {{buss.buss_cat}}
+                        {% endfor %}
+                </td>
+                <td>
+                        {% for prod in l[0].prod_cat %}       
+                        {{prod.prod_cat}}
+                        {% endfor %}
+                </td>
+                <td>{{l[0].broker[0].broker_name}}</td>
+                <td>{{l[0].health_code[0].health}}</td>
+                <td>{{l[0].comm_channel[0].channel}}</td>
+                <td>{{l[0].pref_comm_channel[0].channel}}</td>
+                <td>Still wrking</td>
+                <td>Still wrking</td>
+                <td>{{l[1].amount}}</td>                               
                 <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
                 <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
             </tr>
@@ -166,7 +174,7 @@
                                                         </div>
                                         </div>
                                         <div class="buttons">
-                                                <button class="button is-black" onclick="form_reset()" type="submit"><i class="icon-btn" data-feather="check-square"></i>Set Filter</button>                                          
+                                                <button class="button is-black" type="submit"><i class="icon-btn" data-feather="check-square"></i>Set Filter</button>                                          
                                                 <a class="button is-light"><i class="icon-btn" data-feather="circle"></i>Clear Filters</a>
                                         </div>
                                 </div>

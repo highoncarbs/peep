@@ -98,6 +98,7 @@ def signup():
             # Base.metadata.create_all(engine)        
             db.session.add(new_user)
             db.session.commit()
+            db.session.close()
             return redirect(url_for('login'))
         else:
             return render_template('signup.html' , form = form ,subtitle = "Signup" ,error_mssg = "Email already exists.")
@@ -156,12 +157,9 @@ def contacts():
         for x in form_add_group.contact.data:
             sql = 'insert into {}(contact)  values ({})'.format(group , int(x))
             conn.execute(sql )
+            conn.close()
 
-    contact_list = db.session.query(login_model.AddContact).all() 
-    
-
-
-
+    contact_list = db.session.query(login_model.AddContact).all()
     return render_template('contacts.html' , user = user ,form = form , error_mssg_c_a = session['mssg_c_a'] ,
     contact_list = contact_list , form_add_group=form_add_group) , 200
 
@@ -208,7 +206,7 @@ def contacts_add():
             
             try:
                 db.session.add(new_data)
-                city.contact_city.append(new_data)
+                new_data.city.append(city)
 
                 for id in buss_list:
                     busscat = login_model.BussCat.query.filter_by(id=int(id)).first()
@@ -237,6 +235,7 @@ def contacts_add():
                 group.contact_group.append(new_data)
 
                 db.session.commit()
+                db.session.close()
                 mssg = "Data Successfully added 👍"
 
                 # try:
@@ -344,40 +343,45 @@ def insights():
 
         # Conditional Queries 
 
-        query = db.session.query(login_model.Invoice)
-        
+        query =  db.session.query(login_model.AddContact, login_model.Invoice).join(login_model.Invoice)
+
         if date_start:
-            query = query.filter(date >= date_start)
+            query = query.filter(login_model.Invoice.date >= date_start)
         
         if date_end:
-            query = query.filter(date <= date_end)
+            query = query.filter(login_model.Invoice.date <= date_end)
         
         if broker_list:
-            query = query.filter(login_model.Invoice.broker.in_(broker_list))
+            query = query.filter(login_model.broker.broker_name.in_(broker_list))
         
         if city_list:
-            query = query.filter(login_model.Invoice.city.in_(city_list))
+            query = query.filter(login_model.City.city.in_(city_list))
 
         if state_list:
-            query = query.filter(login_model.Invoice.state.in_(state_list))
+            query = query.filter(login_model.City.state.in_(state_list))
 
         if country_list:
-            query = query.filter(login_model.Invoice.country.in_(country_list))
+            query = query.filter(login_model.City.country.in_(country_list))
 
         if comm_list:
-            query = query.filter(login_model.Invoice.comm_channel.in_(comm_list))
+            query = query.filter(login_model.CommChannel.channel.in_(comm_list))
 
         if hcode_list:
-            query = query.filter(login_model.Invoice.health_code.in_(hcode_list))
+            query = query.filter(login_model.HealthCode.health.in_(health_list))
 
         if no_comm:
             query = query.filter( no_comm >= no_comm)
 
         if amount:
-            query = query.filter( amount >= amount)
-                
-        print(query.all())
-
+            query = query.filter(login_model.Invoice.amount >= amount)
+        
+        results = query.all()
+        print(results)
+        for r in results:
+            print(r[0].city[0].city)
+        db.session.close()
+        return render_template('insights.html' , user = user , filter_list =results , form = form) , 200
+    
     else:  # You only want to print the errors since fail on validate
         print(form.errors) 
 
@@ -407,8 +411,8 @@ def transaction():
         group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first().group
         print(comm_channel)
         date_new = datetime.date(int(form_comm.date.data.split('-')[0]),int(form_comm.date.data.split('-')[1]),int(form_comm.date.data.split('-')[2]))
-        new_data = login_model.Comm(comm_channel=comm_channel , mssg_detail = form_comm.mssg_detail.data,
-        group = group , date = date_new )  
+        new_data = login_model.Comm(comm_channel=comm_channel , mssg_detail = form_comm.mssg_detail.data, 
+            date = date_new  , group = group)  
         print(new_data)
         try:
             print('Going In')
@@ -416,9 +420,11 @@ def transaction():
             print('Going 2')
             db.session.commit()
             print('Going 3')
+            db.session.close()  
 
             mssg = "Data Successfully added 👍"
             session['mssg_t_b'] = mssg
+            
             return redirect(url_for('transaction'))
    
         except Exception as e:
@@ -462,12 +468,15 @@ def transaction_invoice():
             db.session.commit()
             mssg = "Data Successfully added 👍"
             session['mssg_t_a'] = mssg
+            db.session.close()
+
             return redirect(url_for('transaction'))
 
         
         except Exception as e:
             mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
             session['mssg_t_a'] = mssg
+            print(mssg)
             return redirect(url_for('transaction'))
 
 
@@ -523,6 +532,7 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_d'] = mssg
+                db.session.close()
                 return redirect(url_for('basic_master'))
 
             
@@ -551,6 +561,7 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_b'] = mssg        
+                db.session.close()
                 return redirect(url_for('basic_master'))
 
             
@@ -578,7 +589,7 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_a'] = mssg
-
+                db.session.close()
                 return redirect(url_for('basic_master'))
 
             
@@ -607,6 +618,7 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_e'] = mssg
+                db.session.close()
                 return redirect(url_for('basic_master'))
 
             
@@ -635,6 +647,8 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_f'] = mssg
+                db.session.close()
+
                 return redirect(url_for('basic_master'))
 
             
@@ -662,6 +676,8 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_g'] = mssg
+                db.session.close()
+
                 return redirect(url_for('basic_master'))
 
             
@@ -690,6 +706,8 @@ def basic_master():
                 db.session.commit()
                 mssg = "Data Successfully added 👍"
                 session['mssg_i'] = mssg
+                db.session.close()
+
                 return redirect(url_for('basic_master'))
 
             
@@ -718,7 +736,8 @@ def basic_master():
                 Base.metadata.create_all(engine)
                 mssg = "Data Successfully added 👍"
                 session['mssg_j'] = mssg
-                
+                db.session.close()
+
                 return redirect(url_for('basic_master'))
 
             
@@ -760,6 +779,8 @@ def city_form():
     if prod :
             mssg = "Duplicate Data "
             session['mssg_h'] = mssg
+            db.session.close()
+                
             return redirect(url_for('basic_master'))
     else:
         state = login_model.State.query.filter_by(id=int(request.form['state'])).first().state
@@ -772,6 +793,8 @@ def city_form():
             db.session.commit()
             mssg = "Data Successfully added 👍"
             session['mssg_h'] = mssg
+            db.session.close()
+                
             return redirect(url_for('basic_master'))
 
 
@@ -806,6 +829,8 @@ def broker_form():
             mssg = "Data Successfully added 👍"
             session['mssg_c'] = mssg
             print(mssg)
+            db.session.close()
+                
             return redirect(url_for('basic_master'))
 
 
@@ -841,6 +866,8 @@ def delete_data_prod(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_a'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/product/<item_id>' , methods=['GET' , 'POST'])
@@ -859,6 +886,8 @@ def edit_data_prod(item_id):
     temp.prod_cat = request.form['edit_input'].upper()
     db.session.commit()
     mssg = "Data Successfully Edited" 
+    db.session.close()
+                
     session['mssg_a'] = mssg
 
     return redirect(url_for('basic_master'))
@@ -883,6 +912,8 @@ def delete_data_comm(item_id):
     login_model.CommChannel.query.filter_by(id=int(item_id)).delete()
     db.session.commit()
     mssg = "Data Successfully deleted"
+    db.session.close()
+                
     session['mssg_d'] = mssg
 
     return redirect(url_for('basic_master'))
@@ -905,6 +936,8 @@ def edit_data_comm(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_d'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Credit Health Routes ################
@@ -927,6 +960,8 @@ def delete_data_health(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_b'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/health/<item_id>' , methods=['GET' , 'POST'])
@@ -946,6 +981,8 @@ def edit_data_health(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_b'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Bussniess Category Routes ################
@@ -968,6 +1005,8 @@ def delete_data_buss(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_e'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/buss/<item_id>' , methods=['GET' , 'POST'])
@@ -987,6 +1026,8 @@ def edit_data_buss(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_e'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit State Routes ################
@@ -1009,6 +1050,8 @@ def delete_data_state(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_f'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/state/<item_id>' , methods=['GET' , 'POST'])
@@ -1029,6 +1072,8 @@ def edit_data_state(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_f'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 
@@ -1052,6 +1097,8 @@ def delete_data_country(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_g'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/country/<item_id>' , methods=['GET' , 'POST'])
@@ -1071,6 +1118,8 @@ def edit_data_country(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_g'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit City Routes ################
@@ -1093,6 +1142,8 @@ def delete_data_city(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_h'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/city/<item_id>' , methods=['GET' , 'POST'])
@@ -1112,6 +1163,8 @@ def edit_data_city(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_h'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Broker Routes ################
@@ -1134,6 +1187,8 @@ def delete_data_broker(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_c'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/broker/<item_id>' , methods=['GET' , 'POST'])
@@ -1153,6 +1208,8 @@ def edit_data_broker(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_c'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Firm Routes ################
@@ -1175,6 +1232,8 @@ def delete_data_firm(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_i'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/firm/<item_id>' , methods=['GET' , 'POST'])
@@ -1195,6 +1254,8 @@ def edit_data_firm(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited" 
     session['mssg_i'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Group Routes ################
@@ -1217,6 +1278,8 @@ def delete_data_group(item_id):
     db.session.commit()
     mssg = "Data Successfully deleted"
     session['mssg_j'] = mssg
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 @app.route('/edit/group/<item_id>' , methods=['GET' , 'POST'])
@@ -1237,6 +1300,8 @@ def edit_data_group(item_id):
     db.session.commit()
     mssg = "Data Successfully Edited"
     session['mssg_j'] = mssg 
+    db.session.close()
+                
     return redirect(url_for('basic_master'))
 
 ################## Delete & Edit Invoice Routes ################
@@ -1259,6 +1324,8 @@ def delete_data_invoice(item_id):
     mssg = "Data Successfully deleted"
     session['mssg_t_a'] = mssg
     session['check'] = 'a'
+    db.session.close()
+                
     return redirect(url_for('transaction'))
 
 @app.route('/edit/invoice/<item_id>' , methods=['GET' , 'POST'])
@@ -1280,6 +1347,8 @@ def edit_data_invoice(item_id):
     mssg = "Data Successfully Edited" 
     session['mssg_t_a'] = mssg
     session['check'] = 'a'
+    db.session.close()
+                
     return redirect(url_for('transaction'))
 
 ################## Delete & Edit Contact Routes ################
@@ -1302,6 +1371,8 @@ def delete_data_contact(item_id):
     mssg = "Data Successfully deleted"
     session['mssg_c_a'] = mssg
     session['check'] = 'a'
+    db.session.close()
+                
     return redirect(url_for('contacts'))
 
 @app.route('/edit/contact/<item_id>' , methods=['GET' , 'POST'])
@@ -1321,6 +1392,8 @@ def edit_data_contact(item_id):
     mssg = "Data Successfully Edited" 
     session['mssg_c_a'] = mssg
     session['check'] = 'a'
+    db.session.close()
+                
     return redirect(url_for('contacts'))
 
 ################## Delete & Edit Transaction Communication Routes ################
@@ -1343,6 +1416,8 @@ def delete_data_comm_adv(item_id):
     mssg = "Data Successfully deleted"
     session['mssg_t_b'] = mssg
     session['check'] = 'b'
+    db.session.close()
+                
     return redirect(url_for('transaction'))
 
 @app.route('/edit/comm_adv/<item_id>' , methods=['GET' , 'POST'])
@@ -1362,4 +1437,6 @@ def edit_data_comm_adv(item_id):
     mssg = "Data Successfully Edited" 
     session['mssg_t_b'] = mssg
     session['check'] = 'b'
+    db.session.close()
+                
     return redirect(url_for('transaction'))

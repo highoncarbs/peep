@@ -87,7 +87,7 @@ Current Invoice Details
         <!-- Data Rows -->
         <td>{{l.invoice_no}}</td>
         <td>{{l.date}}</td>
-        <td>{{l.contact_id}}</td>
+        <td>{{l.contact_invoice.company_name}}</td>
         <td>{{l.firm[0].firm}}</td>
         <td>{{ "{:,}".format(l.amount | int) }}</td>
         <td><a href="{{url_for('delete_data_invoice',item_id= l.id)}}">Delete</a></td>
