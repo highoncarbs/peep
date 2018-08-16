@@ -377,8 +377,8 @@ def insights():
         
         results = query.all()
         print(results)
-        for r in results:
-            print(r[0].city[0].city)
+
+        
         db.session.close()
         return render_template('insights.html' , user = user , filter_list =results , form = form) , 200
     

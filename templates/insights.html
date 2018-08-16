@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 
 <!-- FIX : Action Buttons in navbar-end -->
 <div class="navbar ">
@@ -13,9 +14,83 @@
         </div>
 </div>
 <br>
+<hr>
 <!-- Data Display -->
 <br>
 {% if filter_list|length > 0 %}
+<div class="chart-box animated fadeIn">
+                <div class="columns">
+                
+                <!-- Contacts Percentage  -->
+                <div class="column">
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Contacts</h3>
+                        <br>
+                        <div class="left" style="position: relative; height:auto; width:auto">
+                        <canvas id="contact-chart"></canvas>
+                        </div>
+                </div>
+                <!-- Comm Percentage -->
+                <div class="column">
+                                <h3 class="is-size-4 has-text-weight-bold has-text-centered">Communication</h3>
+                                <br>
+                        <div class="chart-container" style="position: relative; height:40vh; width:auto">
+                        <canvas id="comm-chart"></canvas>
+                        </div>
+                </div>
+
+                <!-- Revenue percentage -->
+                <div class="column">
+                                <h3 class="is-size-4 has-text-weight-bold has-text-centered">Revenue</h3>
+                                <br>
+                        <div class="chart-container" style="position: relative; height:40vh; width:auto">
+                        <canvas id="revenue-chart"></canvas>
+                        </div>
+                </div>
+
+                </div>
+        <script>
+                        data_contact = {
+                                datasets: [{
+                        data: [40, 70] ,
+                        backgroundColor: [
+                                'rgb(0, 0, 0)',
+                                'cyan'
+            ],
+                                }],
+                            
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: [
+                                    'Filtered',
+                                    'All',
+                                ]
+                            };
+                var contact_ctx = document.getElementById("contact-chart").getContext('2d');
+                var comm_ctx = document.getElementById("comm-chart").getContext('2d');
+                var revenue_ctx = document.getElementById("revenue-chart").getContext('2d');
+                
+                var contactChart = new Chart(contact_ctx,{
+                        type: 'pie',
+                        data: data_contact,
+                        options: null
+                    });
+                
+                    var commChart = new Chart(comm_ctx,{
+                        type: 'pie',
+                        data: data_contact,
+                        options: null
+                    });
+                
+                    var revChart = new Chart(revenue_ctx,{
+                        type: 'pie',
+                        data: data_contact,
+                        options: null
+                    });
+                
+                
+                
+
+        </script>
+</div>
 <div class="table-container">
         <table class="table is-fullwidth is-hoverable is-bordered">
             <thead>
@@ -33,17 +108,15 @@
                 <th>No. of Communication</th>
                 <th>No. of Invoice</th>
                 <th>Sales Amount</th>
-                <th>Delete</th>
-                <th>Edit</th>
-            </tr>
+        </tr>
         </thead>
         <tbody>
             {% for l in filter_list %}
             <tr>
-                <td>{{l[0].company_name[0]}}</td>
-                <td>{{l[0].city[0].city }}</td>
-                <td>{{l[0].city[0].state}}</td>
-                <td>{{l[0].city[0].country}}</td>
+                <td>{{ l[0].company_name }}</td>
+                <td>{{ l[0].city[0] }}</td>
+                <td>{{ l[0].city[0] }}</td>
+                <td>{{ l[0].city[0] }}</td>
                 <td>
                         {% for buss in l[0].buss_cat %}       
                         {{buss.buss_cat}}
@@ -54,16 +127,14 @@
                         {{prod.prod_cat}}
                         {% endfor %}
                 </td>
-                <td>{{l[0].broker[0].broker_name}}</td>
-                <td>{{l[0].health_code[0].health}}</td>
-                <td>{{l[0].comm_channel[0].channel}}</td>
-                <td>{{l[0].pref_comm_channel[0].channel}}</td>
+                <td>{{l[0].broker[0]}}</td>
+                <td>{{l[0].health_code[0]}}</td>
+                <td>{{l[0].comm_channel[0]}}</td>
+                <td>{{l[0].pref_comm_channel[0]}}</td>
                 <td>Still wrking</td>
                 <td>Still wrking</td>
                 <td>{{l[1].amount}}</td>                               
-                <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
-                <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
-            </tr>
+           </tr>
             {% endfor %}
     
         </tbody>
