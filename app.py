@@ -378,9 +378,15 @@ def insights():
         results = query.all()
         print(results)
 
-        
+        chart_insights = []
+        filter_con = len(set([x[0] for x in results ]))
+        total_con = db.session.query(login_model.AddContact).count()
+
+        chart_insights.append(filter_con)
+        chart_insights.append(total_con)
+
         db.session.close()
-        return render_template('insights.html' , user = user , filter_list =results , form = form) , 200
+        return render_template('insights.html' , user = user , filter_list =results , form = form , chart_insights = chart_insights) , 200
     
     else:  # You only want to print the errors since fail on validate
         print(form.errors) 

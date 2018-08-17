@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-
+<link href="{{ url_for('static' , filename = 'css/print.css') }}" rel="stylesheet" type="text/css" media="print">
 <!-- FIX : Action Buttons in navbar-end -->
 <div class="navbar ">
         <div class="navbar-start">
@@ -10,7 +10,9 @@
         <div class="navbar-end is-size-4">
                 <a class="navbar-item" id="filter" ><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
                 <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Reports</button></a>
-                <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
+                <a class="navbar-item" id="save"><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
+                <a class="navbar-item" onClick=" window.print(); return false"><button class="button is-black"><i class="icon-btn" data-feather="printer"></i>Print Report</button></a>
+
         </div>
 </div>
 <br>
@@ -28,33 +30,78 @@
                         <div class="left" style="position: relative; height:auto; width:auto">
                         <canvas id="contact-chart"></canvas>
                         </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> {{ chart_insights[0] }} </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> {{ chart_insights[1] }} </p>
+
                 </div>
                 <!-- Comm Percentage -->
                 <div class="column">
                                 <h3 class="is-size-4 has-text-weight-bold has-text-centered">Communication</h3>
                                 <br>
-                        <div class="chart-container" style="position: relative; height:40vh; width:auto">
+                        <div class="chart-container" style="position: relative; height:auto; width:auto">
                         <canvas id="comm-chart"></canvas>
                         </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> 50 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> 120 </p>
+
                 </div>
 
                 <!-- Revenue percentage -->
                 <div class="column">
                                 <h3 class="is-size-4 has-text-weight-bold has-text-centered">Revenue</h3>
                                 <br>
-                        <div class="chart-container" style="position: relative; height:40vh; width:auto">
+                        <div class="chart-container" style="position: relative; height:auto; width:auto">
                         <canvas id="revenue-chart"></canvas>
                         </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> 50 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> 120 </p>
+
                 </div>
 
                 </div>
+                <br>
         <script>
                         data_contact = {
                                 datasets: [{
-                        data: [40, 70] ,
+                        data: [ {{ chart_insights[0] }} , {{ chart_insights[1] }}] ,
                         backgroundColor: [
-                                'rgb(0, 0, 0)',
-                                'cyan'
+                                '#262525',
+                                '#84f2d6'
+            ],
+                                }],
+                            
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: [
+                                    'Filtered',
+                                    'All',
+                                ]
+                            };
+                        
+                        data_rev = {
+                                datasets: [{
+                        data: [50, 50] ,
+                        backgroundColor: [
+                                '#616161',
+                                '#8aae92'
+            ],
+                                }],
+                            
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: [
+                                    'Filtered',
+                                    'All',
+                                ]
+                            };
+                        
+                            data_comm = {
+                                datasets: [{
+                        data: [50, 50] ,
+                        backgroundColor: [
+                                '#1d97c1',
+                                '#87e0ff'
             ],
                                 }],
                             
@@ -76,13 +123,13 @@
                 
                     var commChart = new Chart(comm_ctx,{
                         type: 'pie',
-                        data: data_contact,
+                        data: data_comm,
                         options: null
                     });
                 
                     var revChart = new Chart(revenue_ctx,{
                         type: 'pie',
-                        data: data_contact,
+                        data: data_rev,
                         options: null
                     });
                 
@@ -153,6 +200,13 @@
     </div>
     {% endif %}
 <!-- End Data Display -->
+<!-- Action Buttons Modal -->
+
+<!-- Save Report Model -->
+
+<!-- End Save report -->
+
+<!-- End Action Button Model -->
 <!-- Filter Section -->
 <div class="modal" id="modal-filter">
         <div class="modal-background"></div>
@@ -277,6 +331,26 @@
                 html.classList.remove('is-clipped');
         });
         });
+
+        document.querySelector('#save').addEventListener('click', function(event) {
+                event.preventDefault();
+                var modalsave = document.querySelector('#model-save-report');  // assuming you have only 1
+                var html = document.querySelector('html');
+                modalsave.classList.add('is-active');
+                html.classList.add('is-clipped');
+        
+                modalsave.querySelector('.modal-close').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        modalsave.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
+                        });
+        
+                modalsave.querySelector('.modal-background').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        modalsave.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
+                });
+                });
         
         function prod_cat_reset(){
                 select_box = document.getElementById("prod_cat");
@@ -312,5 +386,8 @@
                 select_box.selectedIndex = -1;
         };
 
+        function save_report(){
+
+        }
 </script>
 {% endblock %}
