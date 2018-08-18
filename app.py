@@ -352,22 +352,22 @@ def insights():
             query = query.filter(login_model.Invoice.date <= date_end)
         
         if broker_list:
-            query = query.filter(login_model.broker.broker_name.in_(broker_list))
-        
+            query = query.filter(login_model.AddContact.broker.any(login_model.Broker.broker_name.in_(broker_list)))
+
         if city_list:
-            query = query.filter(login_model.City.city.in_(city_list))
+            query = query.filter(login_model.AddContact.city.any(login_model.City.city.in_(city_list)))
 
         if state_list:
-            query = query.filter(login_model.City.state.in_(state_list))
+            query = query.filter(login_model.AddContact.city.any(login_model.City.state.in_(state_list)))
 
         if country_list:
-            query = query.filter(login_model.City.country.in_(country_list))
+            query = query.filter(login_model.AddContact.city.any(login_model.City.country.in_(country_list)))
 
         if comm_list:
-            query = query.filter(login_model.CommChannel.channel.in_(comm_list))
+            query = query.filter(login_model.AddContact.comm_channel.any(login_model.CommChannel.channel.in_(comm_list)))
 
         if hcode_list:
-            query = query.filter(login_model.HealthCode.health.in_(health_list))
+            query = query.filter(login_model.AddContact.health_code.any(login_model.HealthCode.health.in_(hcode_list)))
 
         if no_comm:
             query = query.filter( no_comm >= no_comm)
