@@ -9,7 +9,9 @@ from flask_cors import CORS
 from sqlalchemy.sql import text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy.orm import joinedload
 import datetime
+import re
 # Models
 # Flask app intitialization 
 
@@ -54,6 +56,7 @@ def index():
     session['mssg_t_a'] = ""
     session['mssg_t_b'] = ""
     session['mssg_c_a'] = None
+    session['query'] = ""
 
 
     contacts = len(db.session.query(login_model.AddContact).all())
@@ -160,6 +163,7 @@ def contacts():
             conn.close()
 
     contact_list = db.session.query(login_model.AddContact).all()
+    print(contact_list)
     return render_template('contacts.html' , user = user ,form = form , error_mssg_c_a = session['mssg_c_a'] ,
     contact_list = contact_list , form_add_group=form_add_group) , 200
 
@@ -251,7 +255,7 @@ def contacts_add():
 
 
             except Exception as e:
-                print("Here , bitch")
+                print("Here")
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
                 return jsonify({'mssg' : mssg})
 
@@ -283,8 +287,8 @@ def insights():
     form.broker.choices = [(r.id , r.broker_name) for r in login_model.Broker.query.all()]
     form.health_code.choices = [(r.id , r.health) for r in login_model.HealthCode.query.all()]
     form.comm_channel.choices = [(r.id , r.channel) for r in login_model.CommChannel.query.all()]
-
-    
+    form_save = login_model.FilterSaveForm()
+    savedfilters = db.session.query(login_model.FilterSave).all()
     if form.validate_on_submit():
         buss_cat = form.buss_cat.data
         prod_cat = form.prod_cat.data
@@ -334,7 +338,6 @@ def insights():
         for id in comm_channel:
             comm_list.append(db.session.query(login_model.CommChannel).filter_by(id = int(id)).first().channel)
 
-        print(comm_list)
         hcode_list = list()
         for id in health_code:
             hcode_list.append(db.session.query(login_model.HealthCode).filter_by(id = int(id)).first().health)
@@ -374,24 +377,47 @@ def insights():
 
         if amount:
             query = query.filter(login_model.Invoice.amount >= amount)
-        
-        results = query.all()
-        print(results)
 
+        session['query'] = str(query)
+
+        results = query.all()
+      
         chart_insights = []
+        
         filter_con = len(set([x[0] for x in results ]))
         total_con = db.session.query(login_model.AddContact).count()
-
+        total_rev_t =[x.amount for x in db.session.query(login_model.Invoice).all()]
+        total_rev = 0
+        for t in total_rev_t:
+            total_rev = int(t)+total_rev
+        
+        filter_rev= sum( [ x[1].amount for x in results])
+    
         chart_insights.append(filter_con)
         chart_insights.append(total_con)
+        chart_insights.append(filter_rev)
+        chart_insights.append(total_rev)
 
         db.session.close()
-        return render_template('insights.html' , user = user , filter_list =results , form = form , chart_insights = chart_insights) , 200
+
+        return render_template('insights.html' , user = user , form_save = form_save  , filter_list = results , form = form , chart_insights = chart_insights , savedfilters = savedfilters) , 200
     
     else:  # You only want to print the errors since fail on validate
         print(form.errors) 
 
-    return render_template('insights.html' , user = user , form = form) , 200
+    return render_template('insights.html' , user = user , form = form , form_save = form_save , savedfilters = savedfilters) , 200
+
+@app.route('/insights/save' , methods = ['POST'])
+@login_required
+def filter_save():
+    if request.method == 'POST':
+        data = request.get_json()    
+        data = data['data']['name']
+        print(data)
+        temp = login_model.FilterSave(report_name = data , query = session['query'])
+        db.session.add(temp)
+        db.session.commit()
+        return jsonify({"mssg" :"Report saved"})
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required

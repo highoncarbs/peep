@@ -21,7 +21,7 @@ class Invoice(db.Model):
     amount = db.Column(db.Integer)
     invoice_no = db.Column(db.Integer)
     contact_id = db.Column(db.Integer , db.ForeignKey('contact.id'))
-    firm = db.Column(db.Integer , b.ForeignKey('firm.id'))
+    firm = db.Column(db.Integer , db.ForeignKey('firm.id'))
 
 class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)

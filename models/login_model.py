@@ -217,15 +217,15 @@ class AddContact(db.Model):
     address_three = db.Column(db.String(100))
     address_pin = db.Column(db.String(10))
     
-    city = db.relationship('City' ,cascade="all,delete", secondary='contact_city' , backref='contact_city' , lazy = 'dynamic')
-    buss_cat = db.relationship('BussCat' , cascade="all,delete",secondary='contact_buss' , backref='contact_buss' , lazy = 'dynamic')
-    prod_cat = db.relationship('ProdCat' , cascade="all,delete",secondary='contact_prod' , backref='contact_prod' , lazy = 'dynamic')
-    broker = db.relationship('Broker' ,cascade="all,delete", secondary='contact_broker' , backref='contact_broker' , lazy = 'dynamic')
-    comm_channel = db.relationship('CommChannel' ,cascade="all,delete", secondary='contact_comm_a' , backref='contact_comm_a' , lazy = 'dynamic')
-    health_code = db.relationship('HealthCode' , cascade="all,delete",secondary='contact_health' , backref='contact_health' , lazy = 'dynamic')
-    pref_comm_channel = db.relationship('CommChannel' , cascade="all,delete",secondary='contact_comm_b' , backref='contact_comm_b' , lazy = 'dynamic')
-    group = db.relationship('Group' , secondary='contact_group' ,cascade="all,delete", backref='contact_group' , lazy = 'dynamic')
-    invoice = db.relationship('Invoice' , cascade="all,delete", backref='contact_invoice' , lazy = 'dynamic')
+    city = db.relationship('City' ,cascade="all,delete", secondary='contact_city' , backref='contact_city' , lazy = 'joined')
+    buss_cat = db.relationship('BussCat' , cascade="all,delete",secondary='contact_buss' , backref='contact_buss' , lazy = 'joined')
+    prod_cat = db.relationship('ProdCat' , cascade="all,delete",secondary='contact_prod' , backref='contact_prod' , lazy = 'joined')
+    broker = db.relationship('Broker' ,cascade="all,delete", secondary='contact_broker' , backref='contact_broker' , lazy = 'joined')
+    comm_channel = db.relationship('CommChannel' ,cascade="all,delete", secondary='contact_comm_a' , backref='contact_comm_a' , lazy = 'joined')
+    health_code = db.relationship('HealthCode' , cascade="all,delete",secondary='contact_health' , backref='contact_health' , lazy = 'joined')
+    pref_comm_channel = db.relationship('CommChannel' , cascade="all,delete",secondary='contact_comm_b' , backref='contact_comm_b' , lazy = 'joined')
+    group = db.relationship('Group' , secondary='contact_group' ,cascade="all,delete", backref='contact_group' , lazy = 'joined')
+    invoice = db.relationship('Invoice' , cascade="all,delete", backref='contact_invoice' , lazy = 'joined')
 
 db.Table('contact_comm_a',
     db.Column('contact_id' , db.Integer , db.ForeignKey('add_contact.id' , ondelete='SET NULL' )),
@@ -349,5 +349,12 @@ class FilterForm(FlaskForm):
     no_invoice = StringField('no_invoice')
     amount = StringField('amount')
 
+class FilterSaveForm(FlaskForm):
+    name = StringField('name')
+
+class FilterSave(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    report_name = db.Column(db.String(50))
+    query = db.Column(db.String(5000))    
 ###### MAPPER #########
 

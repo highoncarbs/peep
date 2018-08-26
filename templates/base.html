@@ -59,11 +59,11 @@
 
 		<section class="columns is-fullheight">
 				<aside class="column is-side-bar is-hidden-touch hero is-2 is-fullheight">
-					<div class="brand is-narrow animated fadeInLeft"  style="padding:1rem;padding-top:2rem;">
+					<div class="brand is-narrow"  style="padding:1rem;padding-top:2rem;">
 							<a href="{{url_for('index')}}"><img  src="static/images/peep-logo.png" width="112" height="28" /></a>
 					</div>
 					<div class="menu is-size-4 has-text-weight-bold">
-						<ul class="menu-list animated fadeInLeft">
+						<ul class="menu-list">
 							<li><a href="{{ url_for('index') }}"><span class="icon icon-btn-m"><i data-feather="home"></i></span><span class="menu-text">Home</span></a></li>
 							<li><a href="{{ url_for('contacts') }}"><span class="icon icon-btn-m"><i data-feather="users"></i></span><span class="menu-text">Contacts</span></a></li>
 							<li><a href="{{ url_for('insights') }}"><span class="icon icon-btn-m"><i data-feather="zap"></i></span><span class="menu-text">Insights</span></a></li>
@@ -71,7 +71,7 @@
 							<li><a href="{{ url_for('transaction') }}"><span class="icon icon-btn-m"><i data-feather="dollar-sign"></i></span><span class="menu-text">Transaction</span></a></li>
 						</ul>
 					</div>
-					<div class="menu user-prof is-fixed-bottom animated fadeInUp ">
+					<div class="menu user-prof is-fixed-bottom ">
 						<ul class="menu-list is-size-4" style="margin-bottom:0.5rem;">
 							<li><a href="{{ url_for('user') }}"><span class="icon icon-btn-m"><i data-feather="user"></i></span><span class="menu-text desktop">Hi, {{user.title()}}</span></a></li>						
 						</ul>
@@ -84,7 +84,7 @@
 				</aside>
 				<aside class="is-main-content column">
 					
-					<div class="xcontent">
+					<div class="xcontent animated fadeIn">
 					{% block content%}
 					{% endblock %}
 					<script>

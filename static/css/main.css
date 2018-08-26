@@ -103,3 +103,19 @@ body{
   font-size:8rem;
   font-variant-numeric: slashed-zero;
 }
+
+.report-box{
+    width: 100%;
+    height: auto;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.filtersave{
+  display: inline-block;
+  margin-left: 1rem !important;
+  transition:  0.2s all ease;
+}
+
+.filtersave:hover{
+background-color: black !important;}

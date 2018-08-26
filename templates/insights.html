@@ -1,209 +1,274 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 <link href="{{ url_for('static' , filename = 'css/print.css') }}" rel="stylesheet" type="text/css" media="print">
 <!-- FIX : Action Buttons in navbar-end -->
 <div class="navbar ">
         <div class="navbar-start">
-            <p class="navbar-item is-size-4 has-text-weight-bold">Insights </p>
-         </div>
+                <p class="navbar-item is-size-4 has-text-weight-bold">Insights </p>
+        </div>
         <div class="navbar-end is-size-4">
-                <a class="navbar-item" id="filter" ><button class="button is-black"><i class="icon-btn" data-feather="filter"></i>Filter</button></a>
-                <a class="navbar-item" ><button class="button is-black"><i class="icon-btn" data-feather="eye"></i>View Reports</button></a>
-                <a class="navbar-item" id="save"><button class="button is-black"><i class="icon-btn" data-feather="download"></i>Save Report</button></a>
-                <a class="navbar-item" onClick=" window.print(); return false"><button class="button is-black"><i class="icon-btn" data-feather="printer"></i>Print Report</button></a>
+                <a class="navbar-item" id="filter">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="filter"></i>Filter</button>
+                </a>
+                <a class="navbar-item" onclick="view_report()">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="eye"></i>View Reports</button>
+                </a>
+                <a class="navbar-item" id="save">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="download"></i>Save Report</button>
+                </a>
+                <a class="navbar-item" onClick=" window.print(); return false">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="printer"></i>Print Report</button>
+                </a>
 
         </div>
 </div>
 <br>
-<hr>
+
+<div class="snackbar-c is-hidden is-overlay is-narrow is-centered">
+                <div class="box is-narrow animated is-centered fadeInDown is-vcentered">
+                    <span class="is-size-5">
+                        <span class="icon icon-btn-m"><i data-feather="info"></i></span>
+                        <span class="response-mssg"></span>
+                    </span>
+                    <br>
+                </div>
+            </div>
 <!-- Data Display -->
-<br>
-{% if filter_list|length > 0 %}
+
+
+<div class="report-box animated fadeIn is-hidden">
+                {% for r in savedfilters %}
+                        <div class="filtersave notification is-dark has-text-centered has-text-weight-bold" style="margin-bottom: 0;">
+                                <p>{{ r.report_name.title() }}</p>
+                        </div>
+                {% endfor %}
+        </div>
+
+{% if filter_list %}
+
+<hr>
+
 <div class="chart-box animated fadeIn">
-                <div class="columns">
-                
+        <div class="columns">
+
                 <!-- Contacts Percentage  -->
                 <div class="column">
                         <h3 class="is-size-4 has-text-weight-bold has-text-centered">Contacts</h3>
                         <br>
                         <div class="left" style="position: relative; height:auto; width:auto">
-                        <canvas id="contact-chart"></canvas>
+                                <canvas id="contact-chart"></canvas>
                         </div>
                         <br>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> {{ chart_insights[0] }} </p>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> {{ chart_insights[1] }} </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered :</span> {{ chart_insights[0] }} </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total :</span> {{ chart_insights[1] }} </p>
 
                 </div>
                 <!-- Comm Percentage -->
                 <div class="column">
-                                <h3 class="is-size-4 has-text-weight-bold has-text-centered">Communication</h3>
-                                <br>
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Communication</h3>
+                        <br>
                         <div class="chart-container" style="position: relative; height:auto; width:auto">
-                        <canvas id="comm-chart"></canvas>
+                                <canvas id="comm-chart"></canvas>
                         </div>
                         <br>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> 50 </p>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> 120 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered :</span> 50 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total :</span> 120 </p>
 
                 </div>
 
                 <!-- Revenue percentage -->
                 <div class="column">
-                                <h3 class="is-size-4 has-text-weight-bold has-text-centered">Revenue</h3>
-                                <br>
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Revenue</h3>
+                        <br>
                         <div class="chart-container" style="position: relative; height:auto; width:auto">
-                        <canvas id="revenue-chart"></canvas>
+                                <canvas id="revenue-chart"></canvas>
                         </div>
                         <br>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Filtered :</span> 50 </p>
-                        <p class="is-size-6 has-text-weight-bold has-text-centered"><span class="has-text-weight-normal">Total :</span> 120 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered : </span>Rs. {{ chart_insights[2] }}</p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total : </span>Rs. {{ chart_insights[3] }}</p>
 
                 </div>
 
-                </div>
-                <br>
+        </div>
+        <br>
         <script>
-                        data_contact = {
-                                datasets: [{
-                        data: [ {{ chart_insights[0] }} , {{ chart_insights[1] }}] ,
-                        backgroundColor: [
-                                '#262525',
-                                '#84f2d6'
-            ],
+                data_contact = {
+                        datasets: [{
+                                data: [{{ chart_insights[0] }}, {{ chart_insights[1] }}] ,
+                backgroundColor: [
+                        '#262525',
+                        '#84f2d6'
+                ],
                                 }],
-                            
-                                // These labels appear in the legend and in the tooltips when hovering different arcs
-                                labels: [
-                                    'Filtered',
-                                    'All',
-                                ]
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                        'Filtered',
+                        'All',
+                ]
                             };
-                        
-                        data_rev = {
-                                datasets: [{
-                        data: [50, 50] ,
-                        backgroundColor: [
-                                '#616161',
-                                '#8aae92'
-            ],
-                                }],
-                            
-                                // These labels appear in the legend and in the tooltips when hovering different arcs
-                                labels: [
-                                    'Filtered',
-                                    'All',
-                                ]
-                            };
-                        
-                            data_comm = {
-                                datasets: [{
-                        data: [50, 50] ,
-                        backgroundColor: [
-                                '#1d97c1',
-                                '#87e0ff'
-            ],
-                                }],
-                            
-                                // These labels appear in the legend and in the tooltips when hovering different arcs
-                                labels: [
-                                    'Filtered',
-                                    'All',
-                                ]
-                            };
+
+                data_rev = {
+                        datasets: [{
+                                data: [{{ chart_insights[2]|int }}, {{ chart_insights[3]|int }}],
+                                backgroundColor: [
+                                        '#616161',
+                                        '#8aae92'
+                                ],
+                        }],
+
+                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                        labels: [
+                                'Filtered',
+                                'All',
+                        ]
+                };
+
+                data_comm = {
+                        datasets: [{
+                                data: [50,50],
+                                backgroundColor: [
+                                        '#1d97c1',
+                                        '#87e0ff'
+                                ],
+                        }],
+
+                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                        labels: [
+                                'Filtered',
+                                'All',
+                        ]
+                };
                 var contact_ctx = document.getElementById("contact-chart").getContext('2d');
                 var comm_ctx = document.getElementById("comm-chart").getContext('2d');
                 var revenue_ctx = document.getElementById("revenue-chart").getContext('2d');
-                
-                var contactChart = new Chart(contact_ctx,{
+
+                var contactChart = new Chart(contact_ctx, {
                         type: 'pie',
                         data: data_contact,
                         options: null
-                    });
-                
-                    var commChart = new Chart(comm_ctx,{
+                });
+
+                var commChart = new Chart(comm_ctx, {
                         type: 'pie',
                         data: data_comm,
                         options: null
-                    });
-                
-                    var revChart = new Chart(revenue_ctx,{
+                });
+
+                var revChart = new Chart(revenue_ctx, {
                         type: 'pie',
                         data: data_rev,
                         options: null
-                    });
-                
-                
-                
+                });
+
+
+
 
         </script>
 </div>
+
 <div class="table-container">
         <table class="table is-fullwidth is-hoverable is-bordered">
-            <thead>
-            <tr>
-                <th>Company Name</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Country</th>
-                <th>Business Category</th>
-                <th>Product Dealing In</th>
-                <th>Broker</th>
-                <th>Health Code</th>
-                <th>Communication Channel</th>
-                <th>Pref Communication Channel</th>
-                <th>No. of Communication</th>
-                <th>No. of Invoice</th>
-                <th>Sales Amount</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for l in filter_list %}
-            <tr>
-                <td>{{ l[0].company_name }}</td>
-                <td>{{ l[0].city[0] }}</td>
-                <td>{{ l[0].city[0] }}</td>
-                <td>{{ l[0].city[0] }}</td>
-                <td>
-                        {% for buss in l[0].buss_cat %}       
-                        {{buss.buss_cat}}
-                        {% endfor %}
-                </td>
-                <td>
-                        {% for prod in l[0].prod_cat %}       
-                        {{prod.prod_cat}}
-                        {% endfor %}
-                </td>
-                <td>{{l[0].broker[0]}}</td>
-                <td>{{l[0].health_code[0]}}</td>
-                <td>{{l[0].comm_channel[0]}}</td>
-                <td>{{l[0].pref_comm_channel[0]}}</td>
-                <td>Still wrking</td>
-                <td>Still wrking</td>
-                <td>{{l[1].amount}}</td>                               
-           </tr>
-            {% endfor %}
-    
-        </tbody>
-        </table>
-    </div>
+                <thead>
+                        <tr>
+                                <th>Company Name</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Business Category</th>
+                                <th>Product Dealing In</th>
+                                <th>Broker</th>
+                                <th>Health Code</th>
+                                <th>Communication Channel</th>
+                                <th>Pref Communication Channel</th>
+                                <th>No. of Communication</th>
+                                <th>No. of Invoice</th>
+                                <th>Sales Amount</th>
+                        </tr>
+                </thead>
+                <tbody>
+                        {% for l in  filter_list %}
+                                <tr>
+                                        <td> {{ l[0].company_name }} </td>
+                                        <td> {{l[0].city[0].city }}</td>
+                                        <td>{{l[0].city[0].state}}</td>
+                                        <td>{{l[0].city[0].country}}</td>
+                                        <td> 
+                                                {% for id in l[0].buss_cat %}
+                                                <span>{{id.buss_cat}}</span>
+                                                {% endfor %}
+                                        </td>
+                                        <td> 
+                                                {% for id in l[0].prod_cat %}
+                                                <span>{{id.prod_cat}}</span>
+                                                {% endfor %}
+                                        </td>
+                                        <td>{{ l[0].broker[0].broker_name }}</td>
+                                        <td>{{ l[0].health_code[0].health }}</td>
+                                        <td>{{ l[0].comm_channel[0].channel }}</td>
+                                        <td>{{ l[0].pref_comm_channel[0].channel }}</td>
+                                        <td>None</td>
+                                        <td>None</td>
+                                        <td>{{ l[1].amount }}</td>
 
-    {% else %}
-    <div class="notification has-text-centered is-center">
+
+
+                                </tr>
+                        {% endfor %}
+                </tbody>
+
+        </table>
+</div>
+
+{% else %}
+<br>
+<div class="notification has-text-centered is-center">
         <p class="is-size-5 has-text-weight-bold has-text-grey-light">
-            😧 Woah ! So empty.
-            <br><br>
-            Create new filters with <span class="button is-outlined has-text-grey"><i class="icon-btn" data-feather="filter"></i>Filter</span> button.
-            <br>
-            Also view saved reports by clicking on <span class="button is-outlined has-text-grey"><i class="icon-btn" data-feather="eye"></i>Vew Reports</span> button.
+                😧 Woah ! So empty.
+                <br>
+                <br> Create new filters with
+                <span class="button is-outlined has-text-grey">
+                        <i class="icon-btn" data-feather="filter"></i>Filter</span> button.
+                <br> Also view saved reports by clicking on
+                <span class="button is-outlined has-text-grey">
+                        <i class="icon-btn" data-feather="eye"></i>Vew Reports</span> button.
         </p>
-    </div>
-    {% endif %}
+</div>
+{% endif %}
+
 <!-- End Data Display -->
 <!-- Action Buttons Modal -->
 
 <!-- Save Report Model -->
+        <div class="modal" id="modal-save">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                        <div class="box has-addons-centered">
+                                        <p class="is-size-4 has-text-weight-bold">Save Report </p>
+                                        <br>
+                                        <form id="save_form" action="/insights/save" method="POST">
+                                               
+                                               {{ form_save.name(class="input" , placeholder ="Report Name")}}
+                                               <br>
+                                               <br>
+                                                <p class="control "><a type="submit" class="button is-black" onclick="submit_filter()"><i class="icon-btn" data-feather="plus-square"></i>Save filter</a></p>
 
+                                        </form>
+                        </div>
+                </div>
+                <button class="modal-close is-large" aria-label="close"></button>
+
+        </div>
 <!-- End Save report -->
 
 <!-- End Action Button Model -->
@@ -211,84 +276,85 @@
 <div class="modal" id="modal-filter">
         <div class="modal-background"></div>
         <div class="modal-content">
-        <div class="box has-addons-centered">
-                <p class="is-size-4 has-text-weight-bold">Filters </p>
-                <br>
-                <form id="filter_form" action="/insights" method="POST">
-                        {{form.hidden_tag()}}
-                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
-                        <div class="field is-grouped is-multiline">
-                        <p class="control">{{form.date_start(class="input" , placeholder="Enter Start Date - YYYY-MM-DD")}}</p>
-                        <span class="control has-text-grey is-size-5 has-text-weight-normal"> to </span>
-                        <p class="control">{{form.date_end(class="input" , placeholder="Enter End Date - YYYY-MM-DD")}}</p>
-                        </div>
+                <div class="box has-addons-centered">
+                        <p class="is-size-4 has-text-weight-bold">Filters </p>
                         <br>
-                        <div class="columns">
-                                <div class="column">
-                                        <div class="field is-horizontal">
-                                                <div class="field" style="margin-right:2rem;">
-                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
-                                                <span onclick="buss_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br>
-                                                <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
-                                                </div>
-                                                
-                                                <div class="field">
-                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
-                                                <span onclick="prod_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br>
-                                                <p class="select is-multiple control" width="5rem">{{form.prod_cat}}</p>
-                                                </div>
-                                        </div>
-                                        <div class="notification is-narrow is-light">
-                                        <div class="field is-horizontal">
-                                                <div class="field" style="margin-right:2.5rem;">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">City</p>
-                                                        <span onclick="city_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                        <br>            
-                                                        <p class="select is-multiple control" width="5rem">{{form.city}}</p>
-                                                </div>
-                                                <div class="field " style="margin-right:2.5rem;">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">State</p>
-                                                        <span onclick="state_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                        <br>
-                                                        <p class="select is-multiple control" width="5rem">{{form.state}}</p>
-                                                </div>
-                                                <div class="field">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Country</p>
-                                                        <span onclick="country_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br>
-                                                        <p class="select is-multiple control" width="5rem">{{form.country}}</p>
-                                                </div>
-                                        </div>
-                                        </div>
-                                        <div class="field is-horizontal">
-                                                <div class="field" style="margin-right:2rem;">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Broker</p>
-                                                        <span onclick="broker_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br>
-                                                        <p class="select is-multiple control" width="5rem">{{form.broker}}</p>
-                                                </div>
-                                                
-                                                <div class="field" style="margin-right:2rem;">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Health Code</p>
-                                                        <span onclick="health_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br>
-                                                        <p class="select is-multiple control" width="5rem">{{form.health_code}}</p>
-                                                </div>
-                                                <div class="field">
-                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Communication Channels</p>
-                                                        <span onclick="comm_reset()" class="clear button is-small is-black">Clear Selection </span>
-                                                <br><p class="select is-multiple control" width="5rem">{{form.comm_channel}}</p>
-                                                </div>
-                                        </div>
+                        <form id="filter_form"  method="POST">
+                                {{ form.hidden_tag() }}
+                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Date Range</p>
+                                <div class="field is-grouped is-multiline">
+                                        <p class="control">{{form.date_start(class="input" , placeholder="Enter Start Date - YYYY-MM-DD")}}</p>
+                                        <span class="control has-text-grey is-size-5 has-text-weight-normal"> to </span>
+                                        <p class="control">{{form.date_end(class="input" , placeholder="Enter End Date - YYYY-MM-DD")}}</p>
+                                </div>
+                                <br>
+                                <div class="columns">
+                                        <div class="column">
+                                                <div class="field is-horizontal">
+                                                        <div class="field" style="margin-right:2rem;">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Bussiness Category</p>
+                                                                <span onclick="buss_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                <br>
+                                                                <p class="select is-multiple control" width="5rem">{{form.buss_cat}}</p>
+                                                        </div>
 
-                                        <div class="field is-horizontal">
+                                                        <div class="field">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Product Category</p>
+                                                                <span onclick="prod_cat_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                <br>
+                                                                <p class="select is-multiple control" width="5rem">{{form.prod_cat}}</p>
+                                                        </div>
+                                                </div>
+                                                <div class="notification is-narrow is-light">
+                                                        <div class="field is-horizontal">
+                                                                <div class="field" style="margin-right:2.5rem;">
+                                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">City</p>
+                                                                        <span onclick="city_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                        <br>
+                                                                        <p class="select is-multiple control" width="5rem">{{form.city}}</p>
+                                                                </div>
+                                                                <div class="field " style="margin-right:2.5rem;">
+                                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">State</p>
+                                                                        <span onclick="state_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                        <br>
+                                                                        <p class="select is-multiple control" width="5rem">{{form.state}}</p>
+                                                                </div>
+                                                                <div class="field">
+                                                                        <p class="label has-text-grey is-size-5 has-text-weight-normal">Country</p>
+                                                                        <span onclick="country_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                        <br>
+                                                                        <p class="select is-multiple control" width="5rem">{{form.country}}</p>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                <div class="field is-horizontal">
+                                                        <div class="field" style="margin-right:2rem;">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Broker</p>
+                                                                <span onclick="broker_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                <br>
+                                                                <p class="select is-multiple control" width="5rem">{{form.broker}}</p>
+                                                        </div>
+
+                                                        <div class="field" style="margin-right:2rem;">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Health Code</p>
+                                                                <span onclick="health_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                <br>
+                                                                <p class="select is-multiple control" width="5rem">{{form.health_code}}</p>
+                                                        </div>
+                                                        <div class="field">
+                                                                <p class="label has-text-grey is-size-5 has-text-weight-normal">Communication Channels</p>
+                                                                <span onclick="comm_reset()" class="clear button is-small is-black">Clear Selection </span>
+                                                                <br>
+                                                                <p class="select is-multiple control" width="5rem">{{form.comm_channel}}</p>
+                                                        </div>
+                                                </div>
+
+                                                <div class="field is-horizontal">
                                                         <div class="field" style="margin-right:1rem;">
                                                                 <p class="label has-text-grey is-size-5 has-text-weight-normal">No. Invoice</p>
-                                                                <p class="select is-multiple control" width="5rem">{{form.no_invoice(class="input" , placeholder="Enter number of Invoice")}}</p>
+                                                                <p class="select is-multiple control" width="5rem">{{form.no_invoice(class="input" , placeholder="Enter numbe of Invoice")}}</p>
                                                         </div>
-                                                        
+
                                                         <div class="field" style="margin-right:1rem;">
                                                                 <p class="label has-text-grey is-size-5 has-text-weight-normal">Amount</p>
                                                                 <p class="select is-multiple control" width="5rem">{{form.amount(class="input" , placeholder="Enter Amount Minimum")}}</p>
@@ -297,97 +363,137 @@
                                                                 <p class="label has-text-grey is-size-5 has-text-weight-normal">No. of Comm</p>
                                                                 <p class="select is-multiple control" width="5rem">{{form.no_comm(class="input" , placeholder="Enter number of Communications")}}</p>
                                                         </div>
-                                        </div>
-                                        <div class="buttons">
-                                                <button class="button is-black" type="submit"><i class="icon-btn" data-feather="check-square"></i>Set Filter</button>                                          
-                                                <a class="button is-light"><i class="icon-btn" data-feather="circle"></i>Clear Filters</a>
+                                                </div>
+                                                <div class="buttons">
+                                                        <button class="button is-black" type="submit">
+                                                                <i class="icon-btn" data-feather="check-square"></i>Set Filter</button>
+                                                        <a class="button is-light">
+                                                                <i class="icon-btn" data-feather="circle"></i>Clear Filters</a>
+                                                </div>
                                         </div>
                                 </div>
-                        </div>
-                </form>
+                        </form>
+                </div>
         </div>
-</div>
-<button class="modal-close is-large" aria-label="close"></button>
+        <button class="modal-close is-large" aria-label="close"></button>
 
 </div>
 <!-- End Filter Modal -->
 <script>
-        document.querySelector('#filter').addEventListener('click', function(event) {
-        event.preventDefault();
-        var modal = document.querySelector('#modal-filter');  // assuming you have only 1
-        var html = document.querySelector('html');
-        modal.classList.add('is-active');
-        html.classList.add('is-clipped');
+        document.querySelector('#filter').addEventListener('click', function (event) {
+                event.preventDefault();
+                var modal = document.querySelector('#modal-filter');  // assuming you have only 1
+                var html = document.querySelector('html');
+                modal.classList.add('is-active');
+                html.classList.add('is-clipped');
 
-        modal.querySelector('.modal-close').addEventListener('click', function(e) {
-                e.preventDefault();
-                modal.classList.remove('is-active');
-                html.classList.remove('is-clipped');
+                modal.querySelector('.modal-close').addEventListener('click', function (e) {
+                        e.preventDefault();
+                        modal.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
                 });
 
-        modal.querySelector('.modal-background').addEventListener('click', function(e) {
-                e.preventDefault();
-                modal.classList.remove('is-active');
-                html.classList.remove('is-clipped');
-        });
+                modal.querySelector('.modal-background').addEventListener('click', function (e) {
+                        e.preventDefault();
+                        modal.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
+                });
         });
 
-        document.querySelector('#save').addEventListener('click', function(event) {
+        document.querySelector('#save').addEventListener('click', function (event) {
                 event.preventDefault();
-                var modalsave = document.querySelector('#model-save-report');  // assuming you have only 1
+                var modalsave = document.querySelector('#modal-save');  // assuming you have only 1
                 var html = document.querySelector('html');
                 modalsave.classList.add('is-active');
                 html.classList.add('is-clipped');
-        
-                modalsave.querySelector('.modal-close').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        modalsave.classList.remove('is-active');
-                        html.classList.remove('is-clipped');
-                        });
-        
-                modalsave.querySelector('.modal-background').addEventListener('click', function(e) {
+
+                modalsave.querySelector('.modal-close').addEventListener('click', function (e) {
                         e.preventDefault();
                         modalsave.classList.remove('is-active');
                         html.classList.remove('is-clipped');
                 });
+
+                modalsave.querySelector('.modal-background').addEventListener('click', function (e) {
+                        e.preventDefault();
+                        modalsave.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
                 });
-        
-        function prod_cat_reset(){
+        });
+
+        function view_report(){
+                var box = document.querySelector('.report-box');
+                box.classList.remove('is-hidden');
+        }
+        function prod_cat_reset() {
                 select_box = document.getElementById("prod_cat");
                 select_box.selectedIndex = -1;
         };
 
-        function comm_reset(){
+        function comm_reset() {
                 select_box = document.getElementById("comm_channel");
                 select_box.selectedIndex = -1;
         };
-        function buss_cat_reset(){
+        function buss_cat_reset() {
                 select_box = document.getElementById("buss_cat");
                 select_box.selectedIndex = -1;
         };
-        function city_reset(){
+        function city_reset() {
                 select_box = document.getElementById("city");
                 select_box.selectedIndex = -1;
         };
-        function state_reset(){
+        function state_reset() {
                 select_box = document.getElementById("state");
                 select_box.selectedIndex = -1;
         };
-        function country_reset(){
+        function country_reset() {
                 select_box = document.getElementById("country");
                 select_box.selectedIndex = -1;
         };
-        function broker_reset(){
+        function broker_reset() {
                 select_box = document.getElementById("broker");
                 select_box.selectedIndex = -1;
         };
-        function health_reset(){
+        function health_reset() {
                 select_box = document.getElementById("health_code");
                 select_box.selectedIndex = -1;
         };
 
-        function save_report(){
+        function save_report() {
 
         }
-</script>
-{% endblock %}
+
+        
+    function submit_filter(){
+        var elements = document.getElementById("save_form").elements;
+        var obj = {};
+        for(var i = 0 ; i < elements.length ; i++){
+            var item = elements.item(i);
+                obj[item.name] = item.value;
+            }
+        
+        console.log(obj);
+        
+        axios.post("{{url_for('filter_save')}}", 
+                    { data : obj}
+                    )
+                    .then(function (response) {
+                        console.log(response.data.mssg );
+                        var snack = document.getElementsByClassName('snackbar-c');                                    
+                        $("span.response-mssg").html(response.data.mssg) ;
+                        $(".snackbar-c").removeClass("is-hidden").addClass("");
+                        setTimeout(function() {
+                            $(".snackbar-c").fadeOut();
+                          }, 3000);
+                        
+                    })
+                    .catch(function (error) {
+                        console.log(response.data.mssg );
+                        var snack = document.getElementsByClassName('snackbar-c');                                    
+                        $("span.response-mssg").html(error.data.mssg+ '🤙') ;
+                        $(".snackbar-c").removeClass("is-hidden").addClass("");
+                        setTimeout(function() {
+                            $(".snackbar-c").fadeOut();
+                          }, 3000);
+                    });
+                };
+</script> {% endblock %}
