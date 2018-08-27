@@ -423,7 +423,9 @@ def insights():
         chart_insights.append(total_rev)
 
         db.session.close()
-
+        if len(results) is 0:
+            mssg = "No Invoices found for current filter. Try another filter."
+            return render_template('insights.html' , user = user , form_save = form_save  , filter_list = results , form = form , chart_insights = chart_insights , savedfilters = savedfilters , error_mssg = mssg) , 200   
         return render_template('insights.html' , user = user , form_save = form_save  , filter_list = results , form = form , chart_insights = chart_insights , savedfilters = savedfilters) , 200
     
     else:  # You only want to print the errors since fail on validate
