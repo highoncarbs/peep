@@ -42,9 +42,10 @@
 
 <div class="report-box animated fadeIn is-hidden">
                 {% for r in savedfilters %}
-                        <div class="filtersave notification is-dark has-text-centered has-text-weight-bold" style="margin-bottom: 0;">
+                        <a href="{{ url_for('view_report' , r_id = r.id) }}"><div class="filtersave notification is-dark has-text-centered has-text-weight-bold" style="margin-bottom: 0;">
                                 <p>{{ r.report_name.title() }}</p>
                         </div>
+                        </a>
                 {% endfor %}
         </div>
 

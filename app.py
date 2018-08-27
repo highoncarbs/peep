@@ -12,6 +12,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import joinedload
 import datetime
 import re
+
+import copy
 # Models
 # Flask app intitialization 
 
@@ -372,18 +374,40 @@ def insights():
         if hcode_list:
             query = query.filter(login_model.AddContact.health_code.any(login_model.HealthCode.health.in_(hcode_list)))
 
-        if no_comm:
-            query = query.filter( no_comm >= no_comm)
+        if buss_list:
+            query = query.filter(login_model.AddContact.buss_cat.any(login_model.BussCat.buss_cat.in_(buss_list)))
+
+        if prod_list:
+            query = query.filter(login_model.AddContact.prod_cat.any(login_model.ProdCat.prod_cat.in_(prod_list)))
 
         if amount:
             query = query.filter(login_model.Invoice.amount >= amount)
 
-        session['query'] = str(query)
-
-        results = query.all()
-      
-        chart_insights = []
         
+        results = query.all()
+        
+        if no_comm:
+            pass
+
+        if no_invoice:
+            ref_list = {}
+            for x in query:
+                if x[0] in ref_list:
+                    ref_list[x[0]] = ref_list[x[0]]+1
+                else:
+                    ref_list[x[0]] = 1
+
+            for key in ref_list:
+                if int(ref_list[key]) >= int(no_invoice):
+                    pass
+                else:
+                    for item in results:
+                        print(item[0])
+                        if str(key) == str(item[0]):
+                            results.remove(item)
+
+        chart_insights = []
+        session['query'] = str(query)
         filter_con = len(set([x[0] for x in results ]))
         total_con = db.session.query(login_model.AddContact).count()
         total_rev_t =[x.amount for x in db.session.query(login_model.Invoice).all()]
@@ -418,6 +442,17 @@ def filter_save():
         db.session.add(temp)
         db.session.commit()
         return jsonify({"mssg" :"Report saved"})
+
+@app.route('/insights/view/<r_id>' , methods= ['GET' , 'POST'])
+@login_required
+def view_report(r_id):
+    print(r_id)
+    user = current_user.username
+
+    data_query = db.session.query(login_model.FilterSave).filter( login_model.FilterSave.id == int(r_id)).first().query
+    results = engine.execute(text(data_query))
+    print(results)    
+    return render_template('view_insights.html' , user = user , filter_list = results ,chart_insights = chart_insights ) , 200
 
 @app.route('/transaction' , methods=['GET' , 'POST'])
 @login_required

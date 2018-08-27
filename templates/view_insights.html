@@ -1,0 +1,232 @@
+{% extends 'base.html' %} {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<link href="{{ url_for('static' , filename = 'css/print.css') }}" rel="stylesheet" type="text/css" media="print">
+<!-- FIX : Action Buttons in navbar-end -->
+<div class="navbar ">
+        <div class="navbar-start">
+                <p class="navbar-item is-size-4 has-text-weight-bold">Insights </p>
+        </div>
+        <div class="navbar-end is-size-4">
+               
+                <a class="navbar-item" onclick="view_report()">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="eye"></i>View Reports</button>
+                </a>
+                <a class="navbar-item" onClick=" window.print(); return false">
+                        <button class="button is-black">
+                                <i class="icon-btn" data-feather="printer"></i>Print Report</button>
+                </a>
+
+        </div>
+</div>
+<br>
+
+<!-- Data Display -->
+
+
+<div class="report-box animated fadeIn is-hidden">
+                {% for r in savedfilters %}
+                        <div class="filtersave notification is-dark has-text-centered has-text-weight-bold" style="margin-bottom: 0;">
+                                <p>{{ r.report_name.title() }}</p>
+                        </div>
+                {% endfor %}
+        </div>
+
+{% if filter_list %}
+
+<hr>
+
+<div class="chart-box animated fadeIn">
+        <div class="columns">
+
+                <!-- Contacts Percentage  -->
+                <div class="column">
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Contacts</h3>
+                        <br>
+                        <div class="left" style="position: relative; height:auto; width:auto">
+                                <canvas id="contact-chart"></canvas>
+                        </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered :</span> {{ chart_insights[0] }} </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total :</span> {{ chart_insights[1] }} </p>
+
+                </div>
+                <!-- Comm Percentage -->
+                <div class="column">
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Communication</h3>
+                        <br>
+                        <div class="chart-container" style="position: relative; height:auto; width:auto">
+                                <canvas id="comm-chart"></canvas>
+                        </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered :</span> 50 </p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total :</span> 120 </p>
+
+                </div>
+
+                <!-- Revenue percentage -->
+                <div class="column">
+                        <h3 class="is-size-4 has-text-weight-bold has-text-centered">Revenue</h3>
+                        <br>
+                        <div class="chart-container" style="position: relative; height:auto; width:auto">
+                                <canvas id="revenue-chart"></canvas>
+                        </div>
+                        <br>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Filtered : </span>Rs. {{ chart_insights[2] }}</p>
+                        <p class="is-size-6 has-text-weight-bold has-text-centered">
+                                <span class="has-text-weight-normal">Total : </span>Rs. {{ chart_insights[3] }}</p>
+
+                </div>
+
+        </div>
+        <br>
+        <script>
+                data_contact = {
+                        datasets: [{
+                                data: [{{ chart_insights[0] }}, {{ chart_insights[1] }}] ,
+                backgroundColor: [
+                        '#262525',
+                        '#84f2d6'
+                ],
+                                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                        'Filtered',
+                        'All',
+                ]
+                            };
+
+                data_rev = {
+                        datasets: [{
+                                data: [{{ chart_insights[2]|int }}, {{ chart_insights[3]|int }}],
+                                backgroundColor: [
+                                        '#616161',
+                                        '#8aae92'
+                                ],
+                        }],
+
+                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                        labels: [
+                                'Filtered',
+                                'All',
+                        ]
+                };
+
+                data_comm = {
+                        datasets: [{
+                                data: [50,50],
+                                backgroundColor: [
+                                        '#1d97c1',
+                                        '#87e0ff'
+                                ],
+                        }],
+
+                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                        labels: [
+                                'Filtered',
+                                'All',
+                        ]
+                };
+                var contact_ctx = document.getElementById("contact-chart").getContext('2d');
+                var comm_ctx = document.getElementById("comm-chart").getContext('2d');
+                var revenue_ctx = document.getElementById("revenue-chart").getContext('2d');
+
+                var contactChart = new Chart(contact_ctx, {
+                        type: 'pie',
+                        data: data_contact,
+                        options: null
+                });
+
+                var commChart = new Chart(comm_ctx, {
+                        type: 'pie',
+                        data: data_comm,
+                        options: null
+                });
+
+                var revChart = new Chart(revenue_ctx, {
+                        type: 'pie',
+                        data: data_rev,
+                        options: null
+                });
+
+
+
+
+        </script>
+</div>
+
+<div class="table-container">
+        <table class="table is-fullwidth is-hoverable is-bordered">
+                <thead>
+                        <tr>
+                                <th>Company Name</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Business Category</th>
+                                <th>Product Dealing In</th>
+                                <th>Broker</th>
+                                <th>Health Code</th>
+                                <th>Communication Channel</th>
+                                <th>Pref Communication Channel</th>
+                                <th>No. of Communication</th>
+                                <th>No. of Invoice</th>
+                                <th>Sales Amount</th>
+                        </tr>
+                </thead>
+                <tbody>
+                        {% for l in  filter_list %}
+                                <tr>
+                                        <td> {{ l[0].company_name }} </td>
+                                        <td> {{l[0].city[0].city }}</td>
+                                        <td>{{l[0].city[0].state}}</td>
+                                        <td>{{l[0].city[0].country}}</td>
+                                        <td> 
+                                                {% for id in l[0].buss_cat %}
+                                                <span>{{id.buss_cat}}</span>
+                                                {% endfor %}
+                                        </td>
+                                        <td> 
+                                                {% for id in l[0].prod_cat %}
+                                                <span>{{id.prod_cat}}</span>
+                                                {% endfor %}
+                                        </td>
+                                        <td>{{ l[0].broker[0].broker_name }}</td>
+                                        <td>{{ l[0].health_code[0].health }}</td>
+                                        <td>{{ l[0].comm_channel[0].channel }}</td>
+                                        <td>{{ l[0].pref_comm_channel[0].channel }}</td>
+                                        <td>None</td>
+                                        <td>None</td>
+                                        <td>{{ l[1].amount }}</td>
+
+
+
+                                </tr>
+                        {% endfor %}
+                </tbody>
+
+        </table>
+</div>
+
+{% else %}
+<br>
+<div class="notification has-text-centered is-center">
+        <p class="is-size-5 has-text-weight-bold has-text-grey-light">
+                😧 Woah ! So empty.
+                <br>
+                <br> Create new filters with
+                <span class="button is-outlined has-text-grey">
+                        <i class="icon-btn" data-feather="filter"></i>Filter</span> button.
+                <br> Also view saved reports by clicking on
+                <span class="button is-outlined has-text-grey">
+                        <i class="icon-btn" data-feather="eye"></i>Vew Reports</span> button.
+        </p>
+</div>
+{% endif %}
+ {% endblock %}
