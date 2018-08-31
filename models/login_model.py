@@ -1,11 +1,24 @@
 from wtforms import StringField, PasswordField , BooleanField , DateField
-from wtforms.widgets import TextArea
+from wtforms.widgets import TextArea , TableWidget, CheckboxInput
 from wtforms_alchemy.fields import QuerySelectField ,SelectMultipleField ,SelectField
 from wtforms.validators import InputRequired, Email, Length , DataRequired ,Regexp , Optional
 from flask_login import UserMixin
 from flask_wtf import FlaskForm 
 from app import db
 import datetime
+########################################
+#########  BASE FORMS ##################
+########################################
+class ChoiceObj(object):
+    def __init__(self, name, choices):
+        # this is needed so that BaseForm.process will accept the object for the named form,
+        # and eventually it will end up in SelectMultipleField.process_data and get assigned
+        # to .data
+        setattr(self, name, choices)
+
+class MultiCheckboxField(SelectMultipleField):
+	widget			= TableWidget()
+	option_widget	= CheckboxInput()
 
 ########################################
 #######  APP LOGIN FORMS & DB ##########
@@ -203,6 +216,8 @@ class AddContactForm(FlaskForm):
     address_three = StringField('address_three')
     address_pin = StringField('address_pin' , validators=[InputRequired()])
     group = QuerySelectField('group',validators=[Optional(),] , query_factory=group_choice , allow_blank= False  , get_label='group')
+    buss_cat_edit = SelectMultipleField('buss_cat_edit' , coerce=int , choices = [ (r.id , r.buss_cat) for r in db.session.query(BussCat)])
+    prod_cat_edit = SelectMultipleField('prod_cat_edit' , coerce=int , choices = [ (r.id , r.prod_cat) for r in db.session.query(ProdCat)])
 
 
 class AddContact(db.Model):
