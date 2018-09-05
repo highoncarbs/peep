@@ -156,6 +156,20 @@ def contacts():
     form_add_group = login_model.AddGroupForm()
     form_add_group.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
     form_add_group.contact.choices = [ (r.id , r.company_name ) for r in login_model.AddContact.query.order_by('company_name') ]
+    formfilter = login_model.FilterForm()
+
+    # Choices for Contact filter ( formfilter )
+
+    formfilter.buss_cat.choices = [(r.id , r.buss_cat) for r in login_model.BussCat.query.all()]
+    formfilter.prod_cat.choices = [(r.id , r.prod_cat) for r in login_model.ProdCat.query.all()]
+    formfilter.city.choices = [(r.id , r.city) for r in login_model.City.query.all()]
+    formfilter.state.choices = [(r.id , r.state) for r in login_model.State.query.all()]
+    formfilter.country.choices = [(r.id , r.country) for r in login_model.Country.query.all()]
+    formfilter.broker.choices = [(r.id , r.broker_name) for r in login_model.Broker.query.all()]
+    formfilter.health_code.choices = [(r.id , r.health) for r in login_model.HealthCode.query.all()]
+    formfilter.comm_channel.choices = [(r.id , r.channel) for r in login_model.CommChannel.query.all()]
+    
+    contact_list = db.session.query(login_model.AddContact).all()
 
     if form_add_group.validate_on_submit():
         group = login_model.Group.query.filter_by(id=int(form_add_group.group.data)).first().group
@@ -164,10 +178,99 @@ def contacts():
             conn.execute(sql )
             conn.close()
 
-    contact_list = db.session.query(login_model.AddContact).all()
-    print(contact_list)
+    if formfilter.validate_on_submit():
+        
+        buss_cat = formfilter.buss_cat.data
+        prod_cat = formfilter.prod_cat.data
+        broker = formfilter.broker.data
+        city = formfilter.city.data
+        health_code = formfilter.health_code.data
+        comm_channel = formfilter.comm_channel.data
+        date_start = formfilter.date_start.data
+        date_end = formfilter.date_end.data
+        state = formfilter.state.data
+        country = formfilter.country.data
+        no_invoice = formfilter.no_invoice.data
+        amount = formfilter.amount.data
+        no_comm = formfilter.no_comm.data
+        
+        # Building filter lists
+        buss_list = list()
+        for id in buss_cat:
+            buss_list.append(db.session.query(login_model.BussCat).filter_by(id = int(id)).first().buss_cat)
+        
+        # Product category
+        prod_list = list()
+        for id in prod_cat:
+            prod_list.append(db.session.query(login_model.ProdCat).filter_by(id = int(id)).first().prod_cat)
+
+        # Broker list        
+        broker_list = list()
+        for id in broker:
+            x = db.session.query(login_model.Broker).filter_by(id = int(id)).first().broker_name
+            broker_list.append(x)
+
+        city_list = list()
+        for id in city:
+            city_list.append(db.session.query(login_model.City).filter_by(id = int(id)).first().city)
+        
+        state_list = list()
+        for id in state:
+            state_list.append(db.session.query(login_model.State).filter_by(id = int(id)).first().state)
+        
+        country_list = list()
+        for id in country:
+            country_list.append(db.session.query(login_model.Country).filter_by(id = int(id)).first().country)
+        
+        comm_list = list()
+        for id in comm_channel:
+            comm_list.append(db.session.query(login_model.CommChannel).filter_by(id = int(id)).first().channel)
+
+        hcode_list = list()
+        for id in health_code:
+            hcode_list.append(db.session.query(login_model.HealthCode).filter_by(id = int(id)).first().health)
+
+        # End filter lists
+
+        # Conditional Queries 
+
+        query =  db.session.query(login_model.AddContact)
+        
+        if broker_list:
+            query = query.filter(login_model.AddContact.broker.any(login_model.Broker.broker_name.in_(broker_list)))
+
+        if city_list:
+            query = query.filter(login_model.AddContact.city.any(login_model.City.city.in_(city_list)))
+
+        if state_list:
+            query = query.filter(login_model.AddContact.city.any(login_model.City.state.in_(state_list)))
+
+        if country_list:
+            query = query.filter(login_model.AddContact.city.any(login_model.City.country.in_(country_list)))
+
+        if comm_list:
+            query = query.filter(login_model.AddContact.comm_channel.any(login_model.CommChannel.channel.in_(comm_list)))
+
+        if hcode_list:
+            query = query.filter(login_model.AddContact.health_code.any(login_model.HealthCode.health.in_(hcode_list)))
+
+        if buss_list:
+            query = query.filter(login_model.AddContact.buss_cat.any(login_model.BussCat.buss_cat.in_(buss_list)))
+
+        if prod_list:
+            query = query.filter(login_model.AddContact.prod_cat.any(login_model.ProdCat.prod_cat.in_(prod_list)))
+
+        
+        filter_list = query.all()
+        if(len(filter_list) is 0):
+            session['mssg_c_a'] = "No contacts matching this filter."
+
+        return render_template('contacts.html' , user = user ,form = form , error_mssg_c_a = session['mssg_c_a'] , contact_list = contact_list ,
+         filter_contacts = filter_list , form_add_group=form_add_group , formfilter = formfilter) , 200
+
+
     return render_template('contacts.html' , user = user ,form = form , error_mssg_c_a = session['mssg_c_a'] ,
-    contact_list = contact_list , form_add_group=form_add_group) , 200
+    contact_list = contact_list , form_add_group=form_add_group , formfilter = formfilter) , 200
 
 @app.route('/contacts/add' , methods=['POST'])
 @login_required
@@ -307,7 +410,7 @@ def insights():
         no_comm = form.no_comm.data
         
         # Building filter lists
-
+       
         # Bussiness category
         buss_list = list()
         for id in buss_cat:
