@@ -114,8 +114,182 @@
                 {% endfor %}
             </td>
             <td><a href="{{url_for('delete_data_contact',item_id= l.id)}}">Delete</a></td>
-            <td><a id="edit_button_contact_{{loop.index}}">Edit</a></td>
+            <td><a id="edit_button_contact_f_{{loop.index}}">Edit</a></td>
         </tr>
+
+        <!-- Edit Contact Modal -->
+<div class="modal" id="modal-edit-f-contact_{{loop.index}}">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+            <div class="box" style="margin-bottom : 0px;">
+                <form  id="contact_edit_form" method="POST">
+                        <p class="is-size-5 has-text-weight-bold">Edit Contact <span class="has-text-grey-light"> - {{l.company_name}}</span></p>
+                        <br>
+                        <div class="notification is-warning">
+                                <i class="icon-btn" data-feather="info"></i> Leave the Inputs empty if you do not wish to change anything.
+                        </div>
+                        <p class="label">Company Name</p>
+
+                        <div class="field is-grouped">
+                            <p class="control is-expanded">
+                                {{ form.company_name(class="input" , placeholder= l.company_name )}}
+                            </p>
+                        </div>
+
+                        <p class="label">Contact Person Name</p>
+
+                        <div class="field is-grouped">
+                            <p class="control is-expanded">
+                                {{ form.company_name(class="input" , placeholder= l.company_per )}}
+                            </p>
+                        </div>
+                        
+                        <label class="label ">Contacts</label>
+                        <div class="field is-grouped">
+                            <div class="field">
+                                    <label class="xlabel">Contact</label>
+                                    <p class="control">{{form.contact_one(class="input" , placeholder=l.contact_one)}}</p>
+                                    
+                            </div>
+                            <div class="field" style="padding-left:3rem;">
+                                    <label class="xlabel ">Whatsapp</label>
+                                    <p class="control">{{form.wh_contact(class="input" , placeholder=l.wh_contact)}}</p>
+                        
+                            </div>
+                            
+                        </div>
+                        <label class="label ">Email</label>
+                    <p class="control">{{form.email(class="input" , placeholder=l.email)}}</p>
+                    <br>
+                    <div class="address-form notification is-light">
+                        <p class="label">Address Line 1</p>
+                        <p class="control">{{form.address_one(class="input" , placeholder=l.address_one)}}</p>
+                        <p class="label">Address Line 2</p>
+                        <p class="control">{{form.address_two(class="input" , placeholder=l.address_two)}}</p>
+                        <p class="label">Address Line 3</p>
+                        <p class="control">{{form.address_three(class="input" , placeholder=l.address_three)}}</p>
+                        <p class="label">Pin Code</p>
+                        <p class="control">{{form.address_pin(class="input" , placeholder=l.address_pin)}}</p>
+
+                        <label class="label ">City</label>
+                        <div class="select" >                        
+                            <p class="control">{{form.city(id="editcity"+loop.index|string)}}</p>
+                        </div>
+                        <script>
+                            var valc_{{loop.index}} = {{ l.city[0].id }};
+                            console.log(valc_{{loop.index}});
+                            $("#editcity{{ loop.index }}").val(valc_{{loop.index}});
+                        </script>
+                    
+                    </div>
+                    <div class="field is-horizontal">
+
+                        <div class="field" style="margin-right:5rem;">
+                            <p class="label">Business Category</p>
+                            <p class="select is-multiple control">
+                            {{ form.buss_cat_edit(class="input" , id="editbuss"+loop.index|string)}}
+                            </p>
+                            <script>
+                                    
+                                    var valbs_{{loop.index}};
+                                    var valbs_temp = [];
+                                    {% for r in l.buss_cat %}
+                                        valbs_temp.push("{{r.id|int}}");
+                                    {% endfor %}
+                                    valbs_{{loop.index}} = valbs_temp;
+                                    $("#editbuss{{ loop.index }}").val(valbs_{{loop.index}});
+                                   
+                            </script>
+                        </div>
+                        <div class="field">
+                                <p class="label">Product Category</p>
+                                <p class="select is-multiple control">
+                                {{ form.prod_cat_edit(class="input" , id="editprod"+loop.index|string)}}
+                                </p>
+                        </div>
+                    </div>
+
+                    <div class="notification is-light field is-horizontal" >
+                        <div class="field" style="margin-right:3rem;">
+                            <p class="label">Broker</p>
+                            <p class="control select">
+                                {{form.broker(class="input" , id="editbroker"+loop.index|string)}}
+                            </p>
+                            <script>
+                                    var valb_{{loop.index}} = {{ l.broker[0].id|string }};
+                                    $("#editbroker{{loop.index}}").val(valb_{{loop.index}});
+                                </script>
+                        </div>
+
+                        <div class="field" style="margin-right:3rem;">
+                            <p class="label">Health Code</p>
+                            <p class="control select">
+                                {{form.health_code(class="input")}}
+                            </p>
+                        </div>
+
+                        <div class="field" >
+                                <p class="label">Group</p>
+                                <p class="control select">
+                                    {{form.group(class="input")}}
+                                </p>
+                            </div>
+
+                    </div>
+
+                    <div class="field is-horizontal">
+
+                            <div class="field" style="margin-right:3rem;">
+                                <p class="label">Coomunication Channel</p>
+                                <p class="select control">
+                                {{ form.comm_channel(class="input")}}
+                                </p>
+                            </div>
+                            <div class="field">
+                                    <p class="label">Pref. Coomunication Channel</p>
+                                    <p class="select control">
+                                    {{ form.pref_comm_channel(class="input")}}
+                                    </p>
+                            </div>
+                    </div>
+
+
+                        <div class="field is-grouped ">
+                            <p class="control "><a type="submit" class="button is-black" onclick="#"><i class="icon-btn" data-feather="plus-square"></i>Update Contact</a></p>
+                            <p class="control"><a class="button" onclick="clear_field()"><i class="icon-btn" data-feather="circle"></i>Clear Fields</a></p>
+                        </div>
+            </form>
+            </div>   
+
+            </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+
+</div>
+
+<!-- End edit contact Modal -->
+    <script>
+    document.querySelector('#edit_button_contact_f_{{loop.index}}').addEventListener('click', function(event) {
+        event.preventDefault();
+        var modal = document.querySelector('#modal-edit-f-contact_{{loop.index}}');  // assuming you have only 1
+        var html = document.querySelector('html');
+        modal.classList.add('is-active');
+        html.classList.add('is-clipped');
+      
+        document.querySelector('.modal-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.classList.remove('is-active');
+            html.classList.remove('is-clipped');
+            window.location.reload();              });
+
+        modal.querySelector('.modal-background').addEventListener('click', function(e) {
+          e.preventDefault();
+          modal.classList.remove('is-active');
+          html.classList.remove('is-clipped');
+          window.location.reload();    
+        });
+      });
+    </script>
+
         {% endfor %}
         </tbody>
         </table>
@@ -125,6 +299,7 @@
             $("#filter-close").click(function(){
                 $("#filter-contacts").fadeOut(300);
                 window.location.replace("{{url_for('contacts')}}");
+
             })
         </script>
     </div>

@@ -172,12 +172,11 @@ def contacts():
     contact_list = db.session.query(login_model.AddContact).all()
 
     if form_add_group.validate_on_submit():
-        group = login_model.Group.query.filter_by(id=int(form_add_group.group.data)).first().group
+        group = login_model.Group.query.filter_by(id=int(form_add_group.group.data)).first()
         for x in form_add_group.contact.data:
-            sql = 'insert into {}(contact)  values ({})'.format(group , int(x))
-            conn.execute(sql )
-            conn.close()
-
+            con = db.session.query(login_model.AddContact).filter_by(id=int(x)).first()
+            group.contact_group.append(con)
+            db.session.commit()
     if formfilter.validate_on_submit():
         
         buss_cat = formfilter.buss_cat.data
