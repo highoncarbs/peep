@@ -451,7 +451,7 @@ def insights():
 
         # Conditional Queries 
 
-        query =  db.session.query(login_model.AddContact, login_model.Invoice , login_model.Comm).join(login_model.Invoice).filter(login_model.AddContact.group.id == login_model.Comm.group )
+        query =  db.session.query(login_model.AddContact, login_model.Invoice ).join(login_model.Invoice)
 
         if date_start:
             query = query.filter(login_model.Invoice.date >= date_start)
@@ -490,11 +490,30 @@ def insights():
         results = query.all()
         
         if no_comm:
-            pass
+            print("here da")
+            ref_list = {}   
+            for con in results:
+                if con[0] not in ref_list.keys():
+                    ref_list[con[0]] = 0
+                else:
+                    pass
+
+            for key in ref_list.keys():
+                for g in key.group:
+                    comm_len = len(g.commu_group)
+                    ref_list[key] = comm_len + ref_list[key]
+            
+            for key in ref_list.keys():
+                if int(ref_list[key]) >= int(no_comm) :
+                    pass
+                else:
+                    for item in results:
+                        if str(key) == str(item[0]):
+                            results.remove(item)
 
         if no_invoice:
             ref_list = {}
-            for x in query:
+            for x in results:
                 if x[0] in ref_list:
                     ref_list[x[0]] = ref_list[x[0]]+1
                 else:
@@ -568,8 +587,7 @@ def transaction():
     invoice_list = db.session.query(login_model.Invoice).all()
 
     form_comm = login_model.CommForm()
-    comm_list =  com = db.session.query(login_model.Comm , login_model.Group , login_model.CommChannel).filter(login_model.Comm.group == login_model.Group.id ,
-         login_model.Comm.comm_channel == login_model.CommChannel.id)
+    comm_list =  db.session.query(login_model.Comm , login_model.CommChannel).join(login_model.CommChannel)
 
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
@@ -581,18 +599,14 @@ def transaction():
         session['mssg_t_b'] = mssg
 
         comm_channel = login_model.CommChannel.query.filter_by(id=int(form_comm.comm_channel.data)).first().id
-        group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first().id
+        group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first()
         date_new = datetime.date(int(form_comm.date.data.split('-')[0]),int(form_comm.date.data.split('-')[1]),int(form_comm.date.data.split('-')[2]))
         new_data = login_model.Comm( mssg_detail = form_comm.mssg_detail.data, 
-            date = date_new , group = group , comm_channel = comm_channel )
-
-        print(new_data)
+            date = date_new  , comm_channel = comm_channel )
+        group.commu_group.append(new_data)
         try:
-            print('Going In')
             db.session.add(new_data)
-            print('Going 2')
             db.session.commit()
-            print('Going 3')
             db.session.close()  
 
             mssg = "Data Successfully added 👍"

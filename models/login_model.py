@@ -312,9 +312,13 @@ class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
     comm_channel = db.Column(db.Integer, db.ForeignKey('comm_channel.id'))
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.Integer, db.ForeignKey('group.id'))
+    group = db.relationship('Group' , secondary='commu_group' ,cascade="all,delete", backref='commu_group' , lazy = 'joined')
     date = db.Column(db.Date)
     
+db.Table('commu_group',
+    db.Column('group_id' , db.Integer , db.ForeignKey('group.id' , ondelete='SET NULL')),
+    db.Column('commu_id' , db.Integer , db.ForeignKey('comm.id', ondelete='SET NULL'))
+    )
 class CommForm(FlaskForm):
     comm_channel = SelectField('comm_channel',validators=[InputRequired()] , coerce = int)
     mssg_detail = StringField('mssg_detail', widget= TextArea())
