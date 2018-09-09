@@ -73,10 +73,10 @@ Current Communications
 {% for l in commlist %}
 <tr>
     <!-- Data Rows -->
-    <td>{{l.comm_channel}}</td>
-    <td>{{l.mssg_detail}}</td>
-    <td>{{l.date}}</td>
-    <td>{{l.group}}</td>
+    <td>{{l[2].channel}}</td>
+    <td>{{l[0].mssg_detail}}</td>
+    <td>{{l[0].date}}</td>
+    <td>{{l[1].group}}</td>
 
     <td><a href="{{url_for('delete_data_comm_adv',item_id= l.id)}}">Delete</a></td>
     <td><a id="edit_button_t_a_{{loop.index}}">Edit</a></td>

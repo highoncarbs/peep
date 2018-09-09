@@ -168,7 +168,6 @@ def contacts():
     formfilter.broker.choices = [(r.id , r.broker_name) for r in login_model.Broker.query.all()]
     formfilter.health_code.choices = [(r.id , r.health) for r in login_model.HealthCode.query.all()]
     formfilter.comm_channel.choices = [(r.id , r.channel) for r in login_model.CommChannel.query.all()]
-    
     contact_list = db.session.query(login_model.AddContact).all()
 
     if form_add_group.validate_on_submit():
@@ -177,6 +176,7 @@ def contacts():
             con = db.session.query(login_model.AddContact).filter_by(id=int(x)).first()
             group.contact_group.append(con)
             db.session.commit()
+
     if formfilter.validate_on_submit():
         
         buss_cat = formfilter.buss_cat.data
@@ -317,7 +317,7 @@ def contacts_add():
                 new_data.city.append(city)
 
                 for id in buss_list:
-                    busscat = login_model.BussCat.query.filter_by(id=int(id)).first()
+                    busscat = login_model.BussCat.query.filter_by(id= int(id)).first()
                     print(busscat.buss_cat)
                     busscat.contact_buss.append(new_data)
 
@@ -361,6 +361,7 @@ def contacts_add():
             except Exception as e:
                 print("Here")
                 mssg = "Error occured while adding data 😵. Here's the error : "+str(e)
+                print(mssg)
                 return jsonify({'mssg' : mssg})
 
 @app.route('/insights' , methods=['GET' , 'POST'])
@@ -450,7 +451,7 @@ def insights():
 
         # Conditional Queries 
 
-        query =  db.session.query(login_model.AddContact, login_model.Invoice).join(login_model.Invoice)
+        query =  db.session.query(login_model.AddContact, login_model.Invoice , login_model.Comm).join(login_model.Invoice).filter(login_model.AddContact.group.id == login_model.Comm.group )
 
         if date_start:
             query = query.filter(login_model.Invoice.date >= date_start)
@@ -567,7 +568,8 @@ def transaction():
     invoice_list = db.session.query(login_model.Invoice).all()
 
     form_comm = login_model.CommForm()
-    comm_list = db.session.query(login_model.Comm).all()
+    comm_list =  com = db.session.query(login_model.Comm , login_model.Group , login_model.CommChannel).filter(login_model.Comm.group == login_model.Group.id ,
+         login_model.Comm.comm_channel == login_model.CommChannel.id)
 
     form_comm.comm_channel.choices = [ (r.id , r.channel ) for r in login_model.CommChannel.query.order_by('channel') ]
     form_comm.group.choices = [ (r.id , r.group ) for r in login_model.Group.query.order_by('group') ]
@@ -578,12 +580,12 @@ def transaction():
         session['check_t'] = 'b'
         session['mssg_t_b'] = mssg
 
-        comm_channel = login_model.CommChannel.query.filter_by(id=int(form_comm.comm_channel.data)).first().channel
-        group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first().group
-        print(comm_channel)
+        comm_channel = login_model.CommChannel.query.filter_by(id=int(form_comm.comm_channel.data)).first().id
+        group = login_model.Group.query.filter_by(id=int(form_comm.group.data)).first().id
         date_new = datetime.date(int(form_comm.date.data.split('-')[0]),int(form_comm.date.data.split('-')[1]),int(form_comm.date.data.split('-')[2]))
-        new_data = login_model.Comm(comm_channel=comm_channel , mssg_detail = form_comm.mssg_detail.data, 
-            date = date_new  , group = group)  
+        new_data = login_model.Comm( mssg_detail = form_comm.mssg_detail.data, 
+            date = date_new , group = group , comm_channel = comm_channel )
+
         print(new_data)
         try:
             print('Going In')

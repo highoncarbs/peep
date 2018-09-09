@@ -216,9 +216,6 @@ class AddContactForm(FlaskForm):
     address_three = StringField('address_three')
     address_pin = StringField('address_pin' , validators=[InputRequired()])
     group = QuerySelectField('group',validators=[Optional(),] , query_factory=group_choice , allow_blank= False  , get_label='group')
-    buss_cat_edit = SelectMultipleField('buss_cat_edit' , coerce=int , choices = [ (r.id , r.buss_cat) for r in db.session.query(BussCat)])
-    prod_cat_edit = SelectMultipleField('prod_cat_edit' , coerce=int , choices = [ (r.id , r.prod_cat) for r in db.session.query(ProdCat)])
-
 
 class AddContact(db.Model):
     id = db.Column(db.Integer , primary_key = True)
@@ -313,9 +310,9 @@ db.Table('invoice_firm',
 
 class Comm(db.Model):
     id = db.Column(db.Integer , primary_key = True)
-    comm_channel = db.Column(db.String(50) )
+    comm_channel = db.Column(db.Integer, db.ForeignKey('comm_channel.id'))
     mssg_detail = db.Column(db.String(100))
-    group = db.Column(db.String(100))
+    group = db.Column(db.Integer, db.ForeignKey('group.id'))
     date = db.Column(db.Date)
     
 class CommForm(FlaskForm):
